@@ -15,7 +15,7 @@ namespace PlayerController
     {
         [SerializeField] private ScriptableStats _stats;
         private Rigidbody2D _rb;
-        private CapsuleCollider2D _col;
+        private BoxCollider2D _col;
         private FrameInput _frameInput;
         private Vector2 _frameVelocity;
         private bool _cachedQueryStartInColliders;
@@ -33,7 +33,7 @@ namespace PlayerController
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
-            _col = GetComponent<CapsuleCollider2D>();
+            _col = GetComponent<BoxCollider2D>();
 
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
         }
@@ -87,8 +87,25 @@ namespace PlayerController
             Physics2D.queriesStartInColliders = false;
 
             // Ground and Ceiling
-            bool groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _stats.GrounderDistance, ~_stats.PlayerLayer);
-            bool ceilingHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.up, _stats.GrounderDistance, ~_stats.PlayerLayer);
+            var origin = (Vector2)_col.transform.position + _col.offset;
+
+            bool groundHit = Physics2D.BoxCast(
+                origin,
+                _col.size,
+                0f,
+                Vector2.down,
+                _stats.GrounderDistance,
+                ~_stats.PlayerLayer
+            );
+
+            bool ceilingHit = Physics2D.BoxCast(
+                origin,
+                _col.size,
+                0f,
+                Vector2.up,
+                _stats.GrounderDistance,
+                ~_stats.PlayerLayer
+            );
 
             // Hit a Ceiling
             if (ceilingHit) _frameVelocity.y = Mathf.Min(0, _frameVelocity.y);
