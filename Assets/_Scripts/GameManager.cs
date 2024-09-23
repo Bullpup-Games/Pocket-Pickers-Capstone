@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using Card;
 using PlayerController;
 using UnityEngine;
-using UnityEngine.Rendering.VirtualTexturing;
-using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {

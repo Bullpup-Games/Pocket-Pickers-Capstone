@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace PlayerController
 {
@@ -60,6 +61,8 @@ namespace PlayerController
             inCardStance = false;
         }
 
+        public bool isFacingRight = true;   // Start facing right by default
+        
         private void GatherInput()
         {
             // TODO: Maybe turn this into an inout gathering script that sends out messages to subscribers
@@ -71,6 +74,13 @@ namespace PlayerController
                 JumpHeld = Input.GetButton("Jump") || Input.GetKey(KeyCode.C),
                 Move = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"))
             };
+            
+            // Track the facing direction based on the last non-zero horizontal input
+            if (_frameInput.Move.x != 0)
+            {
+                isFacingRight = _frameInput.Move.x > 0;
+                Debug.Log(isFacingRight);
+            }
 
             if (_stats.SnapInput)
             {
