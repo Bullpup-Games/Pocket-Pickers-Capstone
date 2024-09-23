@@ -11,7 +11,7 @@ namespace PlayerController
     /// If you hve any questions or would like to brag about your score, come to discord: https://discord.gg/tarodev
     /// </summary>
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
-    public class PlayerController : MonoBehaviour, IPlayerController
+    public class PlayerMovementController : MonoBehaviour, IPlayerController
     {
         [SerializeField] private ScriptableStats _stats;
         private Rigidbody2D _rb;
@@ -41,11 +41,30 @@ namespace PlayerController
         private void Update()
         {
             _time += Time.deltaTime;
-            GatherInput();
+            if (!inCardStance) GatherInput();
+        }
+        
+        /**
+         * When the player is holding the card stance button they should not be allowed
+         * to make other movement inputs
+         */
+        public bool inCardStance = false;
+
+        public void EnterCardStance()
+        {
+            inCardStance = true;
+        }
+
+        public void ExitCardStance()
+        {
+            inCardStance = false;
         }
 
         private void GatherInput()
         {
+            // TODO: Maybe turn this into an inout gathering script that sends out messages to subscribers
+            if (inCardStance) return; // Safety check
+            
             _frameInput = new FrameInput
             {
                 JumpDown = Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.C),
@@ -174,6 +193,11 @@ namespace PlayerController
             if (_frameInput.Move.x == 0)
             {
                 var deceleration = _grounded ? _stats.GroundDeceleration : _stats.AirDeceleration;
+                _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);
+            } 
+            else if (inCardStance)
+            {
+                var deceleration = _grounded ? _stats.GroundDeceleration : 0f;
                 _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);
             }
             else
