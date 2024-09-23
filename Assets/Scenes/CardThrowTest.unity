@@ -347,7 +347,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &428696855
 Transform:
   m_ObjectHideFlags: 0
@@ -658,6 +658,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1274312114}
   - component: {fileID: 1274312113}
+  - component: {fileID: 1274312115}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -677,8 +678,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29f02fbdf263c483b966a0347cec1739, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerMovementController: {fileID: 1909506785}
   inputHandler: {fileID: 398048037}
+  playerMovementController: {fileID: 1909506785}
+  cardStanceArrow: {fileID: 1274312115}
 --- !u!4 &1274312114
 Transform:
   m_ObjectHideFlags: 0
@@ -694,6 +696,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1274312115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1274312112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5db8d21d3fdb7462d86727a1dba86f6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1909506782}
+  directionalArrowPrefab: {fileID: 0}
+  horizontalOffsetDistance: 2.25
+  verticalOffsetDistance: 0.8
 --- !u!1 &1342765706
 GameObject:
   m_ObjectHideFlags: 0
