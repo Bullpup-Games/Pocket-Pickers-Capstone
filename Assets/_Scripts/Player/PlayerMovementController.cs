@@ -42,31 +42,29 @@ namespace PlayerController
         private void Update()
         {
             _time += Time.deltaTime;
-            if (!inCardStance) GatherInput();
+            if (!PlayerVariables.Instance.inCardStance) GatherInput();
         }
         
         /**
          * When the player is holding the card stance button they should not be allowed
          * to make other movement inputs
          */
-        public bool inCardStance = false;
 
         public void EnterCardStance()
         {
-            inCardStance = true;
+            PlayerVariables.Instance.inCardStance = true;
         }
 
         public void ExitCardStance()
         {
-            inCardStance = false;
+            PlayerVariables.Instance.inCardStance = false;
         }
 
-        public bool isFacingRight = true;   // Start facing right by default
         
         private void GatherInput()
         {
             // TODO: Maybe turn this into an inout gathering script that sends out messages to subscribers
-            if (inCardStance) return; // Safety check
+            if (PlayerVariables.Instance.inCardStance) return; // Safety check
             
             _frameInput = new FrameInput
             {
@@ -78,8 +76,7 @@ namespace PlayerController
             // Track the facing direction based on the last non-zero horizontal input
             if (_frameInput.Move.x != 0)
             {
-                isFacingRight = _frameInput.Move.x > 0;
-                Debug.Log(isFacingRight);
+                PlayerVariables.Instance.isFacingRight = _frameInput.Move.x > 0;
             }
 
             if (_stats.SnapInput)
@@ -205,7 +202,7 @@ namespace PlayerController
                 var deceleration = _grounded ? _stats.GroundDeceleration : _stats.AirDeceleration;
                 _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);
             } 
-            else if (inCardStance)
+            else if (PlayerVariables.Instance.inCardStance)
             {
                 var deceleration = _grounded ? _stats.GroundDeceleration : 0f;
                 _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);

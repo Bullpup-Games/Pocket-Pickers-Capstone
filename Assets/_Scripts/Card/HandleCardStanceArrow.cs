@@ -30,12 +30,12 @@ namespace Card
                 Quaternion.identity,
                 player
             );
-        
+            
+            //TODO: Fix the horizontal starting position
             // Calculate the starting rotation angle based on the direction
-            // var angle = (_player.isFacingRight) ? 90f : -90f; // Left: 90°, Right: -90°
+            // var angle = (PlayerVariables.Instance.isFacingRight) ? 90f : -90f; // Left: 90°, Right: -90°
             // Debug.Log(angle);
             // _directionalArrowInstance.transform.rotation = Quaternion.Euler(0, 0, angle);
-            //TODO: Fix the horizontal starting position
         }
 
         private void Update()
