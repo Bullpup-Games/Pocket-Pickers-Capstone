@@ -1,4 +1,5 @@
 using System;
+using PlayerController;
 using UnityEngine;
 
 /**
@@ -34,13 +35,13 @@ public class InputHandler : MonoBehaviour
         else
         {
             Destroy(gameObject);
-            return;
         }
     }
 
     private void Update()
     {
         HandleCardStanceInput();
+        HandleCardThrowInput();
     }
 
     public event Action OnEnterCardStance; // Event for entering card stance
@@ -50,7 +51,7 @@ public class InputHandler : MonoBehaviour
 
     private void HandleCardStanceInput()
     {
-        var triggerValue = Input.GetAxis("RightTrigger");
+        var triggerValue = Input.GetAxis("CardStance");
         bool isInCardStance = Mathf.Abs(triggerValue) > 0.1f;
 
         if (isInCardStance && !_wasInCardStance)
@@ -67,5 +68,21 @@ public class InputHandler : MonoBehaviour
         }
 
         _wasInCardStance = isInCardStance;
+    }
+
+    public event Action OnCardThrow;
+
+    private void HandleCardThrowInput()
+    {
+        if (!PlayerVariables.Instance.inCardStance)
+        {
+            // TODO: Instead of blocking the input if the player isn't in card stance send a quick throw action
+            return;
+        }
+
+        if (Input.GetButtonDown("CardThrow"))
+        {
+            OnCardThrow?.Invoke();
+        }
     }
 }

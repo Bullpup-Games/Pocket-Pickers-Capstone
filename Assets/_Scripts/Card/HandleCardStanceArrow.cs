@@ -1,26 +1,36 @@
 using PlayerController;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace Card
 {
+    /**
+     * HandleCardStanceArrow is responsible for displaying and updating the directional indicator
+     * whenever the player is in 'Card Stance'
+     */
     public class HandleCardStanceArrow : MonoBehaviour
     {
         public Transform player;
         public GameObject directionalArrowPrefab;  // Arrow prefab to instantiate
         private GameObject _directionalArrowInstance;  // The instantiated arrow in the scene
-        private PlayerMovementController _player;
     
-        public float horizontalOffset = 2.0f;  // Distance from the player to position the arrow
-        public float verticalOffset = 0.3f;
-
         public Vector2 currentDirection;  // Stores the current direction of the arrow
 
+        public static HandleCardStanceArrow Instance;
+        
         private void Awake()
         {
-            _player = player.GetComponent<PlayerMovementController>();
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
 
-        // Instantiates the directional arrow
         public void InstantiateDirectionalArrow()
         {
             // Instantiate the arrow as a child of the player
@@ -62,7 +72,7 @@ namespace Card
             var angleRad = Mathf.Atan2(currentDirection.y, currentDirection.x);
 
             // Calculate the arrow's position relative to the player
-            var offset = new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad) + verticalOffset, 0) * horizontalOffset;
+            var offset = new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad) + CardManager.Instance.verticalOffset, 0) * CardManager.Instance.horizontalOffset;
             var arrowPosition = player.position + offset;
             _directionalArrowInstance.transform.position = arrowPosition;
 
@@ -71,7 +81,7 @@ namespace Card
             _directionalArrowInstance.transform.rotation = Quaternion.Euler(0, 0, angleDeg - 90f);
         }
 
-        // Destroys the directional arrow when the player leaves card stance or throws a card
+        // Destroys the directional arrow when the player leaves card stance or throws a card TODO: link up card throwing
         public void DestroyDirectionalArrow()
         {
             if (_directionalArrowInstance == null) return;

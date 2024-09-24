@@ -7,14 +7,23 @@ namespace PlayerController
 {
     public class PlayerVariables : MonoBehaviour
     {
-        public static PlayerVariables Instance;
         public bool isFacingRight = true;   // Start facing right by default
         public bool inCardStance;
 
+        public static PlayerVariables Instance { get; private set; }
+
         private void Awake()
         {
-            if (Instance != null) return;
-            Instance = this;
+            // Singleton pattern
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

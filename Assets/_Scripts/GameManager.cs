@@ -7,6 +7,22 @@ public class GameManager : MonoBehaviour
     public InputHandler inputHandler;
     public PlayerMovementController playerMovementController;
     public HandleCardStanceArrow cardStanceArrow;
+    
+    public static GameManager Instance { get; private set; }
+
+    private void Awake()
+    {
+        // Singleton pattern
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     private void OnEnable()
     {
@@ -17,7 +33,6 @@ public class GameManager : MonoBehaviour
         // enable card stance directional arrow
         inputHandler.OnEnterCardStance += HandleShowDirectionalArrow;
         inputHandler.OnExitCardStance += HandleHideDirectionalArrow;
-        
     }
 
     private void OnDisable()
@@ -50,4 +65,6 @@ public class GameManager : MonoBehaviour
     {
         cardStanceArrow.DestroyDirectionalArrow();
     }
+
 }
+
