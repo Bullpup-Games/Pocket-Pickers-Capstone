@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5464406431111898120}
   - component: {fileID: 4787900142952941893}
   - component: {fileID: 7507623754815840685}
-  - component: {fileID: 8609633813770646877}
+  - component: {fileID: 2204501328560629039}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -59,9 +59,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  directionalArrowPrefab: {fileID: 7647806643403308868, guid: 98b3f9519924c43d38e2e1ed4c737b5b, type: 3}
+  directionalArrowPrefab: {fileID: 0}
   currentDirection: {x: 0, y: 0}
---- !u!114 &8609633813770646877
+--- !u!114 &2204501328560629039
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -75,11 +75,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputHandler: {fileID: 0}
   playerMovementController: {fileID: 0}
-  cardStanceArrow: {fileID: 7507623754815840685}
+  cardStanceArrow: {fileID: 0}
   player: {fileID: 0}
-  cardPrefab: {fileID: 7098434270888417122, guid: 46613c7080d9b4c8b928088ce4f4af34, type: 3}
+  cardPrefab: {fileID: 0}
   horizontalOffset: 2
   verticalOffset: 0.3
-  cooldown: 1
-  cardSpeed: 16
+  cooldown: 0.5
+  cardSpeed: 20
   cardLifeTime: 10
