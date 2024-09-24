@@ -647,9 +647,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29f02fbdf263c483b966a0347cec1739, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputHandler: {fileID: 398048037}
-  playerMovementController: {fileID: 1909506785}
-  cardStanceArrow: {fileID: 1274312115}
 --- !u!4 &1274312114
 Transform:
   m_ObjectHideFlags: 0
@@ -693,6 +690,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputHandler: {fileID: 398048037}
+  playerMovementController: {fileID: 1909506785}
+  cardStanceArrow: {fileID: 1274312115}
   player: {fileID: 1909506782}
   cardPrefab: {fileID: 7098434270888417122, guid: 46613c7080d9b4c8b928088ce4f4af34, type: 3}
   horizontalOffset: 2

@@ -1,25 +1,30 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PlayerController;
 using UnityEngine;
 
 namespace Card
 {
 
     /**
- * Card Manager is responsible for instantiating, destroying, and keeping track on the current active card
- */
+    * Card Manager is responsible for instantiating, destroying, and keeping track on the current active card
+     * It also tracks subscribes to the EventHandler for information about about card related inputs
+     * and sends them out to the necessary scripts.
+    */
     public class CardManager : MonoBehaviour
     {
         public static CardManager Instance { get; private set; }
         public InputHandler inputHandler;
+        public PlayerMovementController playerMovementController;
+        public HandleCardStanceArrow cardStanceArrow;
 
         public Transform player;
         public GameObject cardPrefab;
         private GameObject _instantiatedCard;
-
+        
         [Header("Card and Direction Arrow Offsets")]
-        public float horizontalOffset = 2.0f;  // Distance from the player to position the arrow
+        public float horizontalOffset = 2.0f;
         public float verticalOffset = 0.3f;
 
         private float _lastCardThrowTime;  // Track the last time a card was thrown
@@ -41,18 +46,33 @@ namespace Card
             {
                 Destroy(gameObject);
             }
-            
-            
         }
 
         private void OnEnable()
         {
+            // enter card stance
+            inputHandler.OnEnterCardStance += HandleEnterCardStance;
+            inputHandler.OnExitCardStance += HandleExitCardStance;
+        
+            // enable card stance directional arrow
+            inputHandler.OnEnterCardStance += HandleShowDirectionalArrow;
+            inputHandler.OnExitCardStance += HandleHideDirectionalArrow;
+            
             // Subscribe to the card throw event
             inputHandler.OnCardThrow += HandleCardThrow;
         }
 
         private void OnDisable()
         {
+            // exit Card Stance
+            inputHandler.OnEnterCardStance -= HandleEnterCardStance;
+            inputHandler.OnExitCardStance -= HandleExitCardStance;
+        
+            // disable card stance directional arrow
+            inputHandler.OnEnterCardStance -= HandleShowDirectionalArrow;
+            inputHandler.OnExitCardStance -= HandleHideDirectionalArrow;
+            
+            // Unsubscribe from the card throw event
             inputHandler.OnCardThrow -= HandleCardThrow;
         }
 
@@ -117,6 +137,26 @@ namespace Card
         public void OnCardDestroyed()
         {
             _instantiatedCard = null;
+        }
+        
+        private void HandleEnterCardStance()
+        {
+            playerMovementController.EnterCardStance();
+        }
+
+        private void HandleExitCardStance()
+        {
+            playerMovementController.ExitCardStance();
+        }
+
+        private void HandleShowDirectionalArrow()
+        {
+            cardStanceArrow.InstantiateDirectionalArrow(); 
+        }
+
+        private void HandleHideDirectionalArrow()
+        {
+            cardStanceArrow.DestroyDirectionalArrow();
         }
     }
 }
