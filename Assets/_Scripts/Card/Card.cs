@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 namespace Card
 {
@@ -10,6 +12,18 @@ namespace Card
         private float _startTime;
 
         private Rigidbody2D _rigidbody;
+        public InputHandler inputHandler;
+
+        private void OnEnable()
+        {
+            inputHandler = GameObject.Find("InputHandler").GetComponent<InputHandler>();
+            inputHandler.OnEnterCardStance += DestroyCard;
+        }
+
+        private void OnDestroy()
+        {
+            inputHandler.OnEnterCardStance -= DestroyCard;
+        }
 
         private void Awake()
         {
