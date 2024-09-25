@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace PlayerController
 {
@@ -11,7 +12,7 @@ namespace PlayerController
     /// If you hve any questions or would like to brag about your score, come to discord: https://discord.gg/tarodev
     /// </summary>
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
-    public class PlayerController : MonoBehaviour, IPlayerController
+    public class PlayerMovementController : MonoBehaviour, IPlayerController
     {
         [SerializeField] private ScriptableStats _stats;
         private Rigidbody2D _rb;
@@ -41,17 +42,42 @@ namespace PlayerController
         private void Update()
         {
             _time += Time.deltaTime;
-            GatherInput();
+            if (!PlayerVariables.Instance.inCardStance) GatherInput();
+        }
+        
+        /**
+         * When the player is holding the card stance button they should not be allowed
+         * to make other movement inputs
+         */
+
+        public void EnterCardStance()
+        {
+            PlayerVariables.Instance.inCardStance = true;
         }
 
+        public void ExitCardStance()
+        {
+            PlayerVariables.Instance.inCardStance = false;
+        }
+
+        
         private void GatherInput()
         {
+            // TODO: Maybe turn this into an inout gathering script that sends out messages to subscribers
+            if (PlayerVariables.Instance.inCardStance) return; // Safety check
+            
             _frameInput = new FrameInput
             {
                 JumpDown = Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.C),
                 JumpHeld = Input.GetButton("Jump") || Input.GetKey(KeyCode.C),
                 Move = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"))
             };
+            
+            // Track the facing direction based on the last non-zero horizontal input
+            if (_frameInput.Move.x != 0)
+            {
+                PlayerVariables.Instance.isFacingRight = _frameInput.Move.x > 0;
+            }
 
             if (_stats.SnapInput)
             {
@@ -174,6 +200,11 @@ namespace PlayerController
             if (_frameInput.Move.x == 0)
             {
                 var deceleration = _grounded ? _stats.GroundDeceleration : _stats.AirDeceleration;
+                _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);
+            } 
+            else if (PlayerVariables.Instance.inCardStance)
+            {
+                var deceleration = _grounded ? _stats.GroundDeceleration : 0f;
                 _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);
             }
             else
