@@ -14,13 +14,32 @@ namespace Card
         private Rigidbody2D _rigidbody;
         public InputHandler inputHandler;
 
+        /*
+        When this object first exists, get everything set up.
+        When it gets destroyed, tear everything down.
+        It is a prefab, so some things we can't set in the editor
+        I am putting a lot of things in seperate functions, and then
+        calling those functions, just to make it more readable.
+        For example, I'm calling setListeners and deleteListeners,
+        and those functions are seperate
+        */
         private void OnEnable()
         {
             inputHandler = GameObject.Find("InputHandler").GetComponent<InputHandler>();
-            inputHandler.OnEnterCardStance += DestroyCard;
+            setListeners();
         }
 
         private void OnDestroy()
+        {
+            deleteListeners();
+        }
+        
+        private void setListeners()
+        {
+            inputHandler.OnEnterCardStance += DestroyCard;
+        }
+
+        private void deleteListeners()
         {
             inputHandler.OnEnterCardStance -= DestroyCard;
         }
@@ -70,5 +89,7 @@ namespace Card
             CardManager.Instance.OnCardDestroyed();
             Destroy(gameObject);
         }
+
+        
     }
 }
