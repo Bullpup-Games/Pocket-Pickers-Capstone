@@ -14,6 +14,14 @@ namespace PlayerController
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class PlayerMovementController : MonoBehaviour, IPlayerController
     {
+        
+        /*
+         *The plan:
+         * Subscribe to the event listener for Teleport, belonging to the Card class.
+         * When the event is called, call a function that accepts the vector2
+         * Set the player's transform to be equal to the vector2 passed in
+         * Set the players speed to 0
+         */
         [SerializeField] private ScriptableStats _stats;
         private Rigidbody2D _rb;
         private BoxCollider2D _col;
@@ -30,6 +38,12 @@ namespace PlayerController
         #endregion
 
         private float _time;
+
+        private void OnEnable()
+        {
+            //TODO make it subscribe to Card's Teleport event
+            //Card.Teleport += 
+        }
 
         private void Awake()
         {

@@ -14,6 +14,18 @@ namespace Card
         private Rigidbody2D _rigidbody;
         public InputHandler inputHandler;
 
+        
+        /*
+         *The plan:
+         * x make a public event to say that there is a teleportation
+         * x make a function that engages when the card throw button is pressed
+         * x That function should invoke the teleport event
+         * x That event  should communicate the transform location of the card as a vector2
+         * the function should then destroy the gameobject
+         * 
+         */
+        public event Action<Vector2> Teleport;
+
         /*
         When this object first exists, get everything set up.
         When it gets destroyed, tear everything down.
@@ -68,6 +80,13 @@ namespace Card
             {
                 DestroyCard();
             }
+
+            if (Input.GetButtonDown("CardThrow"))
+            {
+                Debug.Log($"Activating teleporation using {transform.position.x}, {transform.position.y}");
+                Teleport?.Invoke(new Vector2(transform.position.x, transform.position.y));
+                DestroyCard();
+            }
         }
 
         private void OnCollisionEnter2D(Collision2D col)
@@ -82,6 +101,8 @@ namespace Card
             
             Debug.Log("Card collision");
         }
+        
+        
 
         public void DestroyCard()
         {
