@@ -1,4 +1,5 @@
 using System;
+using Card;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -28,6 +29,7 @@ namespace PlayerController
         private FrameInput _frameInput;
         private Vector2 _frameVelocity;
         private bool _cachedQueryStartInColliders;
+        public CardManager cardManager;
 
         #region Interface
 
@@ -39,20 +41,23 @@ namespace PlayerController
 
         private float _time;
 
-        private void OnEnable()
-        {
-            //TODO make it subscribe to Card's Teleport event
-            //Card.Teleport += 
-        }
+       
 
         private void Awake()
         {
+            cardManager = CardManager.Instance;
             _rb = GetComponent<Rigidbody2D>();
             _col = GetComponent<BoxCollider2D>();
 
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
         }
 
+        private void OnEnable()
+        {
+            
+            //TODO make it subscribe to Card's Teleport event
+            cardManager.Teleport += teleportTo;
+        }
         private void Update()
         {
             _time += Time.deltaTime;
@@ -115,6 +120,14 @@ namespace PlayerController
             HandleGravity();
             
             ApplyMovement();
+        }
+
+        private void teleportTo(Vector2 location)
+        {
+            gameObject.transform.position = location;
+            gameObject.transform.rotation = Quaternion.identity;
+            //todo set the player's velocity to 0
+            
         }
 
         #region Collisions
