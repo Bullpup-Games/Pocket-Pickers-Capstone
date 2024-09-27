@@ -96,7 +96,7 @@ namespace Card
         //if not, you should test for teleportation
         private void HandleCardAction()
         {
-            if (PlayerVariables.Instance.inCardStance)
+            if (PlayerVariables.Instance.inCardStance &&  _instantiatedCard == null)
             {
                 HandleCardThrow();
             }

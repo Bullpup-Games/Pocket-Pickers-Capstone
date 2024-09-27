@@ -29,7 +29,6 @@ namespace PlayerController
         private FrameInput _frameInput;
         private Vector2 _frameVelocity;
         private bool _cachedQueryStartInColliders;
-        public CardManager cardManager;
 
         #region Interface
 
@@ -45,7 +44,6 @@ namespace PlayerController
 
         private void Awake()
         {
-            cardManager = CardManager.Instance;
             _rb = GetComponent<Rigidbody2D>();
             _col = GetComponent<BoxCollider2D>();
 
@@ -56,7 +54,7 @@ namespace PlayerController
         {
             
             //TODO make it subscribe to Card's Teleport event
-            cardManager.Teleport += teleportTo;
+            CardManager.Instance.Teleport += teleportTo;
         }
         private void Update()
         {

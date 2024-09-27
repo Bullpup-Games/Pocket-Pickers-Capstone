@@ -768,6 +768,10 @@ PrefabInstance:
       propertyPath: _stats
       value: 
       objectReference: {fileID: 11400000, guid: 05e6a06c5af93134ab98ff12e2c27265, type: 2}
+    - target: {fileID: 1544650614272011792, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
+      propertyPath: cardManager
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1544650614272011794, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
       propertyPath: m_Offset.y
       value: 0.6
