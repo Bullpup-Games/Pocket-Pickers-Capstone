@@ -40,8 +40,6 @@ namespace PlayerController
 
         private float _time;
 
-       
-
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
