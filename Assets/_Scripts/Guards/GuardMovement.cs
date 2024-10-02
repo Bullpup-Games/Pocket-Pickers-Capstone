@@ -13,16 +13,20 @@ public class GuardMovement : MonoBehaviour
     [Header("Patrol Settings")]
     public bool isFacingRight = true;
     public float movementSpeed = 4f;
-    public float leftPatrolDistance = 3f; // Distance to patrol from the left of the origin
-    public float rightPatrolDistance = 3f; // Distance to patrol from the right of the origin
-    public float waitTimeAtEnds = 2f; // Time to wait after each patrol segment
+    [Tooltip("Distance to patrol from the left of the origin")]
+    public float leftPatrolDistance = 3f;
+    [Tooltip("Distance to patrol from the right of the origin")]
+    public float rightPatrolDistance = 3f;
+    [Tooltip("Time to wait after each patrol segment")]
+    public float waitTimeAtEnds = 2f;
 
     [Header("Physics Settings")]
     public float maxFallSpeed = 20f;
     public float gravity = 10f;
 
     [Header("Ground Detection")]
-    public float groundCheckDistance = 0.5f; // Distance for ground check raycast
+    [Tooltip("Distance for ground check raycast")]
+    public float groundCheckDistance = 0.5f;
     public LayerMask groundLayer;
 
     [Header("Gizmo Settings")]
