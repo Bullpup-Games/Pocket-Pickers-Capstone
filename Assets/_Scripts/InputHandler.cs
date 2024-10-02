@@ -74,11 +74,11 @@ public class InputHandler : MonoBehaviour
 
     private void HandleCardThrowInput()
     {
-        if (!PlayerVariables.Instance.inCardStance)
-        {
-            // TODO: Instead of blocking the input if the player isn't in card stance send a quick throw action
-            return;
-        }
+        // if (!PlayerVariables.Instance.inCardStance)
+        // {
+        //     // TODO: Instead of blocking the input if the player isn't in card stance send a quick throw action
+        //     return;
+        // }
 
         if (Input.GetButtonDown("CardThrow"))
         {

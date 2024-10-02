@@ -12,6 +12,18 @@ namespace Card
      * It also tracks subscribes to the EventHandler for information about about card related inputs
      * and sends them out to the necessary scripts.
     */
+    
+    /*
+     * The plan:
+     * x Make card a singleton
+     * x When you recieve the card throw event:
+     * x Check if inStance is true
+     * x if true, throw card
+     * x else, call teleport function
+     * x teleport will check if instance of card is null
+     * x if it is not null, call event Teleport
+     * x If it is null do nothing
+     */
     public class CardManager : MonoBehaviour
     {
         public static CardManager Instance { get; private set; }
@@ -33,6 +45,9 @@ namespace Card
         public float cooldown = 0.5f;
         public float cardSpeed = 20.0f;
         public float cardLifeTime = 10.0f;
+        
+        
+        public event Action <Vector2> Teleport ;
 
         private void Awake()
         {
@@ -59,7 +74,7 @@ namespace Card
             inputHandler.OnExitCardStance += HandleHideDirectionalArrow;
             
             // Subscribe to the card throw event
-            inputHandler.OnCardThrow += HandleCardThrow;
+            inputHandler.OnCardThrow += HandleCardAction;
         }
 
         private void OnDisable()
@@ -73,7 +88,22 @@ namespace Card
             inputHandler.OnExitCardStance -= HandleHideDirectionalArrow;
             
             // Unsubscribe from the card throw event
-            inputHandler.OnCardThrow -= HandleCardThrow;
+            inputHandler.OnCardThrow -= HandleCardAction;
+        }
+        
+        //decide if you should throw card or teleport
+        //if you are in the card stance you should throw a card.
+        //if not, you should test for teleportation
+        private void HandleCardAction()
+        {
+            if (PlayerVariables.Instance.inCardStance &&  _instantiatedCard == null)
+            {
+                HandleCardThrow();
+            }
+            else
+            {
+                HandleTeleportation();
+            }
         }
 
         /**
@@ -129,6 +159,16 @@ namespace Card
             }
 
             _lastCardThrowTime = Time.time;
+        }
+
+        //if the instance of card is not null, trigger an event that holds the card's
+        //transform location. If it is null, do nothing.
+        private void HandleTeleportation()
+        {
+            if (Card.Instance != null)
+            {
+                Teleport.Invoke(Card.Instance.transform.position);
+            }
         }
 
         /**
