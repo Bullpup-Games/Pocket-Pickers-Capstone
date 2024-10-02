@@ -8,23 +8,40 @@ namespace Card
 {
     public class Card : MonoBehaviour
     {
-        private Vector2 _launchDirection; // Direction in which the card is launched
+        
         private float _startTime;
 
-        private Rigidbody2D _rigidbody;
+        //private Rigidbody2D _rigidbody;
         public InputHandler inputHandler;
         public static Card Instance {  get; private set; }
 
+        private Vector2 direction; // Direction in which the card is launched
+        public float speed = 15;
+        private Vector2 velocity;
+       // public Vector2 directon;
+
         /*
-         *The plan:
-         * x make a public event to say that there is a teleportation
-         * x make a function that engages when the card throw button is pressed
-         * x That function should invoke the teleport event
-         * x That event  should communicate the transform location of the card as a vector2
-         * the function should then destroy the gameobject
-         *
-         */
-        //public event Action<Vector2> Teleport;
+        The plan:
+        Add a constant public speed, and a direction vector
+        add a variable for total possible ricochets and a second variable
+        for number of ricochets that have happend
+        Make collision detection with tag recognition for four scenarios
+            1. It hit a wall
+                If we have done all our ricochets
+                    we will switch to a falling state
+                Otherwise
+                    We will bounce off the wall and keep our speed (calculate
+                    the normal of the wall, do an angle reflection calculation,
+                    set that as the new direction, normalize that, and multiply by
+                    speed to set new velocity)
+            2. It hits the player
+                Card goes through player, nothing happens
+            3. Card hits a grate/bars
+                Card goes through the bars, but the player cant go through the bars
+            4. Card hits an enemy
+                Card disapears, enemy is incapacitated, add sin
+        */
+        
 
         /*
         When this object first exists, get everything set up.
@@ -35,6 +52,8 @@ namespace Card
         For example, I'm calling setListeners and deleteListeners,
         and those functions are seperate
         */
+
+        
         private void OnEnable()
         {
             inputHandler = GameObject.Find("InputHandler").GetComponent<InputHandler>();
@@ -74,19 +93,26 @@ namespace Card
             }
             
             
-            _rigidbody = GetComponent<Rigidbody2D>();
+            //_rigidbody = GetComponent<Rigidbody2D>();
+            this.direction = HandleCardStanceArrow.Instance.currentDirection;
             _startTime = Time.time;
         }
 
         public void Launch(Vector2 direction)
         {
-            _launchDirection = direction.normalized;
+            this.direction = direction.normalized;
+            calculateVelocity(this.direction);
 
             // Calculate initial velocity
-            var velocity = _launchDirection * CardManager.Instance.cardSpeed;
+            //var velocity = this.direction * CardManager.Instance.cardSpeed;
 
             // Apply velocity to the Rigidbody2D
-            _rigidbody.velocity = velocity;
+            // _rigidbody.velocity = velocity;
+        }
+
+        private void calculateVelocity(Vector2 direction) {
+            var velocity = direction * this.speed;
+            this.velocity = velocity;
         }
 
         private void Update()
@@ -97,12 +123,19 @@ namespace Card
                 DestroyCard();
             }
 
+            moveCard();
             // if (Input.GetButtonDown("CardThrow"))
             // {
             //     Debug.Log($"Activating teleporation using {transform.position.x}, {transform.position.y}");
             //     Teleport?.Invoke(new Vector2(transform.position.x, transform.position.y));
             //     DestroyCard();
             // }
+        }
+
+        private void moveCard()
+        {
+            Vector3 newPosition = ((Vector2)transform.position) + (velocity * Time.deltaTime);
+            this.transform.position = newPosition;
         }
 
         private void OnCollisionEnter2D(Collision2D col)
@@ -134,6 +167,21 @@ namespace Card
             Destroy(gameObject);
         }
 
+        /*
+         * the plan:
+         * Have an onCollisionEnter function
+         *  do a tag comparison to figure out what situation we're in
+         *  Call a different function for each situation
+         *  for now all the situations except a wall we will return
+         * For a wall collision:
+         *  check if bounces == totalBounces
+         *      if it does, just switch states to fall (do later)
+         *  Calculate the normal of the wall
+         *  Calculate the reflection of the direction of the card
+         *  against the normal of the wall
+         *  call the function calculateVelocity with the new direction
+         *  incriment bounces
+         */
         
     }
 }
