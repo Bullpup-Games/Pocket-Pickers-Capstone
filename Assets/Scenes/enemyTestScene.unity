@@ -143,9 +143,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 506028507}
     - target: {fileID: 2204501328560629039, guid: c6f9bd836282842348fab8839a2de283, type: 3}
+      propertyPath: verticalOffset
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2204501328560629039, guid: c6f9bd836282842348fab8839a2de283, type: 3}
       propertyPath: cardStanceArrow
       value: 
       objectReference: {fileID: 1292601545}
+    - target: {fileID: 2204501328560629039, guid: c6f9bd836282842348fab8839a2de283, type: 3}
+      propertyPath: horizontalOffset
+      value: 0.6
+      objectReference: {fileID: 0}
     - target: {fileID: 2204501328560629039, guid: c6f9bd836282842348fab8839a2de283, type: 3}
       propertyPath: playerMovementController
       value: 
