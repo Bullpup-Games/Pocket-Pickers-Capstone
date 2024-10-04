@@ -75,9 +75,9 @@ namespace _Scripts.Enemies
                 if (!(angleBetween < _viewAngle / 2)) continue;
                 // TODO: When adding variable detection lengths based on distance get the distance from here
                 // Check for obstacles between the enemy and the target
-                var hit = Physics2D.Raycast(position, directionToTarget, _viewDistance, environmentLayer);
+                var obstacleHit = Physics2D.Raycast(position, directionToTarget, _viewDistance, environmentLayer);
 
-                if (hit.collider == null)
+                if (obstacleHit.collider == null)
                 {
                     // Target is detected
                     Debug.Log("cone hit");

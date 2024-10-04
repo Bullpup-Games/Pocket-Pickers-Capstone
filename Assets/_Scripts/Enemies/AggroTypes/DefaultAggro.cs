@@ -8,12 +8,15 @@ namespace _Scripts.Enemies.AggroTypes
 {
     public class DefaultAggro : MonoBehaviour, IAggroType
     {
-        [SerializeField] private float movementSpeed = 12f;
+        [SerializeField] private float movementSpeed = 11f;
+        [Tooltip("The amount of time the enemy waits before flipping directions when the player crosses over them")]
+        [SerializeField] private float flipTime = 0.2f;
         [Header("Quick Time Event Variables")]
         [SerializeField] private float qteTimeLimit = 4f;
         [SerializeField] private float timeLostPerEncounter = 0.5f;
         [SerializeField] private int counterGoal = 5;
         private bool _hasExecuted = false;
+        private bool _isFlipping = false;
 
         private Vector2 _targetPosition;
         private bool _checkingLastKnownLocation;
@@ -72,10 +75,9 @@ namespace _Scripts.Enemies.AggroTypes
                 MoveTo(targetPos);
             }
             // Otherwise, turn around then move it it
-            else
+            else if (!_isFlipping)
             {
-                FlipLocalScale();
-                MoveTo(targetPos);
+                StartCoroutine(FlipLocalScale(targetPos));
             }
         }
 
@@ -117,13 +119,18 @@ namespace _Scripts.Enemies.AggroTypes
         }
         
         // Flip the entity's sprite by inverting the X scaling
-        private void FlipLocalScale()
+        private IEnumerator FlipLocalScale(Vector2 location)
         {
+            _isFlipping = true;
+            yield return new WaitForSeconds(flipTime);
             // I don't know why the transformCopy needs to exist but Unity yelled at me when I didn't have it so here it sits..
             var transformCopy = transform;
             var localScale = transformCopy.localScale;
             localScale.x *= -1;
             transformCopy.localScale = localScale;
+            
+            MoveTo(location);
+            _isFlipping = false;
         }
 
         // Grapple coroutine from Don't Move - Needs to be integrated
