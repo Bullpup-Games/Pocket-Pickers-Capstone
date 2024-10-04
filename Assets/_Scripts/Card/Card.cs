@@ -20,7 +20,7 @@ namespace Card
         public float speed = 15;
         private Vector2 velocity;
 
-        //total bounes is how many ricochets are allowed. Bounces is 
+        //total bounces is how many ricochets are allowed. Bounces is 
         //how many ricochets have happened
         public int totalBounces;
         public int bounces;
@@ -28,11 +28,11 @@ namespace Card
 
         /*
         The plan:
-        Add a constant public speed, and a direction vector
-        add a variable for total possible ricochets and a second variable
-        for number of ricochets that have happend
+        x Add a constant public speed, and a direction vector
+        x add a variable for total possible ricochets and a second variable
+        for number of ricochets that have happened 
         Make collision detection with tag recognition for four scenarios
-            1. It hit a wall
+            x 1. It hit a wall
                 If we have done all our ricochets
                     we will switch to a falling state
                 Otherwise
@@ -40,7 +40,7 @@ namespace Card
                     the normal of the wall, do an angle reflection calculation,
                     set that as the new direction, normalize that, and multiply by
                     speed to set new velocity)
-            2. It hits the player
+            x 2. It hits the player
                 Card goes through player, nothing happens
             3. Card hits a grate/bars
                 Card goes through the bars, but the player cant go through the bars
@@ -115,11 +115,7 @@ namespace Card
             this.direction = direction.normalized;
             calculateVelocity(this.direction);
 
-            // Calculate initial velocity
-            //var velocity = this.direction * CardManager.Instance.cardSpeed;
-
-            // Apply velocity to the Rigidbody2D
-            // _rigidbody.velocity = velocity;
+            
         }
 
         private void calculateVelocity(Vector2 direction) {
@@ -136,12 +132,7 @@ namespace Card
             }
 
             moveCard();
-            // if (Input.GetButtonDown("CardThrow"))
-            // {
-            //     Debug.Log($"Activating teleporation using {transform.position.x}, {transform.position.y}");
-            //     Teleport?.Invoke(new Vector2(transform.position.x, transform.position.y));
-            //     DestroyCard();
-            // }
+           
         }
 
         private void moveCard()
@@ -150,21 +141,7 @@ namespace Card
             this.transform.position = newPosition;
         }
 
-        /*
-         * the plan:
-         *  x Have an onCollisionEnter function
-         *  do a tag comparison to figure out what situation we're in
-         *  Call a different function for each situation
-         *  for now all the situations except a wall we will return
-         * For a wall collision:
-         *  check if bounces == totalBounces
-         *      if it does, just switch states to fall (do later)
-         *  Calculate the normal of the wall
-         *  Calculate the reflection of the direction of the card
-         *  against the normal of the wall
-         *  call the function calculateVelocity with the new direction
-         *  incriment bounces
-         */
+       
         private void OnCollisionEnter2D(Collision2D col)
         {
             
@@ -231,22 +208,7 @@ namespace Card
             CardManager.Instance.OnCardDestroyed();
             Destroy(gameObject);
         }
-
         
-
-         // void onCollisionEnter(Collision collision) {
-         //
-         //    Debug.Log("collision detected");
-         //    if (collision.gameObject.tag == "wall") {
-         //        //deflect();
-         //    } else if (collision.gameObject.tag == "player") {
-         //        //do nothing
-         //    } else if (collision.gameObject.tag == "permeable") {//for example, a grate
-         //        //pass through it
-         //    } else if (collision.gameObject.tag == "enemy") {
-         //        //kill the enemy
-         //    }
-         // }
         
     }
 }
