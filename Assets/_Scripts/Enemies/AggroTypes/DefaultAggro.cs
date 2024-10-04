@@ -17,14 +17,14 @@ namespace _Scripts.Enemies.AggroTypes
 
         private Vector2 _targetPosition;
         private bool _checkingLastKnownLocation;
-        private ConeView _view;
+        private IViewType[] _viewTypes;
         private EnemyStateManager _stateManager;
         private EnemySettings _settings;
         private Rigidbody2D _rb;
 
         private void Awake()
         {
-            _view = GetComponent<ConeView>();
+            _viewTypes = GetComponents<IViewType>();
             _stateManager = GetComponent<EnemyStateManager>();
             _settings = GetComponent<EnemySettings>();
             _rb = GetComponent<Rigidbody2D>();
@@ -44,7 +44,16 @@ namespace _Scripts.Enemies.AggroTypes
         {
             if (_stateManager.state != EnemyState.Aggro) return;
             // if NoPlayerDetected is called call GoToLastKnownLocation and return;
-            if (!_view.IsPlayerDetectedThisFrame())
+            var noPlayerDetected = false;
+            foreach (var viewType in _viewTypes)
+            {
+                if (viewType.IsPlayerDetectedThisFrame())
+                {
+                    noPlayerDetected = true;
+                    break;
+                }
+            }
+            if (noPlayerDetected)
             {
                 if (!_checkingLastKnownLocation)
                 {

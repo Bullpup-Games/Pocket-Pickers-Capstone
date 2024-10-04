@@ -29,5 +29,7 @@ namespace _Scripts.Enemies
          * (angle, radius, length)
          */
         void UpdateView(float modifier);
+
+        bool IsPlayerDetectedThisFrame();
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using _Scripts.Enemies.ViewTypes;
 using UnityEngine;
 
 namespace _Scripts.Enemies
@@ -10,18 +11,24 @@ namespace _Scripts.Enemies
         private EnemySettings _settings;
         private EnemyStateManager _stateManager;
         private Rigidbody2D _rb;
-        private IViewType _view;
+        private IViewType[] _viewTypes;
+        // private IViewType _lineView;
         private void Awake()
         {
             _settings = GetComponent<EnemySettings>();
             _stateManager = GetComponent<EnemyStateManager>();
             _rb = GetComponent<Rigidbody2D>();
-            _view = GetComponent<IViewType>();
+            _viewTypes = GetComponents<IViewType>();
+
         }
 
         private void Update()
         {
-            _view.SetView();
+            foreach (var viewType in _viewTypes)
+            {
+                viewType.SetView();
+            }
+            
             DetectEnemy();
         }
 

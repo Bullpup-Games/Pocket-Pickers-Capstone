@@ -80,6 +80,7 @@ namespace _Scripts.Enemies
                 if (hit.collider == null)
                 {
                     // Target is detected
+                    Debug.Log("cone hit");
                     OnTargetDetected();
                     return;
                 }

@@ -122,7 +122,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &354665053
+--- !u!1001 &37238064
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -134,13 +134,33 @@ PrefabInstance:
       propertyPath: m_Name
       value: Guard
       objectReference: {fileID: 0}
+    - target: {fileID: 1039145183077674432, guid: 277e91905163040f08033e377006c417, type: 3}
+      propertyPath: offset.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1039145183077674432, guid: 277e91905163040f08033e377006c417, type: 3}
+      propertyPath: offset.y
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1039145183077674432, guid: 277e91905163040f08033e377006c417, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1039145183077674432, guid: 277e91905163040f08033e377006c417, type: 3}
+      propertyPath: normalViewRadius
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1039145183077674432, guid: 277e91905163040f08033e377006c417, type: 3}
+      propertyPath: alertedViewRadius
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 7493615964463022480, guid: 277e91905163040f08033e377006c417, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.3
+      value: 9.93
       objectReference: {fileID: 0}
     - target: {fileID: 7493615964463022480, guid: 277e91905163040f08033e377006c417, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.54
+      value: -2.44
       objectReference: {fileID: 0}
     - target: {fileID: 7493615964463022480, guid: 277e91905163040f08033e377006c417, type: 3}
       propertyPath: m_LocalPosition.z
@@ -173,6 +193,18 @@ PrefabInstance:
     - target: {fileID: 7493615964463022480, guid: 277e91905163040f08033e377006c417, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9035393051115882241, guid: 277e91905163040f08033e377006c417, type: 3}
+      propertyPath: offset.x
+      value: -0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 9035393051115882241, guid: 277e91905163040f08033e377006c417, type: 3}
+      propertyPath: offset.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9035393051115882241, guid: 277e91905163040f08033e377006c417, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1388,4 +1420,4 @@ SceneRoots:
   - {fileID: 1139168698}
   - {fileID: 367894350}
   - {fileID: 1347805688}
-  - {fileID: 354665053}
+  - {fileID: 37238064}
