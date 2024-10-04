@@ -1,3 +1,5 @@
+using System;
+
 namespace _Scripts.Guards
 {
     /*
@@ -5,6 +7,8 @@ namespace _Scripts.Guards
      */
     public interface IViewType
     {
+        event Action PlayerDetected; 
+
         /*
          * Create the enemy-type specific cast
          * (Cone, sphere, ray, etc)

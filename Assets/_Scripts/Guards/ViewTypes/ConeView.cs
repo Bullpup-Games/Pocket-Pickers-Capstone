@@ -49,16 +49,14 @@ namespace _Scripts.Guards
                 // Check if the target is within the adjusted view angle
                 var angleBetween = Vector2.Angle(direction, directionToTarget);
 
-                if (angleBetween < viewAngle / 2)
-                {
-                    // Check for obstacles between the enemy and the target
-                    var hit = Physics2D.Raycast(position, directionToTarget, viewDistance, environmentLayer);
+                if (!(angleBetween < viewAngle / 2)) continue;
+                // Check for obstacles between the enemy and the target
+                var hit = Physics2D.Raycast(position, directionToTarget, viewDistance, environmentLayer);
 
-                    if (hit.collider == null)
-                    {
-                        // Target is detected
-                        OnTargetDetected(target.gameObject);
-                    }
+                if (hit.collider == null)
+                {
+                    // Target is detected
+                    OnTargetDetected(target.gameObject);
                 }
             }
         }
@@ -68,13 +66,12 @@ namespace _Scripts.Guards
              viewAngle *= modifier;
         }
 
+        public event Action PlayerDetected; 
         // Callback when a target is detected
         private void OnTargetDetected(GameObject target)
         {
-            if (_detectionLogic != null)
-            {
-                Debug.Log("Player detected");
-            }
+            PlayerDetected?.Invoke();
+            Debug.Log("Player detected");
         }
 
         private void OnDrawGizmosSelected()

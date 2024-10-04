@@ -13,11 +13,17 @@ namespace _Scripts.Guards
         public bool isSearchingLastKnownArea;
 
         private GuardSettings _settings;
+        private IViewType _view;
         private void Awake()
         {
-            _settings = gameObject.GetComponent<GuardSettings>();
+            _settings = GetComponent<GuardSettings>();
+            _view = GetComponent<IViewType>();
         }
 
+        private void Update()
+        {
+            _view.SetView();
+        }
     }
     
 

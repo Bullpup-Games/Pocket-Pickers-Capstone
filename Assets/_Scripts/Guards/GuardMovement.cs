@@ -6,12 +6,6 @@ namespace _Scripts.Guards
     [RequireComponent(typeof(Rigidbody2D)), RequireComponent(typeof(BoxCollider2D))]
     public class GuardMovement : MonoBehaviour
     {
-        #region States
-        public bool isPatrolling = true; // Start in patrolling state by default, can change with handler depending on enemy
-        public bool isChasing; // TODO
-        public bool isStunned; // TODO, probably need card stun first though
-        #endregion
-
         [Header("Patrol Settings")]
         public float movementSpeed = 4f;
         [Tooltip("Distance to patrol from the left of the origin")]
@@ -36,6 +30,7 @@ namespace _Scripts.Guards
 
         private Rigidbody2D _rb;
         private GuardSettings _settings;
+        private EnemyStateManager _stateManager;
         private Vector2 _originPosition;
         private Vector2 _leftPatrolPoint;
         private Vector2 _rightPatrolPoint;
@@ -48,6 +43,7 @@ namespace _Scripts.Guards
         {
             _rb = GetComponent<Rigidbody2D>();
             _settings = GetComponent<GuardSettings>();
+            _stateManager = GetComponent<EnemyStateManager>();
             _originPosition = transform.position;
 
             // Calculate patrol points based on origin and patrol distances
@@ -70,13 +66,10 @@ namespace _Scripts.Guards
 
         private void Update()
         {
-            // TODO: Implement chasing and stunned behavior
-            if (isChasing || isStunned) return;
-
             HandleGroundDetection();
             HandleGravity();
 
-            if (isPatrolling && !_isWaiting)
+            if (_stateManager.state == EnemyState.Patrolling && !_isWaiting)
             {
                 MoveTowardsTarget();
             }
