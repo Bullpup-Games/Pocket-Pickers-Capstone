@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace _Scripts.Guards
+namespace _Scripts.Enemies
 {
     public class EnemyStateManager : MonoBehaviour
     {

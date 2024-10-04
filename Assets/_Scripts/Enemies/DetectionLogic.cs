@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace _Scripts.Guards
+namespace _Scripts.Enemies
 {
     public class DetectionLogic : MonoBehaviour
     {
@@ -12,11 +12,11 @@ namespace _Scripts.Guards
         [Tooltip("True if a guard has lost track on an enemy they were chasing, and is searching is for them again")]
         public bool isSearchingLastKnownArea;
 
-        private GuardSettings _settings;
+        private EnemySettings _settings;
         private IViewType _view;
         private void Awake()
         {
-            _settings = GetComponent<GuardSettings>();
+            _settings = GetComponent<EnemySettings>();
             _view = GetComponent<IViewType>();
         }
 

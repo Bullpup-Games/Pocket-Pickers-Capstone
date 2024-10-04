@@ -1,6 +1,6 @@
 using System;
 
-namespace _Scripts.Guards
+namespace _Scripts.Enemies
 {
     /*
      * Interface to handle different types of guard views

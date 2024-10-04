@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace _Scripts.Guards
+namespace _Scripts.Enemies
 {
     public class ConeView : MonoBehaviour, IViewType
     {
@@ -15,7 +15,7 @@ namespace _Scripts.Guards
         public LayerMask environmentLayer;
         public Vector2 offset;
 
-        private GuardSettings _settings;
+        private EnemySettings _settings;
         private DetectionLogic _detectionLogic;
 
         private void Awake()
@@ -115,7 +115,7 @@ namespace _Scripts.Guards
         // Wrapping GetComponent calls here so they can be called for the Gizmos in editor mode
         private void InitializeSettings()
         {
-            _settings = GetComponent<GuardSettings>();
+            _settings = GetComponent<EnemySettings>();
             _detectionLogic = GetComponent<DetectionLogic>();
             if (_settings == null)
             {

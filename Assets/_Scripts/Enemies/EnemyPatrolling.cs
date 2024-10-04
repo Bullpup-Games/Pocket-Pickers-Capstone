@@ -1,10 +1,10 @@
 using System.Collections;
 using UnityEngine;
 
-namespace _Scripts.Guards
+namespace _Scripts.Enemies
 {
     [RequireComponent(typeof(Rigidbody2D)), RequireComponent(typeof(BoxCollider2D))]
-    public class GuardMovement : MonoBehaviour
+    public class EnemyPatrolling : MonoBehaviour
     {
         [Header("Patrol Settings")]
         public float movementSpeed = 4f;
@@ -29,7 +29,7 @@ namespace _Scripts.Guards
         public Color groundRayColor = Color.red;
 
         private Rigidbody2D _rb;
-        private GuardSettings _settings;
+        private EnemySettings _settings;
         private EnemyStateManager _stateManager;
         private Vector2 _originPosition;
         private Vector2 _leftPatrolPoint;
@@ -42,7 +42,7 @@ namespace _Scripts.Guards
         private void Start()
         {
             _rb = GetComponent<Rigidbody2D>();
-            _settings = GetComponent<GuardSettings>();
+            _settings = GetComponent<EnemySettings>();
             _stateManager = GetComponent<EnemyStateManager>();
             _originPosition = transform.position;
 

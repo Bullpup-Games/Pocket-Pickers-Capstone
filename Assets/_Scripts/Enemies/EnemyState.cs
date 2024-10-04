@@ -1,4 +1,4 @@
-namespace _Scripts.Guards
+namespace _Scripts.Enemies
 {
     public enum EnemyState
     {

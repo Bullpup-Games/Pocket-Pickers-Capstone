@@ -3,9 +3,9 @@ using UnityEngine;
 using UnityEngine.Rendering.VirtualTexturing;
 using UnityEngine.XR;
 
-namespace _Scripts.Guards
+namespace _Scripts.Enemies
 {
-    public class GuardSettings : MonoBehaviour
+    public class EnemySettings : MonoBehaviour
     {
         public bool isFacingRight = true;
 
