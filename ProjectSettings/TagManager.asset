@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - InputHandler
+  - enemy
+  - wall
+  - permeable
   layers:
   - Default
   - TransparentFX
