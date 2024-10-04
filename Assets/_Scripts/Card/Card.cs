@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PlayerController;
 using UnityEngine;
 
 
@@ -92,8 +93,11 @@ namespace Card
                 Destroy(gameObject);
             }
             
+            //if we don't have this, a card throw up or down will push the player around
+            var col = PlayerVariables.Instance.gameObject.GetComponent<BoxCollider2D>();
+            Physics2D.IgnoreCollision(col, GetComponent<Collider2D>());
             
-            //_rigidbody = GetComponent<Rigidbody2D>();
+           
             this.direction = HandleCardStanceArrow.Instance.currentDirection;
             _startTime = Time.time;
         }
@@ -140,15 +144,23 @@ namespace Card
 
         private void OnCollisionEnter2D(Collision2D col)
         {
+            
+            Debug.Log("Card collision");
             // Ignore collisions with the player
             if (col.gameObject.CompareTag("Player"))
             {
                 Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
                 return;
-            } 
+            }
+
+            if (col.gameObject.CompareTag("enemy"))
+            {
+                Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
+                return;
+            }
             // TODO: Add a check for walls and count bounces
             
-            Debug.Log("Card collision");
+            //Debug.Log("Card collision");
         }
 
         //the teleport event needs to be caught by a function that takes in a vector2
@@ -182,6 +194,20 @@ namespace Card
          *  call the function calculateVelocity with the new direction
          *  incriment bounces
          */
+
+         // void onCollisionEnter(Collision collision) {
+         //
+         //    Debug.Log("collision detected");
+         //    if (collision.gameObject.tag == "wall") {
+         //        //deflect();
+         //    } else if (collision.gameObject.tag == "player") {
+         //        //do nothing
+         //    } else if (collision.gameObject.tag == "permeable") {//for example, a grate
+         //        //pass through it
+         //    } else if (collision.gameObject.tag == "enemy") {
+         //        //kill the enemy
+         //    }
+         // }
         
     }
 }
