@@ -88,7 +88,7 @@ namespace _Scripts.Enemies
                     state = EnemyState.Patrolling;
                     return;
                 case EnemyState.Aggro:
-                    // state = EnemyState.Searching;
+                    state = EnemyState.Searching;
                     return;
                 case EnemyState.Searching:
                     return;

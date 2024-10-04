@@ -19,12 +19,15 @@ namespace _Scripts.Enemies.AggroTypes
         private bool _isFlipping = false;
 
         private Vector2 _targetPosition;
+        private Vector2 _lastKnownPosition;
         private bool _checkingLastKnownLocation;
         private IViewType[] _viewTypes;
         private EnemyStateManager _stateManager;
         private EnemySettings _settings;
         private Rigidbody2D _rb;
 
+        public Vector2 LastKnownPosition() => _lastKnownPosition;
+        
         private void Awake()
         {
             _viewTypes = GetComponents<IViewType>();
@@ -61,7 +64,9 @@ namespace _Scripts.Enemies.AggroTypes
             {
                 if (!_checkingLastKnownLocation)
                 {
-                    GoToLastKnownLocation(PlayerVariables.Instance.transform.position);
+                    var position = PlayerVariables.Instance.transform.position;
+                    _lastKnownPosition = position;
+                    GoToLastKnownLocation(position);
                 }
                 return;
             }

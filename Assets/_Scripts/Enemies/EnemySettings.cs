@@ -9,12 +9,23 @@ namespace _Scripts.Enemies
     {
         public bool isFacingRight = true;
         [Tooltip("Amount of time (in seconds) it takes to fully detect the player and enter aggro")]
-        public float baseDetectionTime = 1.0f;
+        public float baseDetectionTime = 4.0f;
+        public float closeDetectionTime = 1.0f;
 
         private void Update()
         {
             // If the player's local state is 1 they're facing right, -1 left
             isFacingRight = !(Math.Abs(gameObject.transform.localScale.x - 1) > 0.1f);
+        }
+        
+        // Flip the entity's sprite by inverting the X scaling
+        public void FlipLocalScale()
+        {
+            // I don't know why the transformCopy needs to exist but Unity yelled at me when I didn't have it so here it sits..
+            var transformCopy = transform;
+            var localScale = transformCopy.localScale;
+            localScale.x *= -1;
+            transformCopy.localScale = localScale;
         }
 
         #region SinModifiers

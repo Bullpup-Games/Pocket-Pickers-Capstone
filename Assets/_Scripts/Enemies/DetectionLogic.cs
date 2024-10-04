@@ -12,6 +12,7 @@ namespace _Scripts.Enemies
         private EnemyStateManager _stateManager;
         private Rigidbody2D _rb;
         private IViewType[] _viewTypes;
+        
         private void Awake()
         {
             _settings = GetComponent<EnemySettings>();

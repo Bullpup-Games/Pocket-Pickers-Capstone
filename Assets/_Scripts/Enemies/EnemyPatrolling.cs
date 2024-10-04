@@ -60,7 +60,7 @@ namespace _Scripts.Enemies
             {
                 _isMovingRight = false;
                 _currentTarget = _leftPatrolPoint;
-                FlipLocalScale();
+                _settings.FlipLocalScale();
             }
         }
 
@@ -129,19 +129,9 @@ namespace _Scripts.Enemies
         private void SwitchPoints()
         {
             _isMovingRight = !_isMovingRight;
-            FlipLocalScale();
+            _settings.FlipLocalScale();
             _currentTarget = _isMovingRight ? _rightPatrolPoint : _leftPatrolPoint;
             _isWaiting = false;
-        }
-
-        // Flip the entity's sprite by inverting the X scaling
-        private void FlipLocalScale()
-        {
-            // I don't know why the transformCopy needs to exist but Unity yelled at me when I didn't have it so here it sits..
-            var transformCopy = transform;
-            var localScale = transformCopy.localScale;
-            localScale.x *= -1;
-            transformCopy.localScale = localScale;
         }
 
         // Gizmos of the patrol distance and ground detection ray visible in the editor
