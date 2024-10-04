@@ -8,7 +8,7 @@ namespace _Scripts.Enemies.AggroTypes
 {
     public class DefaultAggro : MonoBehaviour, IAggroType
     {
-        [SerializeField] private float movementSpeed = 8f;
+        [SerializeField] private float movementSpeed = 12f;
         [Header("Quick Time Event Variables")]
         [SerializeField] private float qteTimeLimit = 4f;
         [SerializeField] private float timeLostPerEncounter = 0.5f;
@@ -32,6 +32,7 @@ namespace _Scripts.Enemies.AggroTypes
 
         private void Update()
         {
+            // TODO: Check for player distance and call QTE from there
             Movement();
         }
 
@@ -52,9 +53,8 @@ namespace _Scripts.Enemies.AggroTypes
                 return;
             }
 
-            // update the player pos every time ConeView calls player detected
-
-            // move to target location
+            var targetPos = (Vector2)PlayerVariables.Instance.transform.position;
+            MoveTo(targetPos);
         }
 
         /*
@@ -63,16 +63,25 @@ namespace _Scripts.Enemies.AggroTypes
          */
         public void Action()
         {
-           // check distance to player
-           
-           // if within range call StartQuickTimeEvent 
-           // Handle the rest from there
+            return;
+            // check distance to player
+
+            // if within range call StartQuickTimeEvent 
+            // Handle the rest from there
         }
 
         private void GoToLastKnownLocation(Vector2 location)
         {
             _checkingLastKnownLocation = true;
             // move to target location 
+            MoveTo(location);
+            
+            // switch to Searching state
+            _stateManager.SetState(EnemyState.Searching);
+        }
+
+        private void MoveTo(Vector2 location)
+        {
             var direction = _settings.isFacingRight ? 1f : -1f;
 
             _rb.velocity = new Vector2(direction * movementSpeed, _rb.velocity.y);
@@ -82,9 +91,6 @@ namespace _Scripts.Enemies.AggroTypes
                 && (_settings.isFacingRight || !(transform.position.x <= location.x))) return;
         
             _rb.velocity = new Vector2(0, _rb.velocity.y);
-            
-            // switch to Searching state
-            _stateManager.SetState(EnemyState.Searching);
         }
 
         // Grapple coroutine from Don't Move - Needs to be integrated

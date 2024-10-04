@@ -11,7 +11,12 @@ GameObject:
   - component: {fileID: 7493615964463022480}
   - component: {fileID: 806076977170948131}
   - component: {fileID: 9180938684129967659}
+  - component: {fileID: 2490517329720489196}
+  - component: {fileID: 8840065040733541927}
+  - component: {fileID: 3802585943532683739}
   - component: {fileID: 6483612513045490718}
+  - component: {fileID: 9035393051115882241}
+  - component: {fileID: 6226547477544165859}
   m_Layer: 0
   m_Name: Guard
   m_TagString: Untagged
@@ -108,6 +113,45 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!114 &2490517329720489196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 768295214414954276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ad68b81b262410ead3af1f425f5530d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+--- !u!114 &8840065040733541927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 768295214414954276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c05a55eacdcdc405981843c16d5bd4e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isFacingRight: 1
+  baseDetectionTime: 1
+--- !u!114 &3802585943532683739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 768295214414954276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50ac8fc84a1404a5788f5727f2c14f89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6483612513045490718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,10 +164,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4949c5dc39a545e2b7b42ba60487914, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPatrolling: 1
-  isChasing: 0
-  isStunned: 0
-  isFacingRight: 1
   movementSpeed: 5
   leftPatrolDistance: 3
   rightPatrolDistance: 3
@@ -136,6 +176,45 @@ MonoBehaviour:
     m_Bits: 64
   patrolPathColor: {r: 0, g: 1, b: 0, a: 1}
   groundRayColor: {r: 1, g: 0, b: 0, a: 1}
+--- !u!114 &9035393051115882241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 768295214414954276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e23e4918db6e4d78ac0f6ded965d8b8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normalViewAngle: 45
+  alertedViewAngle: 60
+  normalViewDistance: 5
+  alertedViewDistance: 10
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  environmentLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  offset: {x: -0, y: 0}
+--- !u!114 &6226547477544165859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 768295214414954276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ebfc57171b24ee2878be79fb2d5cba5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSpeed: 12
+  qteTimeLimit: 4
+  timeLostPerEncounter: 0.5
+  counterGoal: 5
 --- !u!1 &2924834700768163338
 GameObject:
   m_ObjectHideFlags: 0
