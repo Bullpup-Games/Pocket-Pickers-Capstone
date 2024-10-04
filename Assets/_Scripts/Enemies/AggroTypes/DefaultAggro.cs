@@ -53,6 +53,7 @@ namespace _Scripts.Enemies.AggroTypes
                     break;
                 }
             }
+            
             if (noPlayerDetected)
             {
                 if (!_checkingLastKnownLocation)
@@ -63,7 +64,19 @@ namespace _Scripts.Enemies.AggroTypes
             }
 
             var targetPos = (Vector2)PlayerVariables.Instance.transform.position;
-            MoveTo(targetPos);
+            
+            // If the enemy is already facing the target move to it
+            if ((_settings.isFacingRight && targetPos.x > transform.position.x)
+                || (!_settings.isFacingRight && targetPos.x < transform.position.x))
+            {
+                MoveTo(targetPos);
+            }
+            // Otherwise, turn around then move it it
+            else
+            {
+                FlipLocalScale();
+                MoveTo(targetPos);
+            }
         }
 
         /*
@@ -100,6 +113,16 @@ namespace _Scripts.Enemies.AggroTypes
                 && (_settings.isFacingRight || !(transform.position.x <= location.x))) return;
         
             _rb.velocity = new Vector2(0, _rb.velocity.y);
+        }
+        
+        // Flip the entity's sprite by inverting the X scaling
+        private void FlipLocalScale()
+        {
+            // I don't know why the transformCopy needs to exist but Unity yelled at me when I didn't have it so here it sits..
+            var transformCopy = transform;
+            var localScale = transformCopy.localScale;
+            localScale.x *= -1;
+            transformCopy.localScale = localScale;
         }
 
         // Grapple coroutine from Don't Move - Needs to be integrated

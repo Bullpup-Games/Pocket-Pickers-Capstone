@@ -79,7 +79,7 @@ namespace _Scripts.Enemies
                 }
             }
             
-            Debug.Log("No Player Sighted");
+            // Debug.Log("No Player Sighted");
             switch (state)
             {
                 case EnemyState.Patrolling:
