@@ -154,6 +154,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputHandler: {fileID: 0}
   speed: 15
+  totalBounces: 3
+  bounces: 0
 --- !u!61 &7506234588005209405
 BoxCollider2D:
   m_ObjectHideFlags: 0

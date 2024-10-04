@@ -19,6 +19,11 @@ namespace Card
         private Vector2 direction; // Direction in which the card is launched
         public float speed = 15;
         private Vector2 velocity;
+
+        //total bounes is how many ricochets are allowed. Bounces is 
+        //how many ricochets have happened
+        public int totalBounces;
+        public int bounces;
        // public Vector2 directon;
 
         /*
@@ -92,6 +97,9 @@ namespace Card
             {
                 Destroy(gameObject);
             }
+            //we start with 0 bounces, each time we bounce off a wall we incriment it
+            bounces = 0;
+            
             
             //if we don't have this, a card throw up or down will push the player around
             var col = PlayerVariables.Instance.gameObject.GetComponent<BoxCollider2D>();
@@ -142,6 +150,21 @@ namespace Card
             this.transform.position = newPosition;
         }
 
+        /*
+         * the plan:
+         *  x Have an onCollisionEnter function
+         *  do a tag comparison to figure out what situation we're in
+         *  Call a different function for each situation
+         *  for now all the situations except a wall we will return
+         * For a wall collision:
+         *  check if bounces == totalBounces
+         *      if it does, just switch states to fall (do later)
+         *  Calculate the normal of the wall
+         *  Calculate the reflection of the direction of the card
+         *  against the normal of the wall
+         *  call the function calculateVelocity with the new direction
+         *  incriment bounces
+         */
         private void OnCollisionEnter2D(Collision2D col)
         {
             
@@ -155,10 +178,40 @@ namespace Card
 
             if (col.gameObject.CompareTag("enemy"))
             {
+                //todo if the card hits an enemy, incapacitate the enemy and destroy the card
                 Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
                 return;
             }
             // TODO: Add a check for walls and count bounces
+            if (col.gameObject.CompareTag("wall"))
+            {
+                bounces++;
+                
+                //todo deflect the card and change its direction
+                if (bounces >= totalBounces)
+                {
+                    Debug.Log("no more ricochets");
+                    //todo eventually we will not destroy the card, we will change states
+                    DestroyCard();
+                }
+                
+                //changes the direction of the card, and sets it to move in that direction
+                Vector3 wallNormal = col.contacts[0].normal;
+                direction = Vector2.Reflect(direction, wallNormal);
+                calculateVelocity(direction);
+                
+                Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
+                return;
+                
+            }
+
+            if (col.gameObject.CompareTag("permeable"))
+            {
+                //this tag exists because we want the player and enemies to be stopped
+                //by permeable objects, but not the card.
+                Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
+                return;
+            }
             
             //Debug.Log("Card collision");
         }
@@ -179,21 +232,7 @@ namespace Card
             Destroy(gameObject);
         }
 
-        /*
-         * the plan:
-         * Have an onCollisionEnter function
-         *  do a tag comparison to figure out what situation we're in
-         *  Call a different function for each situation
-         *  for now all the situations except a wall we will return
-         * For a wall collision:
-         *  check if bounces == totalBounces
-         *      if it does, just switch states to fall (do later)
-         *  Calculate the normal of the wall
-         *  Calculate the reflection of the direction of the card
-         *  against the normal of the wall
-         *  call the function calculateVelocity with the new direction
-         *  incriment bounces
-         */
+        
 
          // void onCollisionEnter(Collision collision) {
          //
