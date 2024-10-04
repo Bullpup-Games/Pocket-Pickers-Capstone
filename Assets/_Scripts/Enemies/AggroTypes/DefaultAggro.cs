@@ -44,12 +44,12 @@ namespace _Scripts.Enemies.AggroTypes
         {
             if (_stateManager.state != EnemyState.Aggro) return;
             // if NoPlayerDetected is called call GoToLastKnownLocation and return;
-            var noPlayerDetected = false;
+            var noPlayerDetected = true;
             foreach (var viewType in _viewTypes)
             {
                 if (viewType.IsPlayerDetectedThisFrame())
                 {
-                    noPlayerDetected = true;
+                    noPlayerDetected = false;
                     break;
                 }
             }
@@ -105,8 +105,9 @@ namespace _Scripts.Enemies.AggroTypes
         private void MoveTo(Vector2 location)
         {
             var direction = _settings.isFacingRight ? 1f : -1f;
+            var xVelocity = direction * movementSpeed;
 
-            _rb.velocity = new Vector2(direction * movementSpeed, _rb.velocity.y);
+            _rb.velocity = new Vector2(xVelocity, _rb.velocity.y);
 
             // Checking if the target position has been reached
             if ((!_settings.isFacingRight || !(transform.position.x >= location.x))
