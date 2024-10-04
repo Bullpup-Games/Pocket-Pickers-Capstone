@@ -8,14 +8,19 @@ namespace _Scripts.Enemies
 {
     public class ConeView : MonoBehaviour, IViewType
     {
-        [Header("Cone View Settings")]
-        public float viewAngle = 45f;
-        public float viewDistance = 5f;
+        [Header("Cone View Settings")] 
+        public float normalViewAngle = 45f;
+        public float alertedViewAngle = 60f;
+        public float normalViewDistance = 5f;
+        public float alertedViewDistance = 10f;
         public LayerMask targetLayer;
         public LayerMask environmentLayer;
         public Vector2 offset; // (0.4, 1.0) for current enemy model
 
+        private float _viewAngle;
+        private float _viewDistance;
         private EnemySettings _settings;
+        private EnemyStateManager _stateManager;
         private DetectionLogic _detectionLogic;
 
         public event Action PlayerDetected;
@@ -23,6 +28,21 @@ namespace _Scripts.Enemies
         private void Awake()
         {
             InitializeSettings(); 
+        }
+
+        private void Update()
+        {
+            if (_stateManager.state == EnemyState.Aggro || _stateManager.state == EnemyState.Searching)
+            {
+                // TODO: Make this available in the editor
+                _viewAngle = alertedViewAngle;
+                _viewDistance = alertedViewDistance;
+            }
+            else
+            {
+                _viewAngle = normalViewAngle;
+                _viewDistance = normalViewDistance;
+            }
         }
 
         private void OnEnable()
@@ -42,7 +62,7 @@ namespace _Scripts.Enemies
             var direction = _settings.isFacingRight ? Vector2.right : Vector2.left;
 
             // check for player collider within the view distance
-            var targetsInViewRadius = Physics2D.OverlapCircleAll(position, viewDistance, targetLayer);
+            var targetsInViewRadius = Physics2D.OverlapCircleAll(position, _viewDistance, targetLayer);
 
             foreach (var target in targetsInViewRadius)
             {
@@ -51,10 +71,10 @@ namespace _Scripts.Enemies
                 // Check if the target is within the adjusted view angle
                 var angleBetween = Vector2.Angle(direction, directionToTarget);
 
-                if (!(angleBetween < viewAngle / 2)) continue;
+                if (!(angleBetween < _viewAngle / 2)) continue;
                 // TODO: When adding variable detection lengths based on distance get the distance from here
                 // Check for obstacles between the enemy and the target
-                var hit = Physics2D.Raycast(position, directionToTarget, viewDistance, environmentLayer);
+                var hit = Physics2D.Raycast(position, directionToTarget, _viewDistance, environmentLayer);
 
                 if (hit.collider == null)
                 {
@@ -69,13 +89,7 @@ namespace _Scripts.Enemies
 
         public void UpdateView(float modifier)
         {
-             viewAngle *= modifier;
-        }
-
-        // Callback when a target is detected
-        private void OnTargetDetected(GameObject target)
-        {
-            // Debug.Log("Player detected");
+             _viewAngle *= modifier;
         }
 
         private void OnDrawGizmosSelected()
@@ -89,14 +103,14 @@ namespace _Scripts.Enemies
             var position = (Vector2)transform.position + offset;
             var direction = _settings.isFacingRight ? Vector2.right : Vector2.left;
 
-            var leftBoundary = Quaternion.Euler(0, 0, viewAngle / 2) * direction;
-            var rightBoundary = Quaternion.Euler(0, 0, -viewAngle / 2) * direction;
+            var leftBoundary = Quaternion.Euler(0, 0, _viewAngle / 2) * direction;
+            var rightBoundary = Quaternion.Euler(0, 0, -_viewAngle / 2) * direction;
 
-            Gizmos.DrawLine(position, position + (Vector2)(leftBoundary * viewDistance));
-            Gizmos.DrawLine(position, position + (Vector2)(rightBoundary * viewDistance));
+            Gizmos.DrawLine(position, position + (Vector2)(leftBoundary * _viewDistance));
+            Gizmos.DrawLine(position, position + (Vector2)(rightBoundary * _viewDistance));
             
             Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(position, viewDistance);
+            Gizmos.DrawWireSphere(position, _viewDistance);
         }
 
         /*
@@ -121,6 +135,7 @@ namespace _Scripts.Enemies
         {
             _settings = GetComponent<EnemySettings>();
             _detectionLogic = GetComponent<DetectionLogic>();
+            _stateManager = GetComponent<EnemyStateManager>();
             if (_settings == null)
             {
                 Debug.LogError("GuardSettings component not found on " + gameObject.name);

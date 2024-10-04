@@ -40,7 +40,7 @@ namespace _Scripts.Enemies
             
             // Switch to the agro state after filling detection meter
             _stateManager.SetState(EnemyState.Aggro);
-            Debug.Log("Enemy is now aggro!");
+            // Debug.Log("Enemy is now aggro!");
         }
     }
 }
