@@ -5,13 +5,8 @@ namespace _Scripts.Enemies
 {
     public class DetectionLogic : MonoBehaviour
     {
-        [Tooltip("True if the guard sees the player but is not yet aggro (building aggression)")]
-        public bool isSuspicious;
-        [Tooltip("True if this enemy is currently aggro toward the player and in pursuit")]
-        public bool isTrackingEnemy;
-        [Tooltip("True if a guard has lost track on an enemy they were chasing, and is searching is for them again")]
-        public bool isSearchingLastKnownArea;
-
+        private float _detectionTimer = 0f;
+        
         private EnemySettings _settings;
         private EnemyStateManager _stateManager;
         private Rigidbody2D _rb;
@@ -30,12 +25,22 @@ namespace _Scripts.Enemies
             DetectEnemy();
         }
 
+        // Handle the detection timer, taking the enemy from detecting to aggro if limit is reached
         private void DetectEnemy()
         {
-            if (_stateManager.state != EnemyState.Detecting) return;
-            // TODO: Detection timer
+            if (_stateManager.state != EnemyState.Detecting)
+            {
+                _detectionTimer = 0f;
+                return;
+            }
+
+            _detectionTimer += Time.deltaTime * _settings.DetectionModifier;
+
+            if (!(_detectionTimer >= _settings.baseDetectionTime)) return;
+            
+            // Switch to the agro state after filling detection meter
+            _stateManager.SetState(EnemyState.Aggro);
+            Debug.Log("Enemy is now aggro!");
         }
     }
-    
-
 }

@@ -597,9 +597,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50ac8fc84a1404a5788f5727f2c14f89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isSuspicious: 0
-  isTrackingEnemy: 0
-  isSearchingLastKnownArea: 0
 --- !u!114 &779425140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -613,6 +610,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFacingRight: 1
+  baseDetectionTime: 3
 --- !u!114 &779425141
 MonoBehaviour:
   m_ObjectHideFlags: 0

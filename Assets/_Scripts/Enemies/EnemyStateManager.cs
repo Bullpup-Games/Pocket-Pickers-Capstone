@@ -8,6 +8,11 @@ namespace _Scripts.Enemies
     {
         public EnemyState state;
         private IViewType _view;
+
+        public void SetState(EnemyState state)
+        {
+            this.state = state;
+        }
         
         private void Awake()
         {
@@ -35,10 +40,10 @@ namespace _Scripts.Enemies
                     return;
                 case EnemyState.Detecting:
                     return;
-                case EnemyState.Agro:
+                case EnemyState.Aggro:
                     return;
                 case EnemyState.Searching:
-                    state = EnemyState.Agro;
+                    state = EnemyState.Aggro;
                     return;
                 case EnemyState.Stunned:
                     return;
@@ -55,7 +60,7 @@ namespace _Scripts.Enemies
                 case EnemyState.Detecting:
                     state = EnemyState.Patrolling;
                     return;
-                case EnemyState.Agro:
+                case EnemyState.Aggro:
                     state = EnemyState.Searching;
                     return;
                 case EnemyState.Searching:

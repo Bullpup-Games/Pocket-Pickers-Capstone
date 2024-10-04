@@ -13,7 +13,7 @@ namespace _Scripts.Enemies
         public float viewDistance = 5f;
         public LayerMask targetLayer;
         public LayerMask environmentLayer;
-        public Vector2 offset;
+        public Vector2 offset; // (0.4, 1.0) for current enemy model
 
         private EnemySettings _settings;
         private DetectionLogic _detectionLogic;
@@ -63,6 +63,7 @@ namespace _Scripts.Enemies
                     return;
                 }
             }
+            
             NoPlayerDetected?.Invoke();
         }
 

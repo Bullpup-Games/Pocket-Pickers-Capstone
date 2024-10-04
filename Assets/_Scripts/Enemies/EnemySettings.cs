@@ -8,7 +8,8 @@ namespace _Scripts.Enemies
     public class EnemySettings : MonoBehaviour
     {
         public bool isFacingRight = true;
-
+        [Tooltip("Amount of time (in seconds) it takes to fully detect the player and enter aggro")]
+        public float baseDetectionTime = 1.0f;
 
         private void Update()
         {
@@ -17,18 +18,18 @@ namespace _Scripts.Enemies
         }
 
         #region SinModifiers
-        private float _detectionSpeed = 1.0f;
-        private float _viewModifier = 1.0f;
+        private float _detectionModifier = 1.0f; // Speed modifier for detecting the player
+        private float _viewModifier = 1.0f; // View width, radius, length, etc modifier for detecting the player
         public event Action<float> OnDetectionSpeedChanged;
         public event Action<float> OnViewModifierChanged;
-        public float DetectionSpeed
+        public float DetectionModifier
         {
-            get => _detectionSpeed;
+            get => _detectionModifier;
             set
             {
-                if (!(Math.Abs(_detectionSpeed - value) > 0)) return;
-                _detectionSpeed = value;
-                OnDetectionSpeedChanged?.Invoke(_detectionSpeed); // Trigger event when detectionSpeed is modified
+                if (!(Math.Abs(_detectionModifier - value) > 0)) return;
+                _detectionModifier = value;
+                OnDetectionSpeedChanged?.Invoke(_detectionModifier); // Trigger event when detectionSpeed is modified
             }
         }
         public float ViewModifier
