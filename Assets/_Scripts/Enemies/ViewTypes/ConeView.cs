@@ -22,6 +22,7 @@ namespace _Scripts.Enemies
         private EnemySettings _settings;
         private EnemyStateManager _stateManager;
         private DetectionLogic _detectionLogic;
+        private bool _playerDetectedThisFrame = false;
 
         public event Action PlayerDetected;
         public event Action NoPlayerDetected;
@@ -79,13 +80,27 @@ namespace _Scripts.Enemies
                 if (hit.collider == null)
                 {
                     // Target is detected
-                    PlayerDetected?.Invoke();
+                    OnTargetDetected();
                     return;
                 }
             }
             
+            OnNoTargetDetected();
+        }
+
+        private void OnTargetDetected()
+        {
+            _playerDetectedThisFrame = true;
+            PlayerDetected?.Invoke();
+        }
+
+        private void OnNoTargetDetected()
+        {
+            _playerDetectedThisFrame = false;
             NoPlayerDetected?.Invoke();
         }
+        
+        public bool IsPlayerDetectedThisFrame() => _playerDetectedThisFrame;
 
         public void UpdateView(float modifier)
         {

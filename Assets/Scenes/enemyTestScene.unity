@@ -547,6 +547,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 768295214414954276, guid: 277e91905163040f08033e377006c417, type: 3}
       insertIndex: 6
       addedObject: {fileID: 779425139}
+    - targetCorrespondingSourceObject: {fileID: 768295214414954276, guid: 277e91905163040f08033e377006c417, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 779425146}
   m_SourcePrefab: {fileID: 100100000, guid: 277e91905163040f08033e377006c417, type: 3}
 --- !u!114 &506028507 stripped
 MonoBehaviour:
@@ -576,8 +579,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e23e4918db6e4d78ac0f6ded965d8b8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewAngle: 45
-  viewDistance: 5
+  normalViewAngle: 45
+  alertedViewAngle: 60
+  normalViewDistance: 5
+  alertedViewDistance: 10
   targetLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -624,6 +629,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 0
+--- !u!114 &779425146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 779425133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ebfc57171b24ee2878be79fb2d5cba5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSpeed: 8
+  qteTimeLimit: 4
+  timeLostPerEncounter: 0.5
+  counterGoal: 5
 --- !u!1 &867319601
 GameObject:
   m_ObjectHideFlags: 0
