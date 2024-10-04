@@ -129,8 +129,8 @@ namespace _Scripts.Enemies.AggroTypes
             localScale.x *= -1;
             transformCopy.localScale = localScale;
             
-            MoveTo(location);
             _isFlipping = false;
+            MoveTo(location);
         }
 
         // Grapple coroutine from Don't Move - Needs to be integrated

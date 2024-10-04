@@ -65,9 +65,10 @@ namespace _Scripts.Enemies
             // check for player collider within the view distance
             var targetsInViewRadius = Physics2D.OverlapCircleAll(position, _viewDistance, targetLayer);
 
+            var directionToTarget = new Vector3();
             foreach (var target in targetsInViewRadius)
             {
-                var directionToTarget = (target.transform.position - transform.position).normalized;
+                directionToTarget = (target.transform.position - transform.position).normalized;
 
                 // Check if the target is within the adjusted view angle
                 var angleBetween = Vector2.Angle(direction, directionToTarget);
@@ -75,17 +76,19 @@ namespace _Scripts.Enemies
                 if (!(angleBetween < _viewAngle / 2)) continue;
                 // TODO: When adding variable detection lengths based on distance get the distance from here
                 // Check for obstacles between the enemy and the target
-                var obstacleHit = Physics2D.Raycast(position, directionToTarget, _viewDistance, environmentLayer);
+                var obstacleHit = Physics2D.Raycast((Vector2)transform.position, directionToTarget, _viewDistance, environmentLayer);
 
                 if (obstacleHit.collider == null)
                 {
                     // Target is detected
+                    Debug.Log("Target in Line of Sight " + target.gameObject);
                     Debug.Log("cone hit");
                     OnTargetDetected();
                     return;
                 }
             }
             
+            Debug.Log("Direction:" + directionToTarget);
             OnNoTargetDetected();
         }
 
@@ -97,6 +100,7 @@ namespace _Scripts.Enemies
 
         private void OnNoTargetDetected()
         {
+            Debug.Log("No target found");
             _playerDetectedThisFrame = false;
             NoPlayerDetected?.Invoke();
         }
