@@ -69,7 +69,7 @@ namespace _Scripts.Enemies
             HandleGroundDetection();
             HandleGravity();
 
-            if (_stateManager.state == EnemyState.Patrolling && !_isWaiting)
+            if ((_stateManager.state == EnemyState.Patrolling || _stateManager.state == EnemyState.Detecting) && !_isWaiting)
             {
                 MoveTowardsTarget();
             }
@@ -90,10 +90,14 @@ namespace _Scripts.Enemies
             if ((!_isMovingRight || !(transform.position.x >= _currentTarget.x))
                 && (_isMovingRight || !(transform.position.x <= _currentTarget.x))) return;
         
-            // Once the target position has been reached enter the waiting state
             _rb.velocity = new Vector2(0, _rb.velocity.y);
-            _isWaiting = true;
-            StartCoroutine(WaitAtPoint());
+
+            if (_stateManager.state == EnemyState.Patrolling)
+            {
+                _isWaiting = true;
+                StartCoroutine(WaitAtPoint()); 
+            }
+            
         }
 
         // Coroutine to handle the wait time and prepare the variables for the next patrol
@@ -102,10 +106,7 @@ namespace _Scripts.Enemies
             yield return new WaitForSeconds(waitTimeAtEnds);
 
             // Flip the guard around after waiting the full duration
-            _isMovingRight = !_isMovingRight;
-            FlipLocalScale();
-            _currentTarget = _isMovingRight ? _rightPatrolPoint : _leftPatrolPoint;
-            _isWaiting = false;
+            SwitchPoints();
         }
     
         private void HandleGroundDetection()
@@ -122,6 +123,15 @@ namespace _Scripts.Enemies
             // Apply gravity to make the guard fall
             var newYVelocity = Mathf.MoveTowards(_rb.velocity.y, -maxFallSpeed, gravity * Time.deltaTime);
             _rb.velocity = new Vector2(_rb.velocity.x, newYVelocity);
+        }
+
+        // Turn around and switch patrol points
+        private void SwitchPoints()
+        {
+            _isMovingRight = !_isMovingRight;
+            FlipLocalScale();
+            _currentTarget = _isMovingRight ? _rightPatrolPoint : _leftPatrolPoint;
+            _isWaiting = false;
         }
 
         // Flip the entity's sprite by inverting the X scaling

@@ -13,16 +13,27 @@ namespace _Scripts.Enemies
         public bool isSearchingLastKnownArea;
 
         private EnemySettings _settings;
+        private EnemyStateManager _stateManager;
+        private Rigidbody2D _rb;
         private IViewType _view;
         private void Awake()
         {
             _settings = GetComponent<EnemySettings>();
+            _stateManager = GetComponent<EnemyStateManager>();
+            _rb = GetComponent<Rigidbody2D>();
             _view = GetComponent<IViewType>();
         }
 
         private void Update()
         {
             _view.SetView();
+            DetectEnemy();
+        }
+
+        private void DetectEnemy()
+        {
+            if (_stateManager.state != EnemyState.Detecting) return;
+            // TODO: Detection timer
         }
     }
     

@@ -18,6 +18,8 @@ namespace _Scripts.Enemies
         private EnemySettings _settings;
         private DetectionLogic _detectionLogic;
 
+        public event Action PlayerDetected;
+        public event Action NoPlayerDetected;
         private void Awake()
         {
             InitializeSettings(); 
@@ -50,15 +52,18 @@ namespace _Scripts.Enemies
                 var angleBetween = Vector2.Angle(direction, directionToTarget);
 
                 if (!(angleBetween < viewAngle / 2)) continue;
+                // TODO: When adding variable detection lengths based on distance get the distance from here
                 // Check for obstacles between the enemy and the target
                 var hit = Physics2D.Raycast(position, directionToTarget, viewDistance, environmentLayer);
 
                 if (hit.collider == null)
                 {
                     // Target is detected
-                    OnTargetDetected(target.gameObject);
+                    PlayerDetected?.Invoke();
+                    return;
                 }
             }
+            NoPlayerDetected?.Invoke();
         }
 
         public void UpdateView(float modifier)
@@ -66,12 +71,10 @@ namespace _Scripts.Enemies
              viewAngle *= modifier;
         }
 
-        public event Action PlayerDetected; 
         // Callback when a target is detected
         private void OnTargetDetected(GameObject target)
         {
-            PlayerDetected?.Invoke();
-            Debug.Log("Player detected");
+            // Debug.Log("Player detected");
         }
 
         private void OnDrawGizmosSelected()

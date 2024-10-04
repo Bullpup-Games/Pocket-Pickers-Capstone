@@ -26,11 +26,9 @@ namespace _Scripts.Enemies
             get => _detectionSpeed;
             set
             {
-                if (Math.Abs(_detectionSpeed - value) > 0)
-                {
-                    _detectionSpeed = value;
-                    OnDetectionSpeedChanged?.Invoke(_detectionSpeed); // Trigger event when detectionSpeed is modified
-                }
+                if (!(Math.Abs(_detectionSpeed - value) > 0)) return;
+                _detectionSpeed = value;
+                OnDetectionSpeedChanged?.Invoke(_detectionSpeed); // Trigger event when detectionSpeed is modified
             }
         }
         public float ViewModifier
