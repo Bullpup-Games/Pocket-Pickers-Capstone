@@ -177,6 +177,7 @@ namespace Card
         public void OnCardDestroyed()
         {
             _instantiatedCard = null;
+            Destroy(_instantiatedCard);
         }
         
         private void HandleEnterCardStance()

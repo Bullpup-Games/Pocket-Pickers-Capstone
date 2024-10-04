@@ -196,11 +196,11 @@ namespace Card
                 }
                 
                 //changes the direction of the card, and sets it to move in that direction
-                Vector3 wallNormal = col.contacts[0].normal;
+                Vector3 wallNormal = col.GetContact(0).normal;
                 direction = Vector2.Reflect(direction, wallNormal);
                 calculateVelocity(direction);
                 
-                Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
+                //Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
                 return;
                 
             }
