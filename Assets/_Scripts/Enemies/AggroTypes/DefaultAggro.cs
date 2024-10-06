@@ -144,7 +144,7 @@ namespace _Scripts.Enemies.AggroTypes
                 // Stop any movement from the guard or player
                 _rb.velocity = new Vector2(0f, 0f);
                 playerRb.velocity = new Vector2(0f, 0f);
-                if (Input.GetKeyDown(KeyCode.E))
+                if (Input.GetButtonDown("FalseTrigger"))
                 {
                     counter++;
                 }
