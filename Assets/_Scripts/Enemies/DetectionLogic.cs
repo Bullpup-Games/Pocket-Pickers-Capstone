@@ -1,6 +1,7 @@
 using System;
 using _Scripts.Enemies.ViewTypes;
 using UnityEngine;
+using UnityEngine.Rendering.VirtualTexturing;
 
 namespace _Scripts.Enemies
 {
@@ -29,21 +30,27 @@ namespace _Scripts.Enemies
                 viewType.SetView();
             }
             
-            DetectEnemy();
-        }
-
-        // Handle the detection timer, taking the enemy from detecting to aggro if limit is reached
-        private void DetectEnemy()
-        {
             if (_stateManager.state != EnemyState.Detecting)
             {
                 _detectionTimer = 0f;
-                return;
             }
+        }
 
+        private void OnEnable()
+        {
+            foreach (var viewType in _viewTypes)
+            {
+                viewType.PlayerDetected += HandleDetectionTimer;
+            } 
+        }
+
+        // Handle the detection timer, taking the enemy from detecting to aggro if limit is reached
+        private void HandleDetectionTimer(bool quickDetect)
+        {
             _detectionTimer += Time.deltaTime * _settings.DetectionModifier;
 
-            if (!(_detectionTimer >= _settings.baseDetectionTime)) return;
+            if (!(_detectionTimer >= Mathf.Abs(_settings.baseDetectionTime)) && !quickDetect) return;
+            if (!(_detectionTimer >= Mathf.Abs(_settings.baseDetectionTime / 4f)) && quickDetect) return;
             
             // Switch to the agro state after filling detection meter
             _stateManager.SetState(EnemyState.Aggro);

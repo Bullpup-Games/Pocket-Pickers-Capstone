@@ -8,6 +8,8 @@ namespace _Scripts.Enemies
 {
     public class ConeView : MonoBehaviour, IViewType
     {
+        [Tooltip("If enabled cuts the set detection time into a quarter of the original")]
+        public bool quickDetection;
         [Header("Cone View Settings")] 
         public float normalViewAngle = 45f;
         public float alertedViewAngle = 60f;
@@ -24,7 +26,7 @@ namespace _Scripts.Enemies
         private DetectionLogic _detectionLogic;
         private bool _playerDetectedThisFrame = false;
 
-        public event Action PlayerDetected;
+        public event Action<bool> PlayerDetected;
         public event Action NoPlayerDetected;
         private void Awake()
         {
@@ -95,7 +97,7 @@ namespace _Scripts.Enemies
         private void OnTargetDetected()
         {
             _playerDetectedThisFrame = true;
-            PlayerDetected?.Invoke();
+            PlayerDetected?.Invoke(quickDetection);
         }
 
         private void OnNoTargetDetected()

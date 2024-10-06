@@ -38,7 +38,7 @@ namespace _Scripts.Enemies
             }
         }
 
-        private void HandlePlayerSighting()
+        private void HandlePlayerSighting(bool quickDetect) // quickDetect not needed here, needed elsewhere as part of event
         {
             var spotted = false;
             

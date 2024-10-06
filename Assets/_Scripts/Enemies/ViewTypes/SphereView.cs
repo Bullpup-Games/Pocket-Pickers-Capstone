@@ -5,6 +5,8 @@ namespace _Scripts.Enemies.ViewTypes
 {
     public class SphereView : MonoBehaviour, IViewType
     {
+        [Tooltip("If enabled cuts the set detection time in half")]
+        public bool quickDetection;
         [Header("Sphere View Settings")]
         public float normalViewRadius = 5f;    // Normal detection radius
         public float alertedViewRadius = 10f;  // Detection radius when alerted
@@ -23,7 +25,7 @@ namespace _Scripts.Enemies.ViewTypes
         private float _baseNormalViewRadius;
         private float _baseAlertedViewRadius;
 
-        public event Action PlayerDetected;
+        public event Action<bool> PlayerDetected;
         public event Action NoPlayerDetected;
 
         private void Awake()
@@ -83,7 +85,7 @@ namespace _Scripts.Enemies.ViewTypes
         private void OnTargetDetected()
         {
             _playerDetectedThisFrame = true;
-            PlayerDetected?.Invoke();
+            PlayerDetected?.Invoke(quickDetection);
         }
 
         private void OnNoTargetDetected()
