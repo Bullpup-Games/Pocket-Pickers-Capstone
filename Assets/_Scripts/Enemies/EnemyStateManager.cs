@@ -9,10 +9,9 @@ namespace _Scripts.Enemies
     {
         public EnemyState state;
         private IViewType[] _viewTypes;
-        // private IViewType _lineView;
-        public void SetState(EnemyState state)
+        public void SetState(EnemyState newState)
         {
-            this.state = state;
+            this.state = newState;
         }
         
         private void Awake()
@@ -25,7 +24,7 @@ namespace _Scripts.Enemies
             foreach (var viewType in _viewTypes)
             {
                 viewType.PlayerDetected += HandlePlayerSighting;
-                viewType.NoPlayerDetected += HandleNoPlayerSighting;
+                // viewType.NoPlayerDetected += HandleNoPlayerSighting;
             }
         }
 
@@ -34,7 +33,7 @@ namespace _Scripts.Enemies
             foreach (var viewType in _viewTypes)
             {
                 viewType.PlayerDetected -= HandlePlayerSighting;
-                viewType.NoPlayerDetected -= HandleNoPlayerSighting;
+                // viewType.NoPlayerDetected -= HandleNoPlayerSighting;
             }
         }
 
@@ -72,6 +71,7 @@ namespace _Scripts.Enemies
             }
         }
 
+        // TODO: Determine if this and the associated NoPlayerSighted event is still needed for anything 
         private void HandleNoPlayerSighting()
         {
             foreach (var viewType in _viewTypes)
@@ -88,15 +88,30 @@ namespace _Scripts.Enemies
                 case EnemyState.Patrolling:
                     return;
                 case EnemyState.Detecting:
-                    state = EnemyState.Patrolling;
+                    // state = EnemyState.Patrolling;
                     return;
                 case EnemyState.Aggro:
-                    state = EnemyState.Searching;
                     return;
                 case EnemyState.Searching:
                     return;
                 case EnemyState.Stunned:
                     return;
+            }
+        }
+
+        private void OnCollisionEnter2D(Collision2D col)
+        {
+            if (col.gameObject.layer == LayerMask.NameToLayer("Card"))
+            {
+                state = EnemyState.Disabled;
+                // TODO: Maybe destroy card? 
+            }
+
+            // If the player touches an alive and un-stunned guard it should aggro them immediately 
+            if (col.gameObject.layer == LayerMask.NameToLayer("Player"))
+            {
+                if (state is EnemyState.Disabled or EnemyState.Stunned) return;
+                state = EnemyState.Aggro;
             }
         }
     }

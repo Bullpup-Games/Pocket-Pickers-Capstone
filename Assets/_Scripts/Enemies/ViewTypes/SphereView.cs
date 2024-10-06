@@ -26,7 +26,6 @@ namespace _Scripts.Enemies.ViewTypes
         private float _viewRadius;
         private EnemySettings _settings;
         private EnemyStateManager _stateManager;
-        private DetectionLogic _detectionLogic;
         private bool _playerDetectedThisFrame = false;
 
         private float _baseNormalViewRadius;
@@ -43,7 +42,7 @@ namespace _Scripts.Enemies.ViewTypes
         private void Update()
         {
             // Update the view radius based on the enemy's current state
-            if (_stateManager.state == EnemyState.Aggro || _stateManager.state == EnemyState.Searching)
+            if (_stateManager.state is EnemyState.Aggro or EnemyState.Searching)
             {
                 _viewRadius = alertedViewRadius;
             }
@@ -156,7 +155,6 @@ namespace _Scripts.Enemies.ViewTypes
         private void InitializeSettings()
         {
             _settings = GetComponent<EnemySettings>();
-            _detectionLogic = GetComponent<DetectionLogic>();
             _stateManager = GetComponent<EnemyStateManager>();
 
             if (_settings == null)

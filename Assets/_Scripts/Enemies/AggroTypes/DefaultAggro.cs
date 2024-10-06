@@ -141,13 +141,19 @@ namespace _Scripts.Enemies.AggroTypes
         // Grapple coroutine from Don't Move - Needs to be integrated
         private IEnumerator StartQuicktimeEvent()
         {
+            Debug.Log("QTE Started");
             _hasExecuted = false;
             // grappleUI.SetActive(true);
             var counter = 0;
             var timeElapsed = 0f;
 
+            var playerRb = PlayerVariables.Instance.gameObject.GetComponent<Rigidbody2D>();
+
             while (timeElapsed < qteTimeLimit && counter < counterGoal)
             {
+                // Stop any movement from the guard or player
+                _rb.velocity = new Vector2(0f, 0f);
+                playerRb.velocity = new Vector2(0f, 0f);
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     counter++;
@@ -158,21 +164,35 @@ namespace _Scripts.Enemies.AggroTypes
             }
 
             if (_hasExecuted) yield break;
+            // Quick time event succeeded
             if (counter >= counterGoal)
             {
                 // grappleUI.SetActive(false);
                 // UnlockPositions();
+                Debug.Log("QTE Passed");
+                _stateManager.SetState(EnemyState.Stunned);
                 if (qteTimeLimit > 2f)
                     qteTimeLimit -= timeLostPerEncounter;
             }
+            // Quick time event failed
             else
             {
+                Debug.Log("QTE Failed");
                 StopCoroutine(StartQuicktimeEvent());
                 // grappleUI.SetActive(false);
                 // GameOver.Instance.EndGame();
             }
 
             _hasExecuted = true;
+        }
+
+        private void OnCollisionEnter2D(Collision2D col)
+        {
+            if (_stateManager.state is EnemyState.Disabled or EnemyState.Stunned) return;
+            if (col.gameObject.layer == LayerMask.NameToLayer("Player"))
+            {
+                StartCoroutine(StartQuicktimeEvent());
+            }
         }
     }
 }

@@ -11,11 +11,30 @@ namespace _Scripts.Enemies
         [Tooltip("Amount of time (in seconds) it takes to fully detect the player and enter aggro")]
         public float baseDetectionTime = 4.0f;
         public float closeDetectionTime = 1.0f;
+        
+        private EnemyStateManager _stateManager;
+        private Rigidbody2D _rb;
+        private BoxCollider2D _col;
+
+        private void Awake()
+        {
+            _stateManager = GetComponent<EnemyStateManager>();
+            _rb = GetComponent<Rigidbody2D>();
+            _col = GetComponent<BoxCollider2D>();
+        }
 
         private void Update()
         {
             // If the player's local state is 1 they're facing right, -1 left
             isFacingRight = !(Math.Abs(gameObject.transform.localScale.x - 1) > 0.1f);
+            
+            // If the enemy is disabled they should just stop at their current position and be immovable for now
+            if (_stateManager.state == EnemyState.Disabled)
+            {
+                // TODO: Maybe change this eventually?
+                _rb.isKinematic = true;
+                _col.isTrigger = true;
+            } 
         }
         
         // Flip the entity's sprite by inverting the X scaling

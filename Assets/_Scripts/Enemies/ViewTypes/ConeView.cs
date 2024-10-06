@@ -30,7 +30,6 @@ namespace _Scripts.Enemies
         private float _viewDistance;
         private EnemySettings _settings;
         private EnemyStateManager _stateManager;
-        private DetectionLogic _detectionLogic;
         private bool _playerDetectedThisFrame = false;
 
         public event Action<bool, float> PlayerDetected;
@@ -42,7 +41,7 @@ namespace _Scripts.Enemies
 
         private void Update()
         {
-            if (_stateManager.state == EnemyState.Aggro || _stateManager.state == EnemyState.Searching)
+            if (_stateManager.state is EnemyState.Aggro or EnemyState.Searching)
             {
                 // TODO: Make this available in the editor
                 _viewAngle = alertedViewAngle;
@@ -74,7 +73,7 @@ namespace _Scripts.Enemies
             // check for player collider within the view distance
             var targetsInViewRadius = Physics2D.OverlapCircleAll(position, _viewDistance, targetLayer);
 
-            var directionToTarget = new Vector3();
+            Vector3 directionToTarget;
             foreach (var target in targetsInViewRadius)
             {
                 var targetPos = target.transform.position;
@@ -178,7 +177,6 @@ namespace _Scripts.Enemies
         private void InitializeSettings()
         {
             _settings = GetComponent<EnemySettings>();
-            _detectionLogic = GetComponent<DetectionLogic>();
             _stateManager = GetComponent<EnemyStateManager>();
             if (_settings == null)
             {

@@ -5,7 +5,7 @@ using UnityEngine.Rendering.VirtualTexturing;
 
 namespace _Scripts.Enemies
 {
-    public class DetectionLogic : MonoBehaviour
+    public class DetectionTimer : MonoBehaviour
     {
         private float _detectionTimer = 0f;
         

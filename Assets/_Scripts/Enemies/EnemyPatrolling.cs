@@ -69,7 +69,7 @@ namespace _Scripts.Enemies
             HandleGroundDetection();
             HandleGravity();
 
-            if ((_stateManager.state == EnemyState.Patrolling || _stateManager.state == EnemyState.Detecting) && !_isWaiting)
+            if ((_stateManager.state is EnemyState.Patrolling or EnemyState.Detecting) && !_isWaiting)
             {
                 MoveTowardsTarget();
             }
