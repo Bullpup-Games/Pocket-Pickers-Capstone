@@ -100,7 +100,7 @@ namespace _Scripts.Enemies
                 }
             }
             
-            Debug.Log("Direction:" + directionToTarget);
+            // Debug.Log("Direction:" + directionToTarget);
             OnNoTargetDetected();
         }
 
@@ -112,7 +112,7 @@ namespace _Scripts.Enemies
 
         private void OnNoTargetDetected()
         {
-            Debug.Log("No target found");
+            // Debug.Log("No target found");
             _playerDetectedThisFrame = false;
             NoPlayerDetected?.Invoke();
         }
