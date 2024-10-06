@@ -5,8 +5,15 @@ namespace _Scripts.Enemies.ViewTypes
 {
     public class SphereView : MonoBehaviour, IViewType
     {
-        [Tooltip("If enabled cuts the set detection time in half")]
+        [Header("Detection Settings")]
+        [Tooltip("If enabled cuts the detection time down to a quarter")]
         public bool quickDetection;
+        [Tooltip("Upper bound for the modifier given to the detection timer when the player is at the far edge of the view"),
+         Range(1.0f, 10.0f)]
+        public float maxDistanceModifier = 3.0f;
+        [Tooltip("Lower bound for the modifier given to the detection timer when the player is close to the origin of the view"),
+         Range(0.01f, 1.0f)]
+        public float minDistanceModifier = 0.25f;
         [Header("Sphere View Settings")]
         public float normalViewRadius = 5f;    // Normal detection radius
         public float alertedViewRadius = 10f;  // Detection radius when alerted
@@ -25,7 +32,7 @@ namespace _Scripts.Enemies.ViewTypes
         private float _baseNormalViewRadius;
         private float _baseAlertedViewRadius;
 
-        public event Action<bool> PlayerDetected;
+        public event Action<bool, float> PlayerDetected;
         public event Action NoPlayerDetected;
 
         private void Awake()
@@ -66,7 +73,9 @@ namespace _Scripts.Enemies.ViewTypes
 
             foreach (var target in targetsInViewRadius)
             {
-                var directionToTarget = ((Vector2)target.transform.position - position).normalized;
+                var targetPos = target.transform.position;
+                var directionToTarget = ((Vector2)targetPos - position).normalized;
+                var distanceToTarget = Vector2.Distance(position, targetPos);
 
                 // Check for obstacles between the enemy and the target
                 var hit = Physics2D.Raycast(position, directionToTarget, _viewRadius, environmentLayer);
@@ -74,7 +83,8 @@ namespace _Scripts.Enemies.ViewTypes
                 if (hit.collider == null)
                 {
                     // Target is detected
-                    OnTargetDetected();
+                    var modifier = CalculateModifier(distanceToTarget);
+                    OnTargetDetected(modifier);
                     return;
                 }
             }
@@ -82,10 +92,10 @@ namespace _Scripts.Enemies.ViewTypes
             OnNoTargetDetected();
         }
 
-        private void OnTargetDetected()
+        private void OnTargetDetected(float modifier)
         {
             _playerDetectedThisFrame = true;
-            PlayerDetected?.Invoke(quickDetection);
+            PlayerDetected?.Invoke(quickDetection, modifier);
         }
 
         private void OnNoTargetDetected()
@@ -95,6 +105,17 @@ namespace _Scripts.Enemies.ViewTypes
         }
 
         public bool IsPlayerDetectedThisFrame() => _playerDetectedThisFrame;
+        
+        private float CalculateModifier(float distanceToPlayer)
+        {
+            var minDistance = 0.5f;
+            var maxDistance = _viewRadius;
+            distanceToPlayer = Mathf.Clamp(distanceToPlayer, minDistance, maxDistance);
+
+            var t = (distanceToPlayer - minDistance) / (maxDistance - minDistance);
+            var modifier = Mathf.Lerp(maxDistanceModifier, minDistanceModifier, t);
+            return modifier;
+        }
 
         public void UpdateView(float modifier)
         {

@@ -8,7 +8,7 @@ namespace _Scripts.Enemies
     public interface IViewType
     {
         // Event called when the player is sighted
-        event Action<bool> PlayerDetected;
+        event Action<bool, float> PlayerDetected;
 
         /*
          * Event called when the player is out of view

@@ -45,9 +45,10 @@ namespace _Scripts.Enemies
         }
 
         // Handle the detection timer, taking the enemy from detecting to aggro if limit is reached
-        private void HandleDetectionTimer(bool quickDetect)
+        private void HandleDetectionTimer(bool quickDetect, float distanceModifier)
         {
-            _detectionTimer += Time.deltaTime * _settings.DetectionModifier;
+            _detectionTimer += Time.deltaTime * _settings.DetectionModifier * distanceModifier;
+            // Debug.Log("Modifier:" + distanceModifier);
 
             if (!(_detectionTimer >= Mathf.Abs(_settings.baseDetectionTime)) && !quickDetect) return;
             if (!(_detectionTimer >= Mathf.Abs(_settings.baseDetectionTime / 4f)) && quickDetect) return;
