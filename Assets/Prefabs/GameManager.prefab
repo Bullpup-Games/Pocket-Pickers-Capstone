@@ -78,8 +78,8 @@ MonoBehaviour:
   cardStanceArrow: {fileID: 0}
   player: {fileID: 0}
   cardPrefab: {fileID: 0}
-  horizontalOffset: 2
-  verticalOffset: 0.3
+  horizontalOffset: 0.6
+  verticalOffset: 1.2
   cooldown: 0.5
   cardSpeed: 20
   cardLifeTime: 10

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PlayerController;
 using UnityEngine;
 
 
@@ -8,23 +9,45 @@ namespace Card
 {
     public class Card : MonoBehaviour
     {
-        private Vector2 _launchDirection; // Direction in which the card is launched
+        
         private float _startTime;
 
-        private Rigidbody2D _rigidbody;
+        //private Rigidbody2D _rigidbody;
         public InputHandler inputHandler;
         public static Card Instance {  get; private set; }
 
+        private Vector2 direction; // Direction in which the card is launched
+        public float speed = 15;
+        private Vector2 velocity;
+
+        //total bounces is how many ricochets are allowed. Bounces is 
+        //how many ricochets have happened
+        public int totalBounces;
+        public int bounces;
+       // public Vector2 directon;
+
         /*
-         *The plan:
-         * x make a public event to say that there is a teleportation
-         * x make a function that engages when the card throw button is pressed
-         * x That function should invoke the teleport event
-         * x That event  should communicate the transform location of the card as a vector2
-         * the function should then destroy the gameobject
-         *
-         */
-        //public event Action<Vector2> Teleport;
+        The plan:
+        x Add a constant public speed, and a direction vector
+        x add a variable for total possible ricochets and a second variable
+        for number of ricochets that have happened 
+        Make collision detection with tag recognition for four scenarios
+            x 1. It hit a wall
+                If we have done all our ricochets
+                    we will switch to a falling state
+                Otherwise
+                    We will bounce off the wall and keep our speed (calculate
+                    the normal of the wall, do an angle reflection calculation,
+                    set that as the new direction, normalize that, and multiply by
+                    speed to set new velocity)
+            x 2. It hits the player
+                Card goes through player, nothing happens
+            3. Card hits a grate/bars
+                Card goes through the bars, but the player cant go through the bars
+            4. Card hits an enemy
+                Card disapears, enemy is incapacitated, add sin
+        */
+        
 
         /*
         When this object first exists, get everything set up.
@@ -35,6 +58,8 @@ namespace Card
         For example, I'm calling setListeners and deleteListeners,
         and those functions are seperate
         */
+
+        
         private void OnEnable()
         {
             inputHandler = GameObject.Find("InputHandler").GetComponent<InputHandler>();
@@ -72,21 +97,30 @@ namespace Card
             {
                 Destroy(gameObject);
             }
+            //we start with 0 bounces, each time we bounce off a wall we incriment it
+            bounces = 0;
             
             
-            _rigidbody = GetComponent<Rigidbody2D>();
+            //if we don't have this, a card throw up or down will push the player around
+            var col = PlayerVariables.Instance.gameObject.GetComponent<BoxCollider2D>();
+            Physics2D.IgnoreCollision(col, GetComponent<Collider2D>());
+            
+           
+            this.direction = HandleCardStanceArrow.Instance.currentDirection;
             _startTime = Time.time;
         }
 
         public void Launch(Vector2 direction)
         {
-            _launchDirection = direction.normalized;
+            this.direction = direction.normalized;
+            calculateVelocity(this.direction);
 
-            // Calculate initial velocity
-            var velocity = _launchDirection * CardManager.Instance.cardSpeed;
+            
+        }
 
-            // Apply velocity to the Rigidbody2D
-            _rigidbody.velocity = velocity;
+        private void calculateVelocity(Vector2 direction) {
+            var velocity = direction * this.speed;
+            this.velocity = velocity;
         }
 
         private void Update()
@@ -97,25 +131,66 @@ namespace Card
                 DestroyCard();
             }
 
-            // if (Input.GetButtonDown("CardThrow"))
-            // {
-            //     Debug.Log($"Activating teleporation using {transform.position.x}, {transform.position.y}");
-            //     Teleport?.Invoke(new Vector2(transform.position.x, transform.position.y));
-            //     DestroyCard();
-            // }
+            moveCard();
+           
         }
 
+        private void moveCard()
+        {
+            Vector3 newPosition = ((Vector2)transform.position) + (velocity * Time.deltaTime);
+            this.transform.position = newPosition;
+        }
+
+       
         private void OnCollisionEnter2D(Collision2D col)
         {
+            
+            Debug.Log("Card collision");
             // Ignore collisions with the player
             if (col.gameObject.CompareTag("Player"))
             {
                 Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
                 return;
-            } 
+            }
+
+            if (col.gameObject.CompareTag("enemy"))
+            {
+                //todo if the card hits an enemy, incapacitate the enemy and destroy the card
+                Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
+                return;
+            }
             // TODO: Add a check for walls and count bounces
+            if (col.gameObject.CompareTag("wall"))
+            {
+                bounces++;
+                
+                //todo deflect the card and change its direction
+                if (bounces >= totalBounces)
+                {
+                    Debug.Log("no more ricochets");
+                    //todo eventually we will not destroy the card, we will change states
+                    DestroyCard();
+                }
+                
+                //changes the direction of the card, and sets it to move in that direction
+                Vector3 wallNormal = col.GetContact(0).normal;
+                direction = Vector2.Reflect(direction, wallNormal);
+                calculateVelocity(direction);
+                
+                //Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
+                return;
+                
+            }
+
+            if (col.gameObject.CompareTag("permeable"))
+            {
+                //this tag exists because we want the player and enemies to be stopped
+                //by permeable objects, but not the card.
+                Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
+                return;
+            }
             
-            Debug.Log("Card collision");
+            //Debug.Log("Card collision");
         }
 
         //the teleport event needs to be caught by a function that takes in a vector2
@@ -133,7 +208,7 @@ namespace Card
             CardManager.Instance.OnCardDestroyed();
             Destroy(gameObject);
         }
-
+        
         
     }
 }
