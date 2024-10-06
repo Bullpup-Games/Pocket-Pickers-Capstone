@@ -3,6 +3,7 @@ using System.Collections;
 using _Scripts.Enemies.ViewTypes;
 using _Scripts.Player;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 namespace _Scripts.Enemies.AggroTypes
@@ -170,7 +171,8 @@ namespace _Scripts.Enemies.AggroTypes
             else
             {
                 Debug.Log("QTE Failed");
-                StopCoroutine(StartQuicktimeEvent());
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                // StopCoroutine(StartQuicktimeEvent());
                 // grappleUI.SetActive(false);
                 // GameOver.Instance.EndGame();
             }
