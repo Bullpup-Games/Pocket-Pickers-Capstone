@@ -66,6 +66,9 @@ namespace _Scripts.Enemies
                     return;
                 case EnemyState.Stunned:
                     return;
+                case EnemyState.Returning:
+                    state = EnemyState.Aggro;
+                    return;
             }
         }
 
