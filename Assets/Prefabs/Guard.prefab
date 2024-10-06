@@ -198,7 +198,7 @@ MonoBehaviour:
   flipTime: 0.2
   qteTimeLimit: 4
   timeLostPerEncounter: 0.5
-  counterGoal: 5
+  counterGoal: 15
 --- !u!114 &2722947044655955237
 MonoBehaviour:
   m_ObjectHideFlags: 0

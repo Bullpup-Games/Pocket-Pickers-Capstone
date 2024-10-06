@@ -15,7 +15,7 @@ namespace _Scripts.Enemies.AggroTypes
         [Header("Quick Time Event Variables")]
         [SerializeField] private float qteTimeLimit = 4f;
         [SerializeField] private float timeLostPerEncounter = 0.5f;
-        [SerializeField] private int counterGoal = 5;
+        [SerializeField] private int counterGoal = 15;
         private bool _hasExecuted = false;
         private bool _isFlipping = false;
 
@@ -128,7 +128,7 @@ namespace _Scripts.Enemies.AggroTypes
             MoveTo(location);
         }
 
-        // Grapple coroutine from Don't Move - Needs to be integrated
+        // Modified grapple coroutine from Don't Move
         private IEnumerator StartQuicktimeEvent()
         {
             Debug.Log("QTE Started");
@@ -162,6 +162,7 @@ namespace _Scripts.Enemies.AggroTypes
                 Debug.Log("QTE Passed");
                 _enemyStateManager.SetState(EnemyState.Stunned);
                 _playerStateManager.SetState(PlayerState.Idle);
+                counterGoal += 2;
                 if (qteTimeLimit > 2f)
                     qteTimeLimit -= timeLostPerEncounter;
             }
