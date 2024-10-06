@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace PlayerController
+namespace _Scripts.Player
 {
     /// <summary>
     /// VERY primitive animator example.

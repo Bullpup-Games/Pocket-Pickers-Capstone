@@ -24,7 +24,7 @@ namespace _Scripts.Enemies
             foreach (var viewType in _viewTypes)
             {
                 viewType.PlayerDetected += HandlePlayerSighting;
-                // viewType.NoPlayerDetected += HandleNoPlayerSighting;
+                viewType.NoPlayerDetected += HandleNoPlayerSighting;
             }
         }
 
@@ -33,7 +33,7 @@ namespace _Scripts.Enemies
             foreach (var viewType in _viewTypes)
             {
                 viewType.PlayerDetected -= HandlePlayerSighting;
-                // viewType.NoPlayerDetected -= HandleNoPlayerSighting;
+                viewType.NoPlayerDetected -= HandleNoPlayerSighting;
             }
         }
 
@@ -71,7 +71,6 @@ namespace _Scripts.Enemies
             }
         }
 
-        // TODO: Determine if this and the associated NoPlayerSighted event is still needed for anything 
         private void HandleNoPlayerSighting()
         {
             foreach (var viewType in _viewTypes)
@@ -88,7 +87,7 @@ namespace _Scripts.Enemies
                 case EnemyState.Patrolling:
                     return;
                 case EnemyState.Detecting:
-                    // state = EnemyState.Patrolling;
+                    state = EnemyState.Patrolling;
                     return;
                 case EnemyState.Aggro:
                     return;

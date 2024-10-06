@@ -1,8 +1,9 @@
 using System;
-using PlayerController;
 using UnityEngine;
 
-/**
+namespace _Scripts
+{
+    /**
  * Input manager axis to DuelSense inputs
 - 0 - Square
 - 1 - X
@@ -19,70 +20,70 @@ using UnityEngine;
 - 12 - On / Off Button
 - 13 - DuelSense GamePad
  */
-
-public class InputHandler : MonoBehaviour
-{
-    public static InputHandler Instance { get; private set; }
-
-    private void Awake()
+    public class InputHandler : MonoBehaviour
     {
-        // Singleton pattern
-        if (Instance == null)
+        public static InputHandler Instance { get; private set; }
+    
+        private void Awake()
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    private void Update()
-    {
-        HandleCardStanceInput();
-        HandleCardThrowInput();
-    }
-
-    public event Action OnEnterCardStance; // Event for entering card stance
-    public event Action OnExitCardStance;  // Event for exiting card stance
-
-    private bool _wasInCardStance = false; // Check to see if card stance was already entered last in the previous frame
-
-    private void HandleCardStanceInput()
-    {
-        var triggerValue = Input.GetAxis("CardStance");
-        bool isInCardStance = Mathf.Abs(triggerValue) > 0.1f;
-
-        if (isInCardStance && !_wasInCardStance)
-        {
-            // Trigger pressed
-            OnEnterCardStance?.Invoke();
-            Debug.Log("Entered Card Stance");
-        }
-        else if (!isInCardStance && _wasInCardStance)
-        {
-            // Trigger released
-            OnExitCardStance?.Invoke();
-            Debug.Log("Exited Card Stance");
+            // Singleton pattern
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
 
-        _wasInCardStance = isInCardStance;
-    }
-
-    public event Action OnCardThrow;
-
-    private void HandleCardThrowInput()
-    {
-        // if (!PlayerVariables.Instance.inCardStance)
-        // {
-        //     // TODO: Instead of blocking the input if the player isn't in card stance send a quick throw action
-        //     return;
-        // }
-
-        if (Input.GetButtonDown("CardThrow"))
+        private void Update()
         {
-            OnCardThrow?.Invoke();
+            HandleCardStanceInput();
+            HandleCardThrowInput();
+        }
+
+        public event Action OnEnterCardStance; // Event for entering card stance
+        public event Action OnExitCardStance;  // Event for exiting card stance
+
+        private bool _wasInCardStance = false; // Check to see if card stance was already entered last in the previous frame
+
+        private void HandleCardStanceInput()
+        {
+            var triggerValue = Input.GetAxis("CardStance");
+            bool isInCardStance = Mathf.Abs(triggerValue) > 0.1f;
+
+            if (isInCardStance && !_wasInCardStance)
+            {
+                // Trigger pressed
+                OnEnterCardStance?.Invoke();
+                Debug.Log("Entered Card Stance");
+            }
+            else if (!isInCardStance && _wasInCardStance)
+            {
+                // Trigger released
+                OnExitCardStance?.Invoke();
+                Debug.Log("Exited Card Stance");
+            }
+
+            _wasInCardStance = isInCardStance;
+        }
+
+        public event Action OnCardThrow;
+
+        private void HandleCardThrowInput()
+        {
+            // if (!PlayerVariables.Instance.inCardStance)
+            // {
+            //     // TODO: Instead of blocking the input if the player isn't in card stance send a quick throw action
+            //     return;
+            // }
+
+            if (Input.GetButtonDown("CardThrow"))
+            {
+                OnCardThrow?.Invoke();
+            }
         }
     }
 }

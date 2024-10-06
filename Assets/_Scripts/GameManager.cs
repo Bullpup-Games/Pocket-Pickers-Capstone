@@ -1,22 +1,23 @@
-using Card;
-using PlayerController;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+namespace _Scripts
 {
-    public static GameManager Instance { get; private set; }
-
-    private void Awake()
+    public class GameManager : MonoBehaviour
     {
-        // Singleton pattern
-        if (Instance == null)
+        public static GameManager Instance { get; private set; }
+
+        private void Awake()
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
+            // Singleton pattern
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

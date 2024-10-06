@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
-using PlayerController;
+using _Scripts.Enemies.ViewTypes;
+using _Scripts.Player;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -191,6 +192,8 @@ namespace _Scripts.Enemies.AggroTypes
             if (_stateManager.state is EnemyState.Disabled or EnemyState.Stunned) return;
             if (col.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
+                var playerStateManager = col.gameObject.GetComponent<PlayerStateManager>();
+                playerStateManager.SetState(PlayerState.Stunned);
                 StartCoroutine(StartQuicktimeEvent());
             }
         }

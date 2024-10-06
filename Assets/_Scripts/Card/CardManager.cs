@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using PlayerController;
+using _Scripts.Player;
 using UnityEngine;
 
-namespace Card
+namespace _Scripts.Card
 {
 
     /**
@@ -30,6 +28,7 @@ namespace Card
         public InputHandler inputHandler;
         public PlayerMovementController playerMovementController;
         public HandleCardStanceArrow cardStanceArrow;
+        private PlayerStateManager _playerStateManager;
 
         public Transform player;
         public GameObject cardPrefab;
@@ -96,7 +95,7 @@ namespace Card
         //if not, you should test for teleportation
         private void HandleCardAction()
         {
-            if (PlayerVariables.Instance.inCardStance &&  _instantiatedCard == null)
+            if (PlayerVariables.Instance.stateManager.state == PlayerState.CardStance &&  _instantiatedCard == null)
             {
                 HandleCardThrow();
             }

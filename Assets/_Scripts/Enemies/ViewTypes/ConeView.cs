@@ -1,10 +1,7 @@
 using System;
-using System.ComponentModel;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace _Scripts.Enemies
+namespace _Scripts.Enemies.ViewTypes
 {
     public class ConeView : MonoBehaviour, IViewType
     {

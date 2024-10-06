@@ -1,8 +1,6 @@
-using PlayerController;
-using UnityEditorInternal;
 using UnityEngine;
 
-namespace Card
+namespace _Scripts.Card
 {
     /**
      * HandleCardStanceArrow is responsible for displaying and updating the directional indicator

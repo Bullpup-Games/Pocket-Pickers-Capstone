@@ -1,14 +1,13 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Timeline;
 
-namespace PlayerController
+namespace _Scripts.Player
 {
     public class PlayerVariables : MonoBehaviour
     {
         public bool isFacingRight = true;   // Start facing right by default
-        public bool inCardStance;
+        // public bool inCardStance;
+        [HideInInspector]public PlayerStateManager stateManager;
 
         public static PlayerVariables Instance { get; private set; }
 
@@ -24,6 +23,8 @@ namespace PlayerController
             {
                 Destroy(gameObject);
             }
+
+            stateManager = GetComponent<PlayerStateManager>();
         }
     }
 }
