@@ -4,21 +4,23 @@ namespace _Scripts
 {
     public class GameManager : MonoBehaviour
     {
-        public static GameManager Instance { get; private set; }
+        #region Singleton
 
-        private void Awake()
+        public static GameManager Instance
         {
-            // Singleton pattern
-            if (Instance == null)
+            get
             {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
+                if (_instance == null)
+                    _instance = FindObjectOfType(typeof(GameManager)) as GameManager;
+
+                return _instance;
             }
-            else
-            {
-                Destroy(gameObject);
-            }
+            set { _instance = value; }
         }
+
+        private static GameManager _instance;
+
+        #endregion
     }
 }
 

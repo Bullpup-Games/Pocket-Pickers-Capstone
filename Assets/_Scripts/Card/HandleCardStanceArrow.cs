@@ -14,20 +14,24 @@ namespace _Scripts.Card
     
         public Vector2 currentDirection;  // Stores the current direction of the arrow
 
-        public static HandleCardStanceArrow Instance;
-        
-        private void Awake()
+        #region Singleton
+
+        public static HandleCardStanceArrow Instance
         {
-            if (Instance == null)
+            get
             {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
+                if (_instance == null)
+                    _instance = FindObjectOfType(typeof(HandleCardStanceArrow)) as HandleCardStanceArrow;
+
+                return _instance;
             }
-            else
+            set
             {
-                Destroy(gameObject);
+                _instance = value;
             }
         }
+        private static HandleCardStanceArrow _instance;
+        #endregion
 
         public void InstantiateDirectionalArrow()
         {

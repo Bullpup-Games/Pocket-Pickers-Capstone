@@ -9,21 +9,27 @@ namespace _Scripts.Player
         // public bool inCardStance;
         [HideInInspector]public PlayerStateManager stateManager;
 
-        public static PlayerVariables Instance { get; private set; }
+        #region Singleton
+
+        public static PlayerVariables Instance
+        {
+            get
+            {
+                if (_instance == null)
+                    _instance = FindObjectOfType(typeof(PlayerVariables)) as PlayerVariables;
+
+                return _instance;
+            }
+            set
+            {
+                _instance = value;
+            }
+        }
+        private static PlayerVariables _instance;
+        #endregion
 
         private void Awake()
         {
-            // Singleton pattern
-            if (Instance == null)
-            {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-
             stateManager = GetComponent<PlayerStateManager>();
         }
     }

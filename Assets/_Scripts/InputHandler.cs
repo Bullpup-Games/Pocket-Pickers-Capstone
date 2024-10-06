@@ -22,21 +22,22 @@ namespace _Scripts
  */
     public class InputHandler : MonoBehaviour
     {
-        public static InputHandler Instance { get; private set; }
-    
-        private void Awake()
+        #region Singleton
+
+        public static InputHandler Instance
         {
-            // Singleton pattern
-            if (Instance == null)
+            get
             {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
+                if (_instance == null)
+                    _instance = FindObjectOfType(typeof(InputHandler)) as InputHandler;
+
+                return _instance;
             }
-            else
-            {
-                Destroy(gameObject);
-            }
+            set { _instance = value; }
         }
+
+        private static InputHandler _instance;
+        #endregion
 
         private void Update()
         {

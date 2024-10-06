@@ -24,7 +24,6 @@ namespace _Scripts.Card
      */
     public class CardManager : MonoBehaviour
     {
-        public static CardManager Instance { get; private set; }
         public InputHandler inputHandler;
         public PlayerMovementController playerMovementController;
         public HandleCardStanceArrow cardStanceArrow;
@@ -47,20 +46,25 @@ namespace _Scripts.Card
         
         
         public event Action <Vector2> Teleport ;
+        
+        #region Singleton
 
-        private void Awake()
+        public static CardManager Instance
         {
-            // Singleton pattern
-            if (Instance == null)
+            get
             {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
+                if (_instance == null)
+                    _instance = FindObjectOfType(typeof(CardManager)) as CardManager;
+
+                return _instance;
             }
-            else
+            set
             {
-                Destroy(gameObject);
+                _instance = value;
             }
         }
+        private static CardManager _instance;
+        #endregion
 
         private void OnEnable()
         {
