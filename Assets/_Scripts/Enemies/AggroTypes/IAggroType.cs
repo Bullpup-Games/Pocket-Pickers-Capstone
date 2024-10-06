@@ -15,6 +15,6 @@ namespace _Scripts.Enemies.AggroTypes
          * Bat: Screech to alert other guards of intruder
          * Sharpshooter: Prime and fire shot
          */
-        void Action();
+        // void Action();
     }
 }

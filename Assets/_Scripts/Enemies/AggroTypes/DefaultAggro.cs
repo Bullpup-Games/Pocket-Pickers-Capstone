@@ -23,7 +23,8 @@ namespace _Scripts.Enemies.AggroTypes
         private Vector2 _lastKnownPosition;
         private bool _checkingLastKnownLocation;
         private IViewType[] _viewTypes;
-        private EnemyStateManager _stateManager;
+        private EnemyStateManager _enemyStateManager;
+        private PlayerStateManager _playerStateManager;
         private EnemySettings _settings;
         private Rigidbody2D _rb;
 
@@ -32,7 +33,8 @@ namespace _Scripts.Enemies.AggroTypes
         private void Awake()
         {
             _viewTypes = GetComponents<IViewType>();
-            _stateManager = GetComponent<EnemyStateManager>();
+            _enemyStateManager = GetComponent<EnemyStateManager>();
+            _playerStateManager = PlayerVariables.Instance.gameObject.GetComponent<PlayerStateManager>();
             _settings = GetComponent<EnemySettings>();
             _rb = GetComponent<Rigidbody2D>();
         }
@@ -49,7 +51,7 @@ namespace _Scripts.Enemies.AggroTypes
          */
         public void Movement()
         {
-            if (_stateManager.state != EnemyState.Aggro) return;
+            if (_enemyStateManager.state != EnemyState.Aggro) return;
             // if NoPlayerDetected is called call GoToLastKnownLocation and return;
             var noPlayerDetected = true;
             foreach (var viewType in _viewTypes)
@@ -87,19 +89,6 @@ namespace _Scripts.Enemies.AggroTypes
             }
         }
 
-        /*
-         * When within a certain range the guard should grab the player and enter a QTE that gets progressively
-         * harder to pass. If failed trigger a level reset
-         */
-        public void Action()
-        {
-            return;
-            // check distance to player
-
-            // if within range call StartQuickTimeEvent 
-            // Handle the rest from there
-        }
-
         private void GoToLastKnownLocation(Vector2 location)
         {
             _checkingLastKnownLocation = true;
@@ -107,7 +96,7 @@ namespace _Scripts.Enemies.AggroTypes
             MoveTo(location);
             
             // switch to Searching state
-            _stateManager.SetState(EnemyState.Searching);
+            _enemyStateManager.SetState(EnemyState.Searching);
         }
 
         private void MoveTo(Vector2 location)
@@ -171,7 +160,8 @@ namespace _Scripts.Enemies.AggroTypes
                 // grappleUI.SetActive(false);
                 // UnlockPositions();
                 Debug.Log("QTE Passed");
-                _stateManager.SetState(EnemyState.Stunned);
+                _enemyStateManager.SetState(EnemyState.Stunned);
+                _playerStateManager.SetState(PlayerState.Idle);
                 if (qteTimeLimit > 2f)
                     qteTimeLimit -= timeLostPerEncounter;
             }
@@ -189,7 +179,7 @@ namespace _Scripts.Enemies.AggroTypes
 
         private void OnCollisionEnter2D(Collision2D col)
         {
-            if (_stateManager.state is EnemyState.Disabled or EnemyState.Stunned) return;
+            if (_enemyStateManager.state is EnemyState.Disabled or EnemyState.Stunned) return;
             if (col.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
                 var playerStateManager = col.gameObject.GetComponent<PlayerStateManager>();
