@@ -1,4 +1,5 @@
 using System;
+using _Scripts.Player;
 using UnityEngine;
 
 namespace _Scripts
@@ -43,6 +44,7 @@ namespace _Scripts
         {
             HandleCardStanceInput();
             HandleCardThrowInput();
+            HandleFalseTriggerInput();
         }
 
         public event Action OnEnterCardStance; // Event for entering card stance
@@ -54,7 +56,10 @@ namespace _Scripts
         {
             var triggerValue = Input.GetAxis("CardStance");
             bool isInCardStance = Mathf.Abs(triggerValue) > 0.1f;
-
+            
+            // Player should not be allowed to enter card stance while stunned
+            if (PlayerVariables.Instance.stateManager.state == PlayerState.Stunned) return;
+            
             if (isInCardStance && !_wasInCardStance)
             {
                 // Trigger pressed
@@ -83,7 +88,23 @@ namespace _Scripts
 
             if (Input.GetButtonDown("CardThrow"))
             {
+                // Players should not be allowed to throw a card while stunned
+                if (PlayerVariables.Instance.stateManager.state == PlayerState.Stunned) return;
                 OnCardThrow?.Invoke();
+            }
+        }
+
+        public event Action OnFalseTrigger;
+        private void HandleFalseTriggerInput()
+        {
+            if (Input.GetButtonDown("FalseTrigger"))
+            {
+                /*
+                 * The False trigger input is used to escape stuns. Even if it wasn't, it would be a clever way
+                 * of escaping one regardless if the player already has an active card out and near the enemy.
+                 * So, allow FalseTrigger input even if the player is stunned
+                 */
+                OnFalseTrigger?.Invoke();
             }
         }
     }

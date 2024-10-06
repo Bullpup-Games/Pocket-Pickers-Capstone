@@ -139,45 +139,50 @@ namespace _Scripts.Enemies.AggroTypes
             var timeElapsed = 0f;
 
             var playerRb = PlayerVariables.Instance.gameObject.GetComponent<Rigidbody2D>();
+            
+            // Local method to handle the false trigger input
+            void OnFalseTriggerHandler() => counter++;
 
-            while (timeElapsed < qteTimeLimit && counter < counterGoal)
+            InputHandler.Instance.OnFalseTrigger += OnFalseTriggerHandler;
+
+            try
             {
-                // Stop any movement from the guard or player
-                _rb.velocity = new Vector2(0f, 0f);
-                playerRb.velocity = new Vector2(0f, 0f);
-                if (Input.GetButtonDown("FalseTrigger"))
+                while (timeElapsed < qteTimeLimit && counter < counterGoal)
                 {
-                    counter++;
+                    // Stop any movement from the guard or player
+                    _rb.velocity = Vector2.zero;
+                    playerRb.velocity = Vector2.zero;
+
+                    timeElapsed += Time.deltaTime;
+                    yield return null;
                 }
 
-                timeElapsed += Time.deltaTime;
-                yield return null;
-            }
+                if (_hasExecuted) yield break;
 
-            if (_hasExecuted) yield break;
-            // Quick time event succeeded
-            if (counter >= counterGoal)
-            {
-                // grappleUI.SetActive(false);
-                // UnlockPositions();
-                Debug.Log("QTE Passed");
-                _enemyStateManager.SetState(EnemyState.Stunned);
-                _playerStateManager.SetState(PlayerState.Idle);
-                counterGoal += 2;
-                if (qteTimeLimit > 2f)
-                    qteTimeLimit -= timeLostPerEncounter;
+                // Quick time event succeeded
+                if (counter >= counterGoal)
+                {
+                    Debug.Log("QTE Passed");
+                    _enemyStateManager.SetState(EnemyState.Stunned);
+                    _playerStateManager.SetState(PlayerState.Idle);
+                    counterGoal += 2;
+                    if (qteTimeLimit > 2f)
+                        qteTimeLimit -= timeLostPerEncounter;
+                }
+                // Quick time event failed
+                else
+                {
+                    Debug.Log("QTE Failed");
+                    // Reload the current scene
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                }
             }
-            // Quick time event failed
-            else
+            finally
             {
-                Debug.Log("QTE Failed");
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-                // StopCoroutine(StartQuicktimeEvent());
-                // grappleUI.SetActive(false);
-                // GameOver.Instance.EndGame();
+                // Unsubscribe from the event
+                InputHandler.Instance.OnFalseTrigger -= OnFalseTriggerHandler;
+                _hasExecuted = true;
             }
-
-            _hasExecuted = true;
         }
 
         private void OnCollisionEnter2D(Collision2D col)
