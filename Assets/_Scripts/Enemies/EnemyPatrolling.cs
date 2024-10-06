@@ -73,6 +73,10 @@ namespace _Scripts.Enemies
             {
                 MoveTowardsTarget();
             }
+            else if (_stateManager.state == EnemyState.Returning)
+            {
+                ReturnToPatrolPosition();
+            }
             else if (_isWaiting)
             {
                 // During waiting state make sure any horizontal movement is halted but allow gravity
@@ -98,6 +102,37 @@ namespace _Scripts.Enemies
                 StartCoroutine(WaitAtPoint()); 
             }
             
+        }
+        
+        private void ReturnToPatrolPosition()
+        {
+            var distanceToOrigin = _originPosition.x - transform.position.x;
+            var direction = distanceToOrigin > 0 ? 1f : -1f;
+
+            if ((_settings.isFacingRight && direction < 0) || (!_settings.isFacingRight && direction > 0))
+            {
+                _settings.FlipLocalScale();
+            }
+
+            // Move towards the origin position
+            _rb.velocity = new Vector2(direction * movementSpeed, _rb.velocity.y);
+
+            if (!(Mathf.Abs(distanceToOrigin) <= 0.1f)) return;
+            _rb.velocity = new Vector2(0, _rb.velocity.y);
+            _stateManager.SetState(EnemyState.Patrolling);
+
+            // Reset patrol variables
+            // Set initial direction and target based on facing direction
+            if (_settings.isFacingRight)
+            {
+                _isMovingRight = true;
+                _currentTarget = _rightPatrolPoint;
+            }
+            else
+            {
+                _isMovingRight = false;
+                _currentTarget = _leftPatrolPoint;
+            }
         }
 
         // Coroutine to handle the wait time and prepare the variables for the next patrol
