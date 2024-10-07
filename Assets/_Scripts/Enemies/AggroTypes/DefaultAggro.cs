@@ -72,6 +72,10 @@ namespace _Scripts.Enemies.AggroTypes
                     _lastKnownPosition = position;
                     GoToLastKnownLocation(position);
                 }
+                else
+                {
+                    _enemyStateManager.SetState(EnemyState.Searching);
+                }
                 return;
             }
 
