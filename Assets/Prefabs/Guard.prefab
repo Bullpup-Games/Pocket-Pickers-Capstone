@@ -20,7 +20,7 @@ GameObject:
   - component: {fileID: 9035393051115882241}
   - component: {fileID: 1039145183077674432}
   - component: {fileID: 5214291992342817127}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Guard
   m_TagString: enemy
   m_Icon: {fileID: 0}
@@ -286,7 +286,7 @@ GameObject:
   - component: {fileID: 7680025773741744506}
   - component: {fileID: 4427794027539917687}
   - component: {fileID: 3113090815231540471}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: Sprite
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -390,7 +390,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2744736446209663425}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}

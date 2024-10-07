@@ -1,3 +1,5 @@
+using System.Collections;
+using _Scripts.Enemies;
 using _Scripts.Player;
 using UnityEngine;
 
@@ -5,20 +7,21 @@ namespace _Scripts.Card
 {
     public class Card : MonoBehaviour
     {
+        [Header("False Trigger Settings")]
+        [SerializeField]private float falseTriggerRadius = 4f;
+        [SerializeField] private Color gizmoColor = Color.cyan;
+        private float _lastActivationTime = -Mathf.Infinity;
         
-        private float _startTime;
-
         //private Rigidbody2D _rigidbody;
-        public InputHandler inputHandler;
-
         private Vector2 direction; // Direction in which the card is launched
         public float speed = 15;
         private Vector2 velocity;
-
+        private float _startTime;
         //total bounces is how many ricochets are allowed. Bounces is 
         //how many ricochets have happened
         public int totalBounces;
         public int bounces;
+
        // public Vector2 directon;
        
        #region Singleton
@@ -76,25 +79,26 @@ namespace _Scripts.Card
 
         private void OnEnable()
         {
-            inputHandler = GameObject.Find("InputHandler").GetComponent<InputHandler>();
-            setListeners();
+            SetListeners();
         }
 
         private void OnDestroy()
         {
-            deleteListeners();
+            DeleteListeners();
         }
         
-        private void setListeners()
+        private void SetListeners()
         {
-            inputHandler.OnEnterCardStance += DestroyCard;
+            InputHandler.Instance.OnEnterCardStance += DestroyCard;
+            InputHandler.Instance.OnFalseTrigger += ActivateFalseTrigger;
             CardManager.Instance.Teleport += CatchTeleport;
         }
 
         //todo sometimes when the card gets deleted, it doesn't have the inputHandler item
-        private void deleteListeners()
+        private void DeleteListeners()
         {
-            inputHandler.OnEnterCardStance -= DestroyCard;
+            InputHandler.Instance.OnEnterCardStance -= DestroyCard;
+            InputHandler.Instance.OnFalseTrigger -= ActivateFalseTrigger;
             CardManager.Instance.Teleport -= CatchTeleport;
         }
 
@@ -116,12 +120,12 @@ namespace _Scripts.Card
         public void Launch(Vector2 direction)
         {
             this.direction = direction.normalized;
-            calculateVelocity(this.direction);
+            CalculateVelocity(this.direction);
 
             
         }
 
-        private void calculateVelocity(Vector2 direction) {
+        private void CalculateVelocity(Vector2 direction) {
             var velocity = direction * this.speed;
             this.velocity = velocity;
         }
@@ -133,18 +137,36 @@ namespace _Scripts.Card
             {
                 DestroyCard();
             }
-
-            moveCard();
+            
+            MoveCard();
            
         }
 
-        private void moveCard()
+        private void MoveCard()
         {
             Vector3 newPosition = ((Vector2)transform.position) + (velocity * Time.deltaTime);
             this.transform.position = newPosition;
         }
 
-       
+        private void ActivateFalseTrigger()
+        {
+            if (CardManager.Instance.falseTriggerOnCooldown) return;
+            
+            var colliders = Physics2D.OverlapCircleAll(transform.position, falseTriggerRadius, LayerMask.GetMask("Enemy"));
+
+            foreach (Collider2D col in colliders)
+            {
+                var enemyStateManager = col.GetComponent<EnemyStateManager>();
+                if (enemyStateManager != null)
+                {
+                    enemyStateManager.SetState(EnemyState.Stunned);
+                }
+            }
+
+            StartCoroutine(CardManager.Instance.FalseTriggerCooldown());
+            DestroyCard();
+        }
+
         private void OnCollisionEnter2D(Collision2D col)
         {
             
@@ -178,7 +200,7 @@ namespace _Scripts.Card
                 //changes the direction of the card, and sets it to move in that direction
                 Vector3 wallNormal = col.GetContact(0).normal;
                 direction = Vector2.Reflect(direction, wallNormal);
-                calculateVelocity(direction);
+                CalculateVelocity(direction);
                 
                 //Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
                 return;
@@ -205,6 +227,7 @@ namespace _Scripts.Card
             DestroyCard();
         }
 
+        // CALL THIS FUNCTION TO DESTROY CARDS, DONT START FROM THE CARD MANAGER!
         public void DestroyCard()
         {
             // Notify the CardManager that the card has been destroyed
@@ -212,6 +235,10 @@ namespace _Scripts.Card
             Destroy(gameObject);
         }
         
-        
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = gizmoColor;
+            Gizmos.DrawWireSphere(transform.position, falseTriggerRadius);
+        } 
     }
 }

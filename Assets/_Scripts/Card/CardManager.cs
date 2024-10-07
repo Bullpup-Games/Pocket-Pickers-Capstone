@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using _Scripts.Player;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Scripts.Card
 {
@@ -44,7 +46,10 @@ namespace _Scripts.Card
         public float cardSpeed = 20.0f;
         public float cardLifeTime = 10.0f;
         
-        
+        public float falseTriggerCooldown = 10f;
+        public bool falseTriggerOnCooldown;
+ 
+
         public event Action <Vector2> Teleport ;
         
         #region Singleton
@@ -172,6 +177,14 @@ namespace _Scripts.Card
             {
                 Teleport.Invoke(Card.Instance.transform.position);
             }
+        }
+        
+        public IEnumerator FalseTriggerCooldown()
+        {
+            falseTriggerOnCooldown = true;
+            yield return new WaitForSeconds(falseTriggerCooldown);
+            falseTriggerOnCooldown = false;
+            yield return null;
         }
 
         /**
