@@ -153,6 +153,12 @@ namespace _Scripts.Enemies.AggroTypes
             {
                 while (timeElapsed < qteTimeLimit && counter < counterGoal)
                 {
+                    // Break out of the QTE if the enemy gets hit with a card
+                    if (_enemyStateManager.state == EnemyState.Disabled)
+                    {
+                        _playerStateManager.SetState(PlayerState.Idle);
+                        yield return null;
+                    }
                     // Stop any movement from the guard or player
                     _rb.velocity = Vector2.zero;
                     playerRb.velocity = Vector2.zero;
