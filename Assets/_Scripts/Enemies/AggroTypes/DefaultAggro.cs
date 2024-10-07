@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using _Scripts.Card;
 using _Scripts.Enemies.ViewTypes;
 using _Scripts.Player;
 using UnityEngine;
@@ -143,6 +144,9 @@ namespace _Scripts.Enemies.AggroTypes
             var timeElapsed = 0f;
 
             var playerRb = PlayerVariables.Instance.gameObject.GetComponent<Rigidbody2D>();
+            
+            // Make sure the card throw arrow isn't active
+            HandleCardStanceArrow.Instance.DestroyDirectionalArrow();
             
             // Local method to handle the false trigger input
             void OnFalseTriggerHandler() => counter++;
