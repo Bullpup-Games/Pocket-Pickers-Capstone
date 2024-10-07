@@ -75,7 +75,10 @@ namespace _Scripts.Enemies.AggroTypes
                 }
                 else
                 {
-                    _enemyStateManager.SetState(EnemyState.Searching);
+                    if (_enemyStateManager.state == EnemyState.Aggro)
+                    {
+                        _enemyStateManager.SetState(EnemyState.Searching);
+                    }
                 }
                 return;
             }
@@ -100,9 +103,13 @@ namespace _Scripts.Enemies.AggroTypes
             _checkingLastKnownLocation = true;
             // move to target location 
             MoveTo(location);
+           
             
             // switch to Searching state
-            _enemyStateManager.SetState(EnemyState.Searching);
+            if (_enemyStateManager.state == EnemyState.Aggro)
+            {
+                _enemyStateManager.SetState(EnemyState.Searching);
+            }
         }
 
         private void MoveTo(Vector2 location)
