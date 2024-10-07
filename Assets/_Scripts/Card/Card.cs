@@ -10,7 +10,6 @@ namespace _Scripts.Card
 
         //private Rigidbody2D _rigidbody;
         public InputHandler inputHandler;
-        public static Card Instance {  get; private set; }
 
         private Vector2 direction; // Direction in which the card is launched
         public float speed = 15;
@@ -21,28 +20,47 @@ namespace _Scripts.Card
         public int totalBounces;
         public int bounces;
        // public Vector2 directon;
+       
+       #region Singleton
 
-        /*
-        The plan:
-        x Add a constant public speed, and a direction vector
-        x add a variable for total possible ricochets and a second variable
-        for number of ricochets that have happened 
-        Make collision detection with tag recognition for four scenarios
-            x 1. It hit a wall
-                If we have done all our ricochets
-                    we will switch to a falling state
-                Otherwise
-                    We will bounce off the wall and keep our speed (calculate
-                    the normal of the wall, do an angle reflection calculation,
-                    set that as the new direction, normalize that, and multiply by
-                    speed to set new velocity)
-            x 2. It hits the player
-                Card goes through player, nothing happens
-            3. Card hits a grate/bars
-                Card goes through the bars, but the player cant go through the bars
-            4. Card hits an enemy
-                Card disapears, enemy is incapacitated, add sin
-        */
+       public static Card Instance
+       {
+           get
+           {
+               if (_instance == null)
+                   _instance = FindObjectOfType(typeof(Card)) as Card;
+
+               return _instance;
+           }
+           set
+           {
+               _instance = value;
+           }
+       }
+       private static Card _instance;
+       #endregion
+
+       /*
+       The plan:
+       x Add a constant public speed, and a direction vector
+       x add a variable for total possible ricochets and a second variable
+       for number of ricochets that have happened 
+       Make collision detection with tag recognition for four scenarios
+           x 1. It hit a wall
+               If we have done all our ricochets
+                   we will switch to a falling state
+               Otherwise
+                   We will bounce off the wall and keep our speed (calculate
+                   the normal of the wall, do an angle reflection calculation,
+                   set that as the new direction, normalize that, and multiply by
+                   speed to set new velocity)
+           x 2. It hits the player
+               Card goes through player, nothing happens
+           3. Card hits a grate/bars
+               Card goes through the bars, but the player cant go through the bars
+           4. Card hits an enemy
+               Card disapears, enemy is incapacitated, add sin
+       */
         
 
         /*
@@ -55,7 +73,7 @@ namespace _Scripts.Card
         and those functions are seperate
         */
 
-        
+
         private void OnEnable()
         {
             inputHandler = GameObject.Find("InputHandler").GetComponent<InputHandler>();
@@ -82,17 +100,6 @@ namespace _Scripts.Card
 
         private void Awake()
         {
-            
-            //singleton pattern
-            if (Instance == null)
-            {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
             //we start with 0 bounces, each time we bounce off a wall we incriment it
             bounces = 0;
             
