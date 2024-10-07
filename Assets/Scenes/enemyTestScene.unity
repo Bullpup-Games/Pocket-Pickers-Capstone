@@ -498,6 +498,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Guard
       objectReference: {fileID: 0}
+    - target: {fileID: 5214291992342817127, guid: 277e91905163040f08033e377006c417, type: 3}
+      propertyPath: quickDetectModifier
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7493615964463022480, guid: 277e91905163040f08033e377006c417, type: 3}
       propertyPath: m_LocalPosition.x
       value: 12.25
@@ -537,6 +541,22 @@ PrefabInstance:
     - target: {fileID: 7493615964463022480, guid: 277e91905163040f08033e377006c417, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9035393051115882241, guid: 277e91905163040f08033e377006c417, type: 3}
+      propertyPath: normalViewAngle
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 9035393051115882241, guid: 277e91905163040f08033e377006c417, type: 3}
+      propertyPath: alertedViewAngle
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 9035393051115882241, guid: 277e91905163040f08033e377006c417, type: 3}
+      propertyPath: normalViewDistance
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 9035393051115882241, guid: 277e91905163040f08033e377006c417, type: 3}
+      propertyPath: alertedViewDistance
+      value: 14
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

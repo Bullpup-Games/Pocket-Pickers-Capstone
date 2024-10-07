@@ -7,6 +7,7 @@ namespace _Scripts.Enemies
 {
     public class DetectionTimer : MonoBehaviour
     {
+        [SerializeField] private float quickDetectModifier = 5f;
         private float _detectionTimer = 0f;
         
         private EnemySettings _settings;
@@ -51,7 +52,7 @@ namespace _Scripts.Enemies
             // Debug.Log("Modifier:" + distanceModifier);
 
             if (!(_detectionTimer >= Mathf.Abs(_settings.baseDetectionTime)) && !quickDetect) return;
-            if (!(_detectionTimer >= Mathf.Abs(_settings.baseDetectionTime / 4f)) && quickDetect) return;
+            if (!(_detectionTimer >= Mathf.Abs(_settings.baseDetectionTime / quickDetectModifier)) && quickDetect) return;
             
             // Switch to the agro state after filling detection meter
             _stateManager.SetState(EnemyState.Aggro);

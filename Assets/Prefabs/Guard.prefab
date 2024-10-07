@@ -253,7 +253,7 @@ MonoBehaviour:
   quickDetection: 1
   maxDistanceModifier: 3
   minDistanceModifier: 0.25
-  normalViewRadius: 1
+  normalViewRadius: 1.75
   alertedViewRadius: 4
   targetLayer:
     serializedVersion: 2

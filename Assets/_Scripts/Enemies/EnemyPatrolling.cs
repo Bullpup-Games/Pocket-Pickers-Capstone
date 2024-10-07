@@ -170,7 +170,7 @@ namespace _Scripts.Enemies
         }
 
         // Gizmos of the patrol distance and ground detection ray visible in the editor
-        private void OnDrawGizmosSelected()
+        private void OnDrawGizmos()
         {
             Gizmos.color = patrolPathColor;
 
