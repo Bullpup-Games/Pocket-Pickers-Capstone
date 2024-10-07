@@ -157,7 +157,8 @@ namespace _Scripts.Enemies.AggroTypes
                     if (_enemyStateManager.state == EnemyState.Disabled)
                     {
                         _playerStateManager.SetState(PlayerState.Idle);
-                        yield return null;
+                        StopCoroutine(StartQuicktimeEvent());
+                        yield break;
                     }
                     // Stop any movement from the guard or player
                     _rb.velocity = Vector2.zero;
