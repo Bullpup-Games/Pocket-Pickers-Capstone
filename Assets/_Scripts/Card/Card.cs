@@ -158,7 +158,10 @@ namespace _Scripts.Card
                 var enemyStateManager = col.GetComponent<EnemyStateManager>();
                 if (enemyStateManager != null)
                 {
-                    enemyStateManager.SetState(EnemyState.Stunned);
+                    if (enemyStateManager.state != EnemyState.Disabled)
+                    {
+                        enemyStateManager.SetState(EnemyState.Stunned);
+                    }
                 }
             }
 
