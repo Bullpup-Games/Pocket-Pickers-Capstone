@@ -68,8 +68,12 @@ namespace _Scripts.Enemies
         {
             HandleGroundDetection();
             HandleGravity();
-
-            if ((_stateManager.state is EnemyState.Patrolling or EnemyState.Detecting) && !_isWaiting)
+            
+            if (_stateManager.state == EnemyState.Disabled)
+            {
+                _rb.velocity = new Vector2(0f, _rb.velocity.y);
+            }
+            else if ((_stateManager.state is EnemyState.Patrolling or EnemyState.Detecting) && !_isWaiting)
             {
                 MoveTowardsTarget();
             }
@@ -106,6 +110,7 @@ namespace _Scripts.Enemies
         
         private void ReturnToPatrolPosition()
         {
+
             var distanceToOrigin = _originPosition.x - transform.position.x;
             var direction = distanceToOrigin > 0 ? 1f : -1f;
 
