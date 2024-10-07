@@ -123,7 +123,7 @@ namespace _Scripts.Enemies.ViewTypes
             alertedViewRadius = _baseAlertedViewRadius * modifier;
         }
 
-        private void OnDrawGizmosSelected()
+        private void OnDrawGizmos()
         {
             if (_settings == null) InitializeSettings();
 
