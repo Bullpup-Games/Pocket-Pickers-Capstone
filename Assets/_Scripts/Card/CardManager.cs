@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using PlayerController;
+using _Scripts.Player;
 using UnityEngine;
 
-namespace Card
+namespace _Scripts.Card
 {
 
     /**
@@ -26,10 +24,10 @@ namespace Card
      */
     public class CardManager : MonoBehaviour
     {
-        public static CardManager Instance { get; private set; }
         public InputHandler inputHandler;
         public PlayerMovementController playerMovementController;
         public HandleCardStanceArrow cardStanceArrow;
+        private PlayerStateManager _playerStateManager;
 
         public Transform player;
         public GameObject cardPrefab;
@@ -48,20 +46,25 @@ namespace Card
         
         
         public event Action <Vector2> Teleport ;
+        
+        #region Singleton
 
-        private void Awake()
+        public static CardManager Instance
         {
-            // Singleton pattern
-            if (Instance == null)
+            get
             {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
+                if (_instance == null)
+                    _instance = FindObjectOfType(typeof(CardManager)) as CardManager;
+
+                return _instance;
             }
-            else
+            set
             {
-                Destroy(gameObject);
+                _instance = value;
             }
         }
+        private static CardManager _instance;
+        #endregion
 
         private void OnEnable()
         {
@@ -96,7 +99,7 @@ namespace Card
         //if not, you should test for teleportation
         private void HandleCardAction()
         {
-            if (PlayerVariables.Instance.inCardStance &&  _instantiatedCard == null)
+            if (PlayerVariables.Instance.stateManager.state == PlayerState.CardStance &&  _instantiatedCard == null)
             {
                 HandleCardThrow();
             }

@@ -1,8 +1,10 @@
 using System;
-using PlayerController;
+using _Scripts.Player;
 using UnityEngine;
 
-/**
+namespace _Scripts
+{
+    /**
  * Input manager axis to DuelSense inputs
 - 0 - Square
 - 1 - X
@@ -19,70 +21,91 @@ using UnityEngine;
 - 12 - On / Off Button
 - 13 - DuelSense GamePad
  */
-
-public class InputHandler : MonoBehaviour
-{
-    public static InputHandler Instance { get; private set; }
-
-    private void Awake()
+    public class InputHandler : MonoBehaviour
     {
-        // Singleton pattern
-        if (Instance == null)
+        #region Singleton
+
+        public static InputHandler Instance
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+            get
+            {
+                if (_instance == null)
+                    _instance = FindObjectOfType(typeof(InputHandler)) as InputHandler;
 
-    private void Update()
-    {
-        HandleCardStanceInput();
-        HandleCardThrowInput();
-    }
-
-    public event Action OnEnterCardStance; // Event for entering card stance
-    public event Action OnExitCardStance;  // Event for exiting card stance
-
-    private bool _wasInCardStance = false; // Check to see if card stance was already entered last in the previous frame
-
-    private void HandleCardStanceInput()
-    {
-        var triggerValue = Input.GetAxis("CardStance");
-        bool isInCardStance = Mathf.Abs(triggerValue) > 0.1f;
-
-        if (isInCardStance && !_wasInCardStance)
-        {
-            // Trigger pressed
-            OnEnterCardStance?.Invoke();
-            Debug.Log("Entered Card Stance");
-        }
-        else if (!isInCardStance && _wasInCardStance)
-        {
-            // Trigger released
-            OnExitCardStance?.Invoke();
-            Debug.Log("Exited Card Stance");
+                return _instance;
+            }
+            set { _instance = value; }
         }
 
-        _wasInCardStance = isInCardStance;
-    }
+        private static InputHandler _instance;
+        #endregion
 
-    public event Action OnCardThrow;
-
-    private void HandleCardThrowInput()
-    {
-        // if (!PlayerVariables.Instance.inCardStance)
-        // {
-        //     // TODO: Instead of blocking the input if the player isn't in card stance send a quick throw action
-        //     return;
-        // }
-
-        if (Input.GetButtonDown("CardThrow"))
+        private void Update()
         {
-            OnCardThrow?.Invoke();
+            HandleCardStanceInput();
+            HandleCardThrowInput();
+            HandleFalseTriggerInput();
+        }
+
+        public event Action OnEnterCardStance; // Event for entering card stance
+        public event Action OnExitCardStance;  // Event for exiting card stance
+
+        private bool _wasInCardStance = false; // Check to see if card stance was already entered last in the previous frame
+
+        private void HandleCardStanceInput()
+        {
+            var triggerValue = Input.GetAxis("CardStance");
+            bool isInCardStance = Mathf.Abs(triggerValue) > 0.1f;
+            
+            // Player should not be allowed to enter card stance while stunned
+            if (PlayerVariables.Instance.stateManager.state == PlayerState.Stunned) return;
+            
+            if (isInCardStance && !_wasInCardStance)
+            {
+                // Trigger pressed
+                OnEnterCardStance?.Invoke();
+                Debug.Log("Entered Card Stance");
+            }
+            else if (!isInCardStance && _wasInCardStance)
+            {
+                // Trigger released
+                OnExitCardStance?.Invoke();
+                Debug.Log("Exited Card Stance");
+            }
+
+            _wasInCardStance = isInCardStance;
+        }
+
+        public event Action OnCardThrow;
+
+        private void HandleCardThrowInput()
+        {
+            // if (!PlayerVariables.Instance.inCardStance)
+            // {
+            //     // TODO: Instead of blocking the input if the player isn't in card stance send a quick throw action
+            //     return;
+            // }
+
+            if (Input.GetButtonDown("CardThrow"))
+            {
+                // Players should not be allowed to throw a card while stunned
+                if (PlayerVariables.Instance.stateManager.state == PlayerState.Stunned) return;
+                OnCardThrow?.Invoke();
+            }
+        }
+
+        public event Action OnFalseTrigger;
+        private void HandleFalseTriggerInput()
+        {
+            if (Input.GetButtonDown("FalseTrigger"))
+            {
+                /*
+                 * The False trigger input is used to escape stuns. Even if it wasn't, it would be a clever way
+                 * of escaping one regardless if the player already has an active card out and near the enemy.
+                 * So, allow FalseTrigger input even if the player is stunned
+                 */
+                OnFalseTrigger?.Invoke();
+            }
         }
     }
 }

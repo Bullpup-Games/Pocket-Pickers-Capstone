@@ -1,11 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using PlayerController;
+using _Scripts.Player;
 using UnityEngine;
 
-
-namespace Card
+namespace _Scripts.Card
 {
     public class Card : MonoBehaviour
     {

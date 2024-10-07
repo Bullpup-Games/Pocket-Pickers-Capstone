@@ -1,23 +1,26 @@
-using Card;
-using PlayerController;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+namespace _Scripts
 {
-    public static GameManager Instance { get; private set; }
-
-    private void Awake()
+    public class GameManager : MonoBehaviour
     {
-        // Singleton pattern
-        if (Instance == null)
+        #region Singleton
+
+        public static GameManager Instance
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+            get
+            {
+                if (_instance == null)
+                    _instance = FindObjectOfType(typeof(GameManager)) as GameManager;
+
+                return _instance;
+            }
+            set { _instance = value; }
         }
-        else
-        {
-            Destroy(gameObject);
-        }
+
+        private static GameManager _instance;
+
+        #endregion
     }
 }
 

@@ -1,9 +1,10 @@
 using System;
-using Card;
+using _Scripts.Card;
+using _Scripts.Enemies;
+using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace PlayerController
+namespace _Scripts.Player
 {
     /// <summary>
     /// Hey!
@@ -26,6 +27,7 @@ namespace PlayerController
         [SerializeField] private ScriptableStats _stats;
         private Rigidbody2D _rb;
         private BoxCollider2D _col;
+        private PlayerStateManager _stateManager;
         private FrameInput _frameInput;
         private Vector2 _frameVelocity;
         private bool _cachedQueryStartInColliders;
@@ -44,6 +46,7 @@ namespace PlayerController
         {
             _rb = GetComponent<Rigidbody2D>();
             _col = GetComponent<BoxCollider2D>();
+            _stateManager = GetComponent<PlayerStateManager>();
 
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
         }
@@ -57,7 +60,10 @@ namespace PlayerController
         private void Update()
         {
             _time += Time.deltaTime;
-            if (!PlayerVariables.Instance.inCardStance) GatherInput();
+            if (_stateManager.state != PlayerState.CardStance && _stateManager.state != PlayerState.Stunned)
+            {
+                GatherInput();
+            }
         }
         
         /**
@@ -67,19 +73,18 @@ namespace PlayerController
 
         public void EnterCardStance()
         {
-            PlayerVariables.Instance.inCardStance = true;
+            _stateManager.SetState(PlayerState.CardStance);
         }
 
         public void ExitCardStance()
         {
-            PlayerVariables.Instance.inCardStance = false;
+            _stateManager.SetState(PlayerState.Idle);
         }
 
         
         private void GatherInput()
         {
-            // TODO: Maybe turn this into an inout gathering script that sends out messages to subscribers
-            if (PlayerVariables.Instance.inCardStance) return; // Safety check
+            if (_stateManager.state is PlayerState.CardStance or PlayerState.Stunned) return; // Safety check
             
             _frameInput = new FrameInput
             {
@@ -92,6 +97,17 @@ namespace PlayerController
             if (_frameInput.Move.x != 0)
             {
                 PlayerVariables.Instance.isFacingRight = _frameInput.Move.x > 0;
+                if (_stateManager.state != PlayerState.CardStance)
+                {
+                    _stateManager.SetState(PlayerState.Moving);
+                }
+            }
+            else
+            {
+                if (_stateManager.state != PlayerState.CardStance)
+                {
+                    _stateManager.SetState(PlayerState.Idle);
+                }
             }
 
             if (_stats.SnapInput)
@@ -225,10 +241,14 @@ namespace PlayerController
                 var deceleration = _grounded ? _stats.GroundDeceleration : _stats.AirDeceleration;
                 _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);
             } 
-            else if (PlayerVariables.Instance.inCardStance)
+            else if (_stateManager.state == PlayerState.CardStance)
             {
                 var deceleration = _grounded ? _stats.GroundDeceleration : 0f;
                 _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);
+            }
+            else if (_stateManager.state == PlayerState.Stunned)
+            {
+                _frameVelocity.x = 0f;
             }
             else
             {
