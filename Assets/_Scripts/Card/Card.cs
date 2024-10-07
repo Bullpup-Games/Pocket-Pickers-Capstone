@@ -10,7 +10,6 @@ namespace _Scripts.Card
         [Header("False Trigger Settings")]
         [SerializeField]private float falseTriggerRadius = 4f;
         [SerializeField] private Color gizmoColor = Color.cyan;
-        private float _lastActivationTime = -Mathf.Infinity;
         
         //private Rigidbody2D _rigidbody;
         private Vector2 direction; // Direction in which the card is launched
