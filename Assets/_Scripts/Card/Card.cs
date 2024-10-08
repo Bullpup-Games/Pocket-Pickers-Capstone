@@ -150,7 +150,7 @@ namespace _Scripts.Card
         private void ActivateFalseTrigger()
         {
             if (CardManager.Instance.falseTriggerOnCooldown) return;
-            
+
             var colliders = Physics2D.OverlapCircleAll(transform.position, falseTriggerRadius, LayerMask.GetMask("Enemy"));
 
             foreach (Collider2D col in colliders)
@@ -165,7 +165,7 @@ namespace _Scripts.Card
                 }
             }
 
-            StartCoroutine(CardManager.Instance.FalseTriggerCooldown());
+            CardManager.Instance.ActivateFalseTriggerCooldown();
             DestroyCard();
         }
 

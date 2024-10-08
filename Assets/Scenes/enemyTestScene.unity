@@ -155,6 +155,10 @@ PrefabInstance:
       value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 2204501328560629039, guid: c6f9bd836282842348fab8839a2de283, type: 3}
+      propertyPath: falseTriggerCooldown
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2204501328560629039, guid: c6f9bd836282842348fab8839a2de283, type: 3}
       propertyPath: playerMovementController
       value: 
       objectReference: {fileID: 1906975199}

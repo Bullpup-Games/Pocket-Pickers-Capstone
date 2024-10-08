@@ -178,8 +178,19 @@ namespace _Scripts.Card
                 Teleport.Invoke(Card.Instance.transform.position);
             }
         }
+
+        /*
+         * Coroutines are tied to the MonoBehavior they are called from
+         * so this function is needed to call the cooldown coroutine from the card
+         * that gets destroyed immediately after
+         */
         
-        public IEnumerator FalseTriggerCooldown()
+        public void ActivateFalseTriggerCooldown()
+        {
+            if (falseTriggerOnCooldown) return;
+            StartCoroutine(FalseTriggerCooldown());
+        }
+        private IEnumerator FalseTriggerCooldown()
         {
             falseTriggerOnCooldown = true;
             yield return new WaitForSeconds(falseTriggerCooldown);
