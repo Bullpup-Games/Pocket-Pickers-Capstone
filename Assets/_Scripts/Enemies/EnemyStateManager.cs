@@ -1,5 +1,6 @@
 using System;
 using _Scripts.Enemies.ViewTypes;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -9,6 +10,7 @@ namespace _Scripts.Enemies
     {
         public EnemyState state;
         private IViewType[] _viewTypes;
+        private Rigidbody2D _rb;
         public void SetState(EnemyState newState)
         {
             this.state = newState;
@@ -17,6 +19,7 @@ namespace _Scripts.Enemies
         private void Awake()
         {
             _viewTypes = GetComponents<IViewType>();
+            _rb = GetComponent<Rigidbody2D>();
         }
 
         private void OnEnable()
@@ -34,6 +37,14 @@ namespace _Scripts.Enemies
             {
                 viewType.PlayerDetected -= HandlePlayerSighting;
                 viewType.NoPlayerDetected -= HandleNoPlayerSighting;
+            }
+        }
+
+        private void Update()
+        {
+            if (state == EnemyState.Disabled)
+            {
+                _rb.velocity = Vector2.zero;
             }
         }
 
