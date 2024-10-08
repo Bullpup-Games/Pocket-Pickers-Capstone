@@ -134,7 +134,6 @@ namespace _Scripts.Enemies.AggroTypes
         // Flip the entity's sprite by inverting the X scaling
         private IEnumerator FlipLocalScale(Vector2 location)
         {
-            Debug.Log("Flip");
             yield return new WaitForSeconds(flipTime);
             _settings.FlipLocalScale();
             MoveTo(location);
