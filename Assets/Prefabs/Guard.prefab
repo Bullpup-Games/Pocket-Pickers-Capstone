@@ -194,7 +194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ebfc57171b24ee2878be79fb2d5cba5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 12
+  movementSpeed: 10
   flipTime: 0.2
   qteTimeLimit: 4
   timeLostPerEncounter: 0.5
@@ -225,12 +225,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   quickDetection: 0
-  maxDistanceModifier: 3
+  maxDistanceModifier: 2
   minDistanceModifier: 0.25
-  normalViewAngle: 45
-  alertedViewAngle: 60
-  normalViewDistance: 8
-  alertedViewDistance: 12
+  normalViewAngle: 60
+  alertedViewAngle: 80
+  normalViewDistance: 9
+  alertedViewDistance: 14
   targetLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -251,10 +251,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   quickDetection: 1
-  maxDistanceModifier: 3
+  maxDistanceModifier: 2
   minDistanceModifier: 0.25
-  normalViewRadius: 1.75
-  alertedViewRadius: 4
+  normalViewRadius: 3
+  alertedViewRadius: 5
   targetLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -275,6 +275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50ac8fc84a1404a5788f5727f2c14f89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  quickDetectModifier: 10
 --- !u!1 &2924834700768163338
 GameObject:
   m_ObjectHideFlags: 0
