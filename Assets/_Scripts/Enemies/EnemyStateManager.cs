@@ -135,6 +135,8 @@ namespace _Scripts.Enemies
             {
                 state = EnemyState.Disabled;
                 // TODO: Maybe destroy card? 
+                var card =  col.gameObject.GetComponent<Card.Card>();
+                card.DestroyCard();
             }
 
             // If the player touches an alive and un-stunned guard it should aggro them immediately 
