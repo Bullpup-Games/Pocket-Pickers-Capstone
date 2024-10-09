@@ -28,13 +28,6 @@ namespace _Scripts.Enemies
             // If the player's local state is 1 they're facing right, -1 left
             isFacingRight = !(Math.Abs(gameObject.transform.localScale.x - 1) > 0.1f);
             
-            // If the enemy is disabled they should just stop at their current position and be immovable for now
-            if (_stateManager.state == EnemyState.Disabled)
-            {
-                // TODO: Maybe change this eventually?
-                _rb.isKinematic = true;
-                _col.isTrigger = true;
-            } 
         }
         
         // Flip the entity's sprite by inverting the X scaling

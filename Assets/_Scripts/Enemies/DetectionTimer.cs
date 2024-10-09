@@ -23,7 +23,6 @@ namespace _Scripts.Enemies
             _stateManager = GetComponent<EnemyStateManager>();
             _rb = GetComponent<Rigidbody2D>();
             _viewTypes = GetComponents<IViewType>();
-
         }
 
         private void Update()

@@ -12,6 +12,7 @@ namespace _Scripts.Enemies
         public EnemyState state;
         private IViewType[] _viewTypes;
         private Rigidbody2D _rb;
+        private Collider2D _col;
 
         public void SetState(EnemyState newState)
         {
@@ -22,6 +23,7 @@ namespace _Scripts.Enemies
         {
             _viewTypes = GetComponents<IViewType>();
             _rb = GetComponent<Rigidbody2D>();
+            _col = GetComponent<Collider2D>();
         }
 
         private void OnEnable()
@@ -46,7 +48,10 @@ namespace _Scripts.Enemies
         {
             if (state == EnemyState.Disabled)
             {
-                _rb.velocity = new Vector2(0f, -10f);
+                _rb.velocity = new Vector2(0f, 0f);
+                // If the enemy is disabled they should just stop at their current position and be immovable for now
+                _rb.isKinematic = true;
+                _col.isTrigger = true;
             }
         }
 
@@ -121,18 +126,21 @@ namespace _Scripts.Enemies
         {
             if (col.gameObject.layer == LayerMask.NameToLayer("Card"))
             {
-                state = EnemyState.Disabled;
-                // TODO: Maybe destroy card? 
-                var card =  col.gameObject.GetComponent<Card.Card>();
-                card.DestroyCard();
+
             }
 
             // If the player touches an alive and un-stunned guard it should aggro them immediately 
             if (col.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
                 if (state is EnemyState.Disabled or EnemyState.Stunned) return;
+                Debug.Log("EnemyStateManager collision");
                 state = EnemyState.Aggro;
             }
+        }
+
+        public void KillEnemy()
+        {
+            state = EnemyState.Disabled;
         }
     }
 }

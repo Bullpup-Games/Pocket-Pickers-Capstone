@@ -63,6 +63,7 @@ namespace _Scripts.Enemies.ViewTypes
 
         public void SetView()
         {
+            if (_stateManager.state is EnemyState.Disabled or EnemyState.Stunned) return;
             UpdateHorizontalOffset();
             var position = (Vector2)transform.position + offset;
             var direction = _settings.isFacingRight ? Vector2.right : Vector2.left;

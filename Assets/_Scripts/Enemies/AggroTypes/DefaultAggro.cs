@@ -5,6 +5,7 @@ using _Scripts.Enemies.ViewTypes;
 using _Scripts.Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 namespace _Scripts.Enemies.AggroTypes
 {
@@ -44,6 +45,7 @@ namespace _Scripts.Enemies.AggroTypes
 
         private void Update()
         {
+            if (_enemyStateManager.state == EnemyState.Disabled) return;
             Movement();
         }
 
@@ -207,13 +209,12 @@ namespace _Scripts.Enemies.AggroTypes
 
         private void OnCollisionEnter2D(Collision2D col)
         {
+            if (col.gameObject.layer != LayerMask.NameToLayer("Player")) return;
             if (_enemyStateManager.state is EnemyState.Disabled or EnemyState.Stunned) return;
-            if (col.gameObject.layer == LayerMask.NameToLayer("Player"))
-            {
-                var playerStateManager = col.gameObject.GetComponent<PlayerStateManager>();
-                playerStateManager.SetState(PlayerState.Stunned);
-                StartCoroutine(StartQuicktimeEvent());
-            }
+            Debug.Log("DefaultAggro collision");
+            var playerStateManager = col.gameObject.GetComponent<PlayerStateManager>();
+            playerStateManager.SetState(PlayerState.Stunned);
+            StartCoroutine(StartQuicktimeEvent());
         }
     }
 }

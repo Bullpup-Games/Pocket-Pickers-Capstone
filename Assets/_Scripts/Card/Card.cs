@@ -184,6 +184,8 @@ namespace _Scripts.Card
             {
                 //todo if the card hits an enemy, incapacitate the enemy and destroy the card
                 Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
+                col.gameObject.GetComponent<EnemyStateManager>().KillEnemy();
+                DestroyCard();
                 return;
             }
             // TODO: Add a check for walls and count bounces
