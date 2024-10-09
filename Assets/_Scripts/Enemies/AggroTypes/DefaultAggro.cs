@@ -1,10 +1,10 @@
 using System;
 using System.Collections;
+using _Scripts.Card;
 using _Scripts.Enemies.ViewTypes;
 using _Scripts.Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 
 namespace _Scripts.Enemies.AggroTypes
 {
@@ -18,7 +18,9 @@ namespace _Scripts.Enemies.AggroTypes
         [SerializeField] private float timeLostPerEncounter = 0.5f;
         [SerializeField] private int counterGoal = 15;
         private bool _hasExecuted = false;
-        private bool _isFlipping = false;
+        
+        private float _flipCooldown = 0.8f;
+        private float _lastFlipTime = -Mathf.Infinity; // for flip cooldown to prevent multiple flips happening really fast
 
         private Vector2 _targetPosition;
         private Vector2 _lastKnownPosition;
@@ -30,7 +32,7 @@ namespace _Scripts.Enemies.AggroTypes
         private Rigidbody2D _rb;
 
         public Vector2 LastKnownPosition() => _lastKnownPosition;
-        
+
         private void Awake()
         {
             _viewTypes = GetComponents<IViewType>();
@@ -42,7 +44,6 @@ namespace _Scripts.Enemies.AggroTypes
 
         private void Update()
         {
-            // TODO: Check for player distance and call QTE from there
             Movement();
         }
 
@@ -53,7 +54,8 @@ namespace _Scripts.Enemies.AggroTypes
         public void Movement()
         {
             if (_enemyStateManager.state != EnemyState.Aggro) return;
-            // if NoPlayerDetected is called call GoToLastKnownLocation and return;
+
+            // Check if player is detected
             var noPlayerDetected = true;
             foreach (var viewType in _viewTypes)
             {
@@ -63,7 +65,7 @@ namespace _Scripts.Enemies.AggroTypes
                     break;
                 }
             }
-            
+
             if (noPlayerDetected)
             {
                 if (!_checkingLastKnownLocation)
@@ -74,34 +76,45 @@ namespace _Scripts.Enemies.AggroTypes
                 }
                 else
                 {
-                    _enemyStateManager.SetState(EnemyState.Searching);
+                    if (_enemyStateManager.state == EnemyState.Aggro)
+                    {
+                        _enemyStateManager.SetState(EnemyState.Searching);
+                    }
                 }
                 return;
             }
 
             var targetPos = (Vector2)PlayerVariables.Instance.transform.position;
-            
+
+            var timeSinceLastFlip = Time.time - _lastFlipTime;
+
             // If the enemy is already facing the target move to it
             if ((_settings.isFacingRight && targetPos.x > transform.position.x)
                 || (!_settings.isFacingRight && targetPos.x < transform.position.x))
             {
                 MoveTo(targetPos);
             }
-            // Otherwise, turn around then move it it
-            else if (!_isFlipping)
+            // Otherwise check cooldown before flipping
+            else if (timeSinceLastFlip >= _flipCooldown)
             {
+                _lastFlipTime = Time.time; // Update last flip time
                 StartCoroutine(FlipLocalScale(targetPos));
+            }
+            else
+            {
+                _rb.velocity = Vector2.Lerp(_rb.velocity, Vector2.zero, Time.deltaTime);
             }
         }
 
         private void GoToLastKnownLocation(Vector2 location)
         {
             _checkingLastKnownLocation = true;
-            // move to target location 
             MoveTo(location);
-            
-            // switch to Searching state
-            _enemyStateManager.SetState(EnemyState.Searching);
+
+            if (_enemyStateManager.state == EnemyState.Aggro)
+            {
+                _enemyStateManager.SetState(EnemyState.Searching);
+            }
         }
 
         private void MoveTo(Vector2 location)
@@ -114,25 +127,18 @@ namespace _Scripts.Enemies.AggroTypes
             // Checking if the target position has been reached
             if ((!_settings.isFacingRight || !(transform.position.x >= location.x))
                 && (_settings.isFacingRight || !(transform.position.x <= location.x))) return;
-        
+
             _rb.velocity = new Vector2(0, _rb.velocity.y);
         }
-        
+
         // Flip the entity's sprite by inverting the X scaling
         private IEnumerator FlipLocalScale(Vector2 location)
         {
-            _isFlipping = true;
             yield return new WaitForSeconds(flipTime);
-            // I don't know why the transformCopy needs to exist but Unity yelled at me when I didn't have it so here it sits..
-            var transformCopy = transform;
-            var localScale = transformCopy.localScale;
-            localScale.x *= -1;
-            transformCopy.localScale = localScale;
-            
-            _isFlipping = false;
+            _settings.FlipLocalScale();
             MoveTo(location);
         }
-
+        
         // Modified grapple coroutine from Don't Move
         private IEnumerator StartQuicktimeEvent()
         {
@@ -144,6 +150,9 @@ namespace _Scripts.Enemies.AggroTypes
 
             var playerRb = PlayerVariables.Instance.gameObject.GetComponent<Rigidbody2D>();
             
+            // Make sure the card throw arrow isn't active
+            HandleCardStanceArrow.Instance.DestroyDirectionalArrow();
+            
             // Local method to handle the false trigger input
             void OnFalseTriggerHandler() => counter++;
 
@@ -153,6 +162,13 @@ namespace _Scripts.Enemies.AggroTypes
             {
                 while (timeElapsed < qteTimeLimit && counter < counterGoal)
                 {
+                    // Break out of the QTE if the enemy gets hit with a card
+                    if (_enemyStateManager.state == EnemyState.Disabled)
+                    {
+                        _playerStateManager.SetState(PlayerState.Idle);
+                        StopCoroutine(StartQuicktimeEvent());
+                        yield break;
+                    }
                     // Stop any movement from the guard or player
                     _rb.velocity = Vector2.zero;
                     playerRb.velocity = Vector2.zero;

@@ -132,7 +132,7 @@ namespace _Scripts.Enemies.ViewTypes
              _viewAngle *= modifier;
         }
 
-        private void OnDrawGizmosSelected()
+        private void OnDrawGizmos()
         {
             if (_settings == null) InitializeSettings();
             
