@@ -44,5 +44,16 @@ namespace _Scripts.Player
             sinHeld += weight;
             Debug.Log("Total sin collected: " + sinHeld);
         }
+
+        public void commitSin(int weight)
+        {
+            Debug.Log("Committed sin of weight " + weight);
+            this.sinAccrued += weight;
+            Debug.Log("Total sin commited: " + this.sinAccrued);
+            if (sinAccrued >= sinThreshold)
+            {
+                Debug.Log("Should add a new sin to the bank vault");
+            }
+        }
     }
 }

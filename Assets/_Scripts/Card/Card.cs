@@ -183,7 +183,9 @@ namespace _Scripts.Card
             if (col.gameObject.CompareTag("enemy"))
             {
                 //todo if the card hits an enemy, incapacitate the enemy and destroy the card
+                col.gameObject.GetComponent<EnemyStateManager>().killEnemy();
                 Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
+                DestroyCard();
                 return;
             }
             // TODO: Add a check for walls and count bounces

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using _Scripts.Enemies.ViewTypes;
+using _Scripts.Player;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -13,6 +14,8 @@ namespace _Scripts.Enemies
         private IViewType[] _viewTypes;
         private Rigidbody2D _rb;
         private bool _waiting;
+
+        public int sinPenalty;
         public void SetState(EnemyState newState)
         {
             this.state = newState;
@@ -131,13 +134,13 @@ namespace _Scripts.Enemies
 
         private void OnCollisionEnter2D(Collision2D col)
         {
-            if (col.gameObject.layer == LayerMask.NameToLayer("Card"))
-            {
-                state = EnemyState.Disabled;
-                // TODO: Maybe destroy card? 
-                var card =  col.gameObject.GetComponent<Card.Card>();
-                card.DestroyCard();
-            }
+            // if (col.gameObject.layer == LayerMask.NameToLayer("Card"))
+            // {
+            //     state = EnemyState.Disabled;
+            //     // TODO: Maybe destroy card? 
+            //     var card =  col.gameObject.GetComponent<Card.Card>();
+            //     card.DestroyCard();
+            // }
 
             // If the player touches an alive and un-stunned guard it should aggro them immediately 
             if (col.gameObject.layer == LayerMask.NameToLayer("Player"))
@@ -145,6 +148,13 @@ namespace _Scripts.Enemies
                 if (state is EnemyState.Disabled or EnemyState.Stunned) return;
                 state = EnemyState.Aggro;
             }
+        }
+
+        public void killEnemy()
+        {
+            
+            PlayerVariables.Instance.commitSin(sinPenalty);
+            state = EnemyState.Disabled;
         }
     }
 }

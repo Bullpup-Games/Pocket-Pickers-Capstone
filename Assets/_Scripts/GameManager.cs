@@ -5,19 +5,19 @@ namespace _Scripts
     
     /*
      * The plan:
-     * 1. Add Sin prefab and Sin script
+    V* 1. Add Sin prefab and Sin script
      * 1.5 Actually add multiple sin prefabs with different designs. They will all
      *      hold the sin tag, and run the same script. They will look different though
-     * 2. Sin script should contain a weight, or how much sin it holds
+    V* 2. Sin script should contain a weight, or how much sin it holds
      * 3. Add prefab for potential sin location
-     * 3. Player should be able to pick up a sin object by touching it
+    V* 3. Player should be able to pick up a sin object by touching it
      * 4. In GameManager, add a public variable for total remaining sin
      * 5. On loading, in GameManager, get a list of all Sin objects (including
      *      ones that were added during play) and put them into a list
      * 6. On loading, in game manager, get the sum of all sins currently in the vault, and
      *      store it in a public variable
-     * 7. In playerVariables, add 3 variables: sin held, sin accrued, and threshold
-     * 8. For sin held, when the player picks up a sin, add its weight to sin held.
+    V* 7. In playerVariables, add 3 variables: sin held, sin accrued, and threshold
+    V* 8. For sin held, when the player picks up a sin, add its weight to sin held.
      * 9.
      * 10. For sin accrued, when the player commits a sin such as killing, add to sin accrued
      * 11. For threshold, it should be a random value within a possible range.
