@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using _Scripts.Enemies.ViewTypes;
 using UnityEngine;
 using UnityEngine.Rendering.VirtualTexturing;
@@ -14,6 +15,7 @@ namespace _Scripts.Enemies
         private EnemyStateManager _stateManager;
         private Rigidbody2D _rb;
         private IViewType[] _viewTypes;
+        private bool _waiting;
         
         private void Awake()
         {
@@ -29,12 +31,17 @@ namespace _Scripts.Enemies
             foreach (var viewType in _viewTypes)
             {
                 viewType.SetView();
+                if (viewType.IsPlayerDetectedThisFrame())
+                {
+                    return;
+                }
             }
             
-            if (_stateManager.state != EnemyState.Detecting)
-            {
-                _detectionTimer = 0f;
-            }
+            if (_waiting || _stateManager.state != EnemyState.Detecting) return;
+            _detectionTimer = 0f;
+            _waiting = true;
+            StartCoroutine(WaitBeforeSwitchingBackToPatrol());
+            Debug.Log("Called wait before patrol");
         }
 
         private void OnEnable()
@@ -57,6 +64,28 @@ namespace _Scripts.Enemies
             // Switch to the agro state after filling detection meter
             _stateManager.SetState(EnemyState.Aggro);
             // Debug.Log("Enemy is now aggro!");
+        }
+        
+        private IEnumerator WaitBeforeSwitchingBackToPatrol()
+        {
+            _waiting = true;
+            yield return new WaitForSeconds(2);
+
+            foreach (var view in _viewTypes)
+            {
+                if (view.IsPlayerDetectedThisFrame())
+                {
+                    _waiting = false;
+                    yield break;
+                }
+            }
+            
+            if (_stateManager.state == EnemyState.Detecting)
+            {
+                _stateManager.SetState(EnemyState.Patrolling);
+            }
+
+            _waiting = false;
         }
     }
 }

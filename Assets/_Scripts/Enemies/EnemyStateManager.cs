@@ -12,7 +12,7 @@ namespace _Scripts.Enemies
         public EnemyState state;
         private IViewType[] _viewTypes;
         private Rigidbody2D _rb;
-        private bool _waiting;
+
         public void SetState(EnemyState newState)
         {
             this.state = newState;
@@ -46,7 +46,7 @@ namespace _Scripts.Enemies
         {
             if (state == EnemyState.Disabled)
             {
-                _rb.velocity = Vector2.zero;
+                _rb.velocity = new Vector2(0f, -10f);
             }
         }
 
@@ -88,7 +88,7 @@ namespace _Scripts.Enemies
         {
             foreach (var viewType in _viewTypes)
             {
-                if (viewType.IsPlayerDetectedThisFrame() == true)
+                if (viewType.IsPlayerDetectedThisFrame())
                 {
                     return;
                 }
@@ -100,7 +100,6 @@ namespace _Scripts.Enemies
                 case EnemyState.Patrolling:
                     return;
                 case EnemyState.Detecting:
-                    if (!_waiting) StartCoroutine(WaitBeforeSwitchingBackToPatrol());
                     return;
                 case EnemyState.Aggro:
                     return;
@@ -116,18 +115,7 @@ namespace _Scripts.Enemies
          * Instead of immediately returning to their patrol state the guard should keep looking in direction
          * of the player's light sighting for a short time before returning.
          */
-        private IEnumerator WaitBeforeSwitchingBackToPatrol()
-        {
-            _waiting = true;
-            yield return new WaitForSeconds(2);
 
-            if (state == EnemyState.Detecting)
-            {
-                state = EnemyState.Patrolling;
-            }
-
-            _waiting = false;
-        }
 
         private void OnCollisionEnter2D(Collision2D col)
         {
