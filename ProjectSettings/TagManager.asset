@@ -8,6 +8,7 @@ TagManager:
   - enemy
   - wall
   - permeable
+  - Sin
   layers:
   - Default
   - TransparentFX
