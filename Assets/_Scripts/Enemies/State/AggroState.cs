@@ -72,6 +72,17 @@ namespace _Scripts.Enemies.State
             // Move towards the player
             var moveDirectionX = Mathf.Sign(directionToPlayer.x);
             var direction = new Vector2(moveDirectionX, 0).normalized;
+            
+            // Ensure proper sprite orientation
+            if (PlayerVariables.Instance.transform.position.x > _enemy.transform.position.x && !_enemy.Settings.isFacingRight)
+            {
+                _enemy.Settings.FlipLocalScale();
+            }
+            else if (PlayerVariables.Instance.transform.position.x < _enemy.transform.position.x && _enemy.Settings.isFacingRight)
+            {
+                _enemy.Settings.FlipLocalScale();
+            }
+            
             _enemy.Move(direction, _enemy.Settings.aggroMovementSpeed);
         }
 
