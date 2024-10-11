@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Scripts.Player;
 using UnityEngine;
 
 namespace _Scripts
@@ -85,9 +86,17 @@ namespace _Scripts
 
         public void collectSin(GameObject sin)
         {
-            activeSins.Remove(sin);
-            remainingSin -= sin.GetComponent<Sin>().weight;
             
+            //deal with stats in GameManager
+            
+            int sinWeight = sin.GetComponent<Sin>().weight;
+            remainingSin -= sinWeight;
+            
+            //deal with stats in Player
+            PlayerVariables.Instance.collectSin(sinWeight);
+            
+            //deal with prefabs and active/potential sin loop
+            activeSins.Remove(sin);
             //TODO instantiate a new potential sin gameobject at the location of sin and add it to potentialSins
             GameObject newPotentialSin = Instantiate(potentialSinPrefab, sin.transform.position, Quaternion.identity);
             potentialSins.Add(newPotentialSin);
@@ -95,13 +104,15 @@ namespace _Scripts
             
             
             //TODO have an event that is called to let all enemies know that a sin was collected
-            
+            //deal with win condition, later we will remove this and put it in a different script for finishing a level
             Debug.Log("Remaining sin " + remainingSin);
             if (remainingSin <= winThreshold)
             {
                 Debug.Log("It is now possible to win");
             }
             
+           
+            //Everything is done, remove the sin object
             Destroy(sin);
         }
     }

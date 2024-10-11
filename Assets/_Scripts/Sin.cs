@@ -24,7 +24,7 @@ public class Sin : MonoBehaviour
     {
         if (col.gameObject.CompareTag("Player"))
         {
-            col.gameObject.GetComponent<PlayerVariables>().collectSin(this.weight);
+            
             Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
             
             GameManager.Instance.collectSin(gameObject);
