@@ -9,6 +9,7 @@ TagManager:
   - wall
   - permeable
   - Sin
+  - PotentialSin
   layers:
   - Default
   - TransparentFX

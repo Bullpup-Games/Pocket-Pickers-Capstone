@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace _Scripts
@@ -12,14 +13,14 @@ namespace _Scripts
      * 3. Add prefab for potential sin location
     V* 3. Player should be able to pick up a sin object by touching it
      * 4. In GameManager, add a public variable for total remaining sin
-     * 5. On loading, in GameManager, get a list of all Sin objects (including
+    V* 5. On loading, in GameManager, get a list of all Sin objects (including
      *      ones that were added during play) and put them into a list
-     * 6. On loading, in game manager, get the sum of all sins currently in the vault, and
+    V* 6. On loading, in game manager, get the sum of all sins currently in the vault, and
      *      store it in a public variable
     V* 7. In playerVariables, add 3 variables: sin held, sin accrued, and threshold
     V* 8. For sin held, when the player picks up a sin, add its weight to sin held.
-     * 9.
-     * 10. For sin accrued, when the player commits a sin such as killing, add to sin accrued
+     * 9. 
+    V* 10. For sin accrued, when the player commits a sin such as killing, add to sin accrued
      * 11. For threshold, it should be a random value within a possible range.
      *      This should reset each time they create a new sin
      * 12. When the players sin accrued goes over the threshold, a potential sin should
@@ -42,6 +43,17 @@ namespace _Scripts
      */
     public class GameManager : MonoBehaviour
     {
+
+
+        public List<GameObject> activeSins;
+        public List<GameObject> potentialSins;
+        public int remainingSin;
+        public int winThreshold;//what is the maximum amount of sin that can remain and you still win
+        
+        
+        //prefabs
+        public GameObject sinPrefab;
+        public GameObject potentialSinPrefab;
         #region Singleton
 
         public static GameManager Instance
@@ -59,6 +71,39 @@ namespace _Scripts
         private static GameManager _instance;
 
         #endregion
+
+        public void Awake()
+        {
+            activeSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("Sin"));
+            foreach (GameObject sin in activeSins)
+            {
+                remainingSin += sin.GetComponent<Sin>().weight;
+            }
+            potentialSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("PotentialSin"));
+            Debug.Log("The total amount of sin in the game is " + remainingSin);
+        }
+
+        public void collectSin(GameObject sin)
+        {
+            activeSins.Remove(sin);
+            remainingSin -= sin.GetComponent<Sin>().weight;
+            
+            //TODO instantiate a new potential sin gameobject at the location of sin and add it to potentialSins
+            GameObject newPotentialSin = Instantiate(potentialSinPrefab, sin.transform.position, Quaternion.identity);
+            potentialSins.Add(newPotentialSin);
+            Debug.Log("Number of potential sins: " + potentialSins.Count);
+            
+            
+            //TODO have an event that is called to let all enemies know that a sin was collected
+            
+            Debug.Log("Remaining sin " + remainingSin);
+            if (remainingSin <= winThreshold)
+            {
+                Debug.Log("It is now possible to win");
+            }
+            
+            Destroy(sin);
+        }
     }
 }
 

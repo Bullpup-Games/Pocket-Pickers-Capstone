@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using _Scripts;
 using _Scripts.Player;
 using UnityEngine;
 
@@ -25,7 +26,8 @@ public class Sin : MonoBehaviour
         {
             col.gameObject.GetComponent<PlayerVariables>().collectSin(this.weight);
             Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
-            Destroy(gameObject);
+            
+            GameManager.Instance.collectSin(gameObject);
         }
     }
 }
