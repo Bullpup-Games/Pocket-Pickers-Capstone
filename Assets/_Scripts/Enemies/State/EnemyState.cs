@@ -1,7 +1,9 @@
-namespace _Scripts.Enemies
+namespace _Scripts.Enemies.State
 {
     public enum EnemyState
     {
+        // THIS ENUM IS JUST FOR DEBUGGING IN THE INSPECTOR NOW, IT HAS NO IMPACT ON BEHAVIOR WHATSOEVER
+        // ALL STATE LOGIC IS HANDLED IN THE ENEMY STATE MANAGER
         // States are shared by all enemy types, behavior in each state varies
         Patrolling, // Not aware of the player at all (eye closed)
         Detecting, // Sees the player, is not yet focused on them (eye opening)

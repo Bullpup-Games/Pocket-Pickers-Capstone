@@ -31,5 +31,7 @@ namespace _Scripts.Enemies.ViewTypes
         void UpdateView(float modifier);
 
         bool IsPlayerDetectedThisFrame();
+
+        bool QuickDetection();
     }
 }

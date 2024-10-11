@@ -1,4 +1,5 @@
 using System;
+using _Scripts.Enemies.State;
 using UnityEngine;
 
 namespace _Scripts.Enemies.ViewTypes
@@ -7,13 +8,17 @@ namespace _Scripts.Enemies.ViewTypes
     {
         [Header("Detection Settings")]
         [Tooltip("If enabled cuts the detection time down to a quarter")]
-        public bool quickDetection;
+        [SerializeField] private bool quickDetection;
+        public bool QuickDetection() => quickDetection;
+        
         [Tooltip("Upper bound for the modifier given to the detection timer when the player is at the far edge of the view"),
          Range(1.0f, 10.0f)]
         public float maxDistanceModifier = 3.0f;
+        
         [Tooltip("Lower bound for the modifier given to the detection timer when the player is close to the origin of the view"),
          Range(0.01f, 1.0f)]
         public float minDistanceModifier = 0.25f;
+        
         [Header("Cone View Settings")] 
         public float normalViewAngle = 45f;
         public float alertedViewAngle = 60f;
@@ -38,9 +43,8 @@ namespace _Scripts.Enemies.ViewTypes
 
         private void Update()
         {
-            if (_stateManager.state is EnemyState.Aggro or EnemyState.Searching)
+            if (_stateManager.IsAlertedState())
             {
-                // TODO: Make this available in the editor
                 _viewAngle = alertedViewAngle;
                 _viewDistance = alertedViewDistance;
             }
@@ -63,6 +67,7 @@ namespace _Scripts.Enemies.ViewTypes
 
         public void SetView()
         {
+            if (_stateManager.IsDisabledState() || _stateManager.IsStunnedState()) return;
             UpdateHorizontalOffset();
             var position = (Vector2)transform.position + offset;
             var direction = _settings.isFacingRight ? Vector2.right : Vector2.left;

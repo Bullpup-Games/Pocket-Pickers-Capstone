@@ -96,7 +96,13 @@ namespace _Scripts.Player
             // Track the facing direction based on the last non-zero horizontal input
             if (_frameInput.Move.x != 0)
             {
-                PlayerVariables.Instance.isFacingRight = _frameInput.Move.x > 0;
+                // PlayerVariables.Instance.isFacingRight = _frameInput.Move.x > 0;
+                if ((PlayerVariables.Instance.isFacingRight && _frameInput.Move.x < 0)||
+                    (!PlayerVariables.Instance.isFacingRight && _frameInput.Move.x > 0))
+                {
+                    PlayerVariables.Instance.FlipLocalScale();
+                }
+                
                 if (_stateManager.state != PlayerState.CardStance)
                 {
                     _stateManager.SetState(PlayerState.Moving);
