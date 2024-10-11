@@ -1,5 +1,6 @@
 using System.Collections;
 using _Scripts.Enemies;
+using _Scripts.Enemies.State;
 using _Scripts.Player;
 using UnityEngine;
 
@@ -149,7 +150,11 @@ namespace _Scripts.Card
 
         private void ActivateFalseTrigger()
         {
-            if (CardManager.Instance.falseTriggerOnCooldown) return;
+            if (CardManager.Instance.falseTriggerOnCooldown)
+            {
+                Debug.Log("False Trigger on cooldown.");
+                return;
+            }
 
             var colliders = Physics2D.OverlapCircleAll(transform.position, falseTriggerRadius, LayerMask.GetMask("Enemy"));
 
@@ -158,10 +163,7 @@ namespace _Scripts.Card
                 var enemyStateManager = col.GetComponent<EnemyStateManager>();
                 if (enemyStateManager != null)
                 {
-                    if (enemyStateManager.state != EnemyState.Disabled)
-                    {
-                        enemyStateManager.SetState(EnemyState.Stunned);
-                    }
+                    enemyStateManager.TransitionToState(enemyStateManager.StunnedState);
                 }
             }
 
@@ -184,7 +186,8 @@ namespace _Scripts.Card
             {
                 //todo if the card hits an enemy, incapacitate the enemy and destroy the card
                 Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
-                col.gameObject.GetComponent<EnemyStateManager>().KillEnemy();
+                var enemy = col.gameObject.GetComponent<EnemyStateManager>();
+                enemy.TransitionToState(enemy.DisabledState);
                 DestroyCard();
                 return;
             }

@@ -59,7 +59,7 @@ namespace _Scripts.Player
 
             DetectGroundColor();
 
-            HandleSpriteFlip();
+            // HandleSpriteFlip();
 
             HandleIdleSpeed();
 
