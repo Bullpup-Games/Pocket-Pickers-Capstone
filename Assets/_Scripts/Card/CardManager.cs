@@ -34,6 +34,7 @@ namespace _Scripts.Card
         public Transform player;
         public GameObject cardPrefab;
         private GameObject _instantiatedCard;
+        public bool IsCardInScene() => _instantiatedCard != null;
         
         [Header("Card and Direction Arrow Offsets")]
         public float horizontalOffset = 2.0f;
@@ -74,12 +75,12 @@ namespace _Scripts.Card
         private void OnEnable()
         {
             // enter card stance
-            inputHandler.OnEnterCardStance += HandleEnterCardStance;
-            inputHandler.OnExitCardStance += HandleExitCardStance;
+            // inputHandler.OnEnterCardStance += HandleEnterCardStance;
+            // inputHandler.OnExitCardStance += HandleExitCardStance;
         
             // enable card stance directional arrow
-            inputHandler.OnEnterCardStance += HandleShowDirectionalArrow;
-            inputHandler.OnExitCardStance += HandleHideDirectionalArrow;
+            // inputHandler.OnEnterCardStance += HandleShowDirectionalArrow;
+            // inputHandler.OnExitCardStance += HandleHideDirectionalArrow;
             
             // Subscribe to the card throw event
             inputHandler.OnCardThrow += HandleCardAction;
@@ -88,12 +89,12 @@ namespace _Scripts.Card
         private void OnDisable()
         {
             // exit Card Stance
-            inputHandler.OnEnterCardStance -= HandleEnterCardStance;
-            inputHandler.OnExitCardStance -= HandleExitCardStance;
+            // inputHandler.OnEnterCardStance -= HandleEnterCardStance;
+            // inputHandler.OnExitCardStance -= HandleExitCardStance;
         
             // disable card stance directional arrow
-            inputHandler.OnEnterCardStance -= HandleShowDirectionalArrow;
-            inputHandler.OnExitCardStance -= HandleHideDirectionalArrow;
+            // inputHandler.OnEnterCardStance -= HandleShowDirectionalArrow;
+            // inputHandler.OnExitCardStance -= HandleHideDirectionalArrow;
             
             // Unsubscribe from the card throw event
             inputHandler.OnCardThrow -= HandleCardAction;
@@ -104,7 +105,7 @@ namespace _Scripts.Card
         //if not, you should test for teleportation
         private void HandleCardAction()
         {
-            if (PlayerVariables.Instance.stateManager.state == PlayerState.CardStance &&  _instantiatedCard == null)
+            if (PlayerVariables.Instance.stateManager.state != PlayerState.Stunned &&  _instantiatedCard == null)
             {
                 HandleCardThrow();
             }
@@ -119,6 +120,7 @@ namespace _Scripts.Card
         */
         private void HandleCardThrow()
         {
+            
             // Check if the cooldown has passed
             if (Time.time - _lastCardThrowTime <= cooldown)
             {
@@ -126,7 +128,7 @@ namespace _Scripts.Card
                 return;
             }
             
-            // If a card is active, destroy the existing card
+            // If a card is active, destroy the existing card (this shouldn't occur but is here for safety)
             Card cardScript;
             if (_instantiatedCard != null)
             {
@@ -145,12 +147,17 @@ namespace _Scripts.Card
 
             // Get the launch direction from the HandleCardStanceArrow
             var currentDirection = HandleCardStanceArrow.Instance.currentDirection;
+            
+            // If the input direction is zero (a quick throw) set the direction to whichever way the player is facing
+            if (currentDirection == Vector2.zero)
+                currentDirection = PlayerVariables.Instance.isFacingRight ? Vector2.right : Vector2.left;
+            
             var angleRad = Mathf.Atan2(currentDirection.y, currentDirection.x);
-            // Calculate the arrow's position relative to the player
+            
+            // Calculate the card's starting position relative to the player
             var offset = new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad) + verticalOffset, 0) * horizontalOffset;
             var cardSpawnLocation = player.position + offset;
 
-            // Instantiate the card at the player's position
             _instantiatedCard = Instantiate(cardPrefab, cardSpawnLocation, Quaternion.identity);
 
             // Get the Card script component from the instantiated card to call its Launch function

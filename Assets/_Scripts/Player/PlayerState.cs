@@ -4,7 +4,7 @@ namespace _Scripts.Player
     {
         Idle,
         Moving,
-        CardStance,
+        // CardStance,
         Stunned // Currently only for when a guard catches up and triggers their QTE
     }
 }

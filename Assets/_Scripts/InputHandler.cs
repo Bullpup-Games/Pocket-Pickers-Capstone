@@ -1,111 +1,107 @@
 using System;
+using _Scripts.Card;
 using _Scripts.Player;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace _Scripts
 {
-    /**
- * Input manager axis to DuelSense inputs
-- 0 - Square
-- 1 - X
-- 2 - Circle
-- 3 - Triangle
-- 4 - Left Bumper
-- 5 - Right Bumper
-- 6 - Left Trigger
-- 7 - Right Trigger
-- 8 - Share Button
-- 9 - Menu Button
-- 10 - Left Stick Down
-- 11 - Right Stick Down
-- 12 - On / Off Button
-- 13 - DuelSense GamePad
- */
     public class InputHandler : MonoBehaviour
     {
         #region Singleton
 
-        public static InputHandler Instance
-        {
-            get
-            {
-                if (_instance == null)
-                    _instance = FindObjectOfType(typeof(InputHandler)) as InputHandler;
+        public static InputHandler Instance { get; private set; }
 
-                return _instance;
+        private void Awake()
+        {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
             }
-            set { _instance = value; }
+            Instance = this;
         }
 
-        private static InputHandler _instance;
         #endregion
 
-        private void Update()
+        private PlayerInputActions _inputActions;
+
+        private void OnEnable()
         {
-            HandleCardStanceInput();
-            HandleCardThrowInput();
-            HandleFalseTriggerInput();
-        }
-
-        public event Action OnEnterCardStance; // Event for entering card stance
-        public event Action OnExitCardStance;  // Event for exiting card stance
-
-        private bool _wasInCardStance = false; // Check to see if card stance was already entered last in the previous frame
-
-        private void HandleCardStanceInput()
-        {
-            var triggerValue = Input.GetAxis("CardStance");
-            bool isInCardStance = Mathf.Abs(triggerValue) > 0.1f;
-            
-            // Player should not be allowed to enter card stance while stunned
-            if (PlayerVariables.Instance.stateManager.state == PlayerState.Stunned) return;
-            
-            if (isInCardStance && !_wasInCardStance)
+            if (_inputActions == null)
             {
-                // Trigger pressed
-                OnEnterCardStance?.Invoke();
-                Debug.Log("Entered Card Stance");
-            }
-            else if (!isInCardStance && _wasInCardStance)
-            {
-                // Trigger released
-                OnExitCardStance?.Invoke();
-                Debug.Log("Exited Card Stance");
+                _inputActions = new PlayerInputActions();
             }
 
-            _wasInCardStance = isInCardStance;
+            _inputActions.Player.Enable();
+
+            // Subscribe to input events
+            _inputActions.Player.Aim.performed += OnLookPerformed;
+            _inputActions.Player.Aim.canceled += OnLookCanceled;
+
+            _inputActions.Player.Throw.performed += OnThrowPerformed;
+            _inputActions.Player.FalseTrigger.performed += OnFalseTriggerPerformed;
         }
 
+        private void OnDisable()
+        {
+            _inputActions.Player.Aim.performed -= OnLookPerformed;
+            _inputActions.Player.Aim.canceled -= OnLookCanceled;
+
+            _inputActions.Player.Throw.performed -= OnThrowPerformed;
+            _inputActions.Player.FalseTrigger.performed -= OnFalseTriggerPerformed;
+            
+            _inputActions.Player.Disable();
+        }
+
+        // Event for updating direction while in card stance
+        public event Action<Vector2> CardStanceDirectionalInput;
+
+        // Event for handling card throw
         public event Action OnCardThrow;
 
-        private void HandleCardThrowInput()
-        {
-            // if (!PlayerVariables.Instance.inCardStance)
-            // {
-            //     // TODO: Instead of blocking the input if the player isn't in card stance send a quick throw action
-            //     return;
-            // }
+        private Vector2 _lookInput;
 
-            if (Input.GetButtonDown("CardThrow"))
+        private void OnLookPerformed(InputAction.CallbackContext context)
+        {
+            if (PlayerVariables.Instance.stateManager.state == PlayerState.Stunned) return;
+            if (CardManager.Instance.IsCardInScene()) return;
+
+            _lookInput = context.ReadValue<Vector2>();
+
+            if (_lookInput.magnitude > 0.1f)
             {
-                // Players should not be allowed to throw a card while stunned
-                if (PlayerVariables.Instance.stateManager.state == PlayerState.Stunned) return;
-                OnCardThrow?.Invoke();
+                Vector2 inputDirection = _lookInput.normalized;
+                CardStanceDirectionalInput?.Invoke(inputDirection);
+            }
+            else
+            {
+                CardStanceDirectionalInput?.Invoke(Vector2.zero);
             }
         }
 
-        public event Action OnFalseTrigger;
-        private void HandleFalseTriggerInput()
+        private void OnLookCanceled(InputAction.CallbackContext context)
         {
-            if (Input.GetButtonDown("FalseTrigger"))
-            {
+            CardStanceDirectionalInput?.Invoke(Vector2.zero);
+        }
+
+        private void OnThrowPerformed(InputAction.CallbackContext context)
+        {
+            if (PlayerVariables.Instance.stateManager.state == PlayerState.Stunned) return;
+            Debug.Log("Throw Input");
+            OnCardThrow?.Invoke();
+        }
+        
+        public event Action OnFalseTrigger;
+        private void OnFalseTriggerPerformed(InputAction.CallbackContext context)
+        {
                 /*
                  * The False trigger input is used to escape stuns. Even if it wasn't, it would be a clever way
                  * of escaping one regardless if the player already has an active card out and near the enemy.
                  * So, allow FalseTrigger input even if the player is stunned
                  */
+                Debug.Log("False Trigger Input");
                 OnFalseTrigger?.Invoke();
-            }
         }
     }
 }

@@ -64,7 +64,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5db8d21d3fdb7462d86727a1dba86f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1544650614272011795, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
   directionalArrowPrefab: {fileID: 7647806643403308868, guid: 98b3f9519924c43d38e2e1ed4c737b5b, type: 3}
   currentDirection: {x: 0, y: 0}
 --- !u!114 &2204501328560629039
@@ -79,11 +78,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4bc3cc5f8377432faf5be00a4cd2b31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputHandler: {fileID: 2878833633030247962, guid: d5ad9a8da65634eedb51a1112b07f6ed, type: 3}
-  playerMovementController: {fileID: 1544650614272011792, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
-  cardStanceArrow: {fileID: 7507623754815840685}
-  player: {fileID: 1544650614272011795, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
-  cardPrefab: {fileID: 7098434270888417122, guid: 46613c7080d9b4c8b928088ce4f4af34, type: 3}
+  inputHandler: {fileID: 0}
+  playerMovementController: {fileID: 0}
+  cardStanceArrow: {fileID: 0}
+  player: {fileID: 0}
+  cardPrefab: {fileID: 0}
   horizontalOffset: 0.6
   verticalOffset: 1.2
   cooldown: 0.5

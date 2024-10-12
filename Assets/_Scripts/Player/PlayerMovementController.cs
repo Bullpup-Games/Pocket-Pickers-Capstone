@@ -60,7 +60,7 @@ namespace _Scripts.Player
         private void Update()
         {
             _time += Time.deltaTime;
-            if (_stateManager.state != PlayerState.CardStance && _stateManager.state != PlayerState.Stunned)
+            if (_stateManager.state != PlayerState.Stunned)
             {
                 GatherInput();
             }
@@ -73,7 +73,7 @@ namespace _Scripts.Player
 
         public void EnterCardStance()
         {
-            _stateManager.SetState(PlayerState.CardStance);
+           // _stateManager.SetState(PlayerState.CardStance);
         }
 
         public void ExitCardStance()
@@ -84,7 +84,7 @@ namespace _Scripts.Player
         
         private void GatherInput()
         {
-            if (_stateManager.state is PlayerState.CardStance or PlayerState.Stunned) return; // Safety check
+            if (_stateManager.state == PlayerState.Stunned) return; // Safety check
             
             _frameInput = new FrameInput
             {
@@ -103,17 +103,11 @@ namespace _Scripts.Player
                     PlayerVariables.Instance.FlipLocalScale();
                 }
                 
-                if (_stateManager.state != PlayerState.CardStance)
-                {
                     _stateManager.SetState(PlayerState.Moving);
-                }
             }
             else
             {
-                if (_stateManager.state != PlayerState.CardStance)
-                {
                     _stateManager.SetState(PlayerState.Idle);
-                }
             }
 
             if (_stats.SnapInput)
@@ -247,11 +241,6 @@ namespace _Scripts.Player
                 var deceleration = _grounded ? _stats.GroundDeceleration : _stats.AirDeceleration;
                 _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);
             } 
-            else if (_stateManager.state == PlayerState.CardStance)
-            {
-                var deceleration = _grounded ? _stats.GroundDeceleration : 0f;
-                _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);
-            }
             else if (_stateManager.state == PlayerState.Stunned)
             {
                 _frameVelocity.x = 0f;
