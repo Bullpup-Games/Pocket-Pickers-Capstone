@@ -10,17 +10,19 @@ namespace _Scripts
     {
         #region Singleton
 
-        public static InputHandler Instance { get; private set; }
-
-        private void Awake()
+        public static InputHandler Instance
         {
-            if (Instance != null && Instance != this)
+            get
             {
-                Destroy(gameObject);
-                return;
+                if (_instance == null)
+                    _instance = FindObjectOfType(typeof(InputHandler)) as InputHandler;
+
+                return _instance;
             }
-            Instance = this;
+            set { _instance = value; }
         }
+
+        private static InputHandler _instance;
 
         #endregion
 
