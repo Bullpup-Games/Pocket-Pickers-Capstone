@@ -1,3 +1,5 @@
+using System;
+using _Scripts.Player;
 using UnityEngine;
 
 namespace _Scripts.Card
@@ -8,14 +10,14 @@ namespace _Scripts.Card
      */
     public class HandleCardStanceArrow : MonoBehaviour
     {
-        public Transform player;
+        // public Transform player;
         public GameObject directionalArrowPrefab;  // Arrow prefab to instantiate
         private GameObject _directionalArrowInstance;  // The instantiated arrow in the scene
+        public GameObject DirectionalArrowInstance() => _directionalArrowInstance;
     
         public Vector2 currentDirection;  // Stores the current direction of the arrow
 
         #region Singleton
-
         public static HandleCardStanceArrow Instance
         {
             get
@@ -38,9 +40,9 @@ namespace _Scripts.Card
             // Instantiate the arrow as a child of the player
             _directionalArrowInstance = Instantiate(
                 directionalArrowPrefab,
-                player.position,
+                PlayerVariables.Instance.transform.position,
                 Quaternion.identity,
-                player
+                PlayerVariables.Instance.transform
             );
             
             //TODO: Fix the horizontal starting position
@@ -52,30 +54,44 @@ namespace _Scripts.Card
 
         private void Update()
         {
-            if (_directionalArrowInstance == null) return;
-            UpdateArrow();
+            // if (_directionalArrowInstance == null) return;
+            // UpdateArrow();
         }
 
-        private void UpdateArrow()
+        private void OnEnable()
+        {
+            InputHandler.Instance.CardStanceDirectionalInput += UpdateArrow;
+        }
+
+        private void UpdateArrow(Vector2 directions)
         {
             // Get the joystick input (currently left joystick)
-            // TODO: Add mouse support
-            var horizontal = Input.GetAxis("Horizontal");
-            var vertical = Input.GetAxis("Vertical");
+            // var horizontal = Input.GetAxis("Horizontal");
+            // var vertical = Input.GetAxis("Vertical");
 
-            var inputDirection = new Vector2(horizontal, vertical);
+            // var inputDirection = new Vector2(horizontal, vertical);
+            
+            
+            currentDirection = directions;
+            // Debug.Log(currentDirection);
 
-            if (inputDirection.sqrMagnitude > 0.01f) // Dead zone to avoid noise
+            if (currentDirection == Vector2.zero)
             {
-                currentDirection = inputDirection.normalized;
+                // If no input is given remove the arrow indicator
+                DestroyDirectionalArrow();
+                return;
+
             }
+            
+            if (_directionalArrowInstance == null) 
+                InstantiateDirectionalArrow();
 
             // Calculate the angle in radians
             var angleRad = Mathf.Atan2(currentDirection.y, currentDirection.x);
 
             // Calculate the arrow's position relative to the player
             var offset = new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad) + CardManager.Instance.verticalOffset, 0) * CardManager.Instance.horizontalOffset;
-            var arrowPosition = player.position + offset;
+            var arrowPosition = PlayerVariables.Instance.transform.position + offset;
             _directionalArrowInstance.transform.position = arrowPosition;
 
             // Rotate the arrow to point in the direction of the joystick

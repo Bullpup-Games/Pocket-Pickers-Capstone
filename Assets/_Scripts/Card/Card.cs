@@ -89,7 +89,7 @@ namespace _Scripts.Card
         
         private void SetListeners()
         {
-            InputHandler.Instance.OnEnterCardStance += DestroyCard;
+            // TODO: InputHandler.Instance.OnEnterCardStance += DestroyCard;
             InputHandler.Instance.OnFalseTrigger += ActivateFalseTrigger;
             CardManager.Instance.Teleport += CatchTeleport;
         }
@@ -97,7 +97,7 @@ namespace _Scripts.Card
         //todo sometimes when the card gets deleted, it doesn't have the inputHandler item
         private void DeleteListeners()
         {
-            InputHandler.Instance.OnEnterCardStance -= DestroyCard;
+            // TODO: InputHandler.Instance.OnEnterCardStance -= DestroyCard;
             InputHandler.Instance.OnFalseTrigger -= ActivateFalseTrigger;
             CardManager.Instance.Teleport -= CatchTeleport;
         }
