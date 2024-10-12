@@ -102,6 +102,28 @@
                 },
                 {
                     "name": "",
+                    "id": "fd9362da-895c-46da-9c15-59a920d5b33c",
+                    "path": "<XInputController>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Throw",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e9ec2379-7782-4c2f-92e1-ff67a703e783",
+                    "path": "<DualShockGamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Throw",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "1f6c60f8-7bb9-4a8c-b5d0-7b028ab0ccca",
                     "path": "<Keyboard>/2",
                     "interactions": "",
@@ -126,6 +148,28 @@
                     "name": "",
                     "id": "5d2de5d5-bd85-4da2-a2c2-973bdf0d10ce",
                     "path": "<DualShockGamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FalseTrigger",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b2dba57b-0b5d-4a11-83aa-4f462e70a006",
+                    "path": "<XInputController>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FalseTrigger",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7992b9ab-20db-4950-bdb1-01504733fc61",
+                    "path": "<DualShockGamepad>/leftTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
