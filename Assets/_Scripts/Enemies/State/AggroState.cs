@@ -91,6 +91,9 @@ namespace _Scripts.Enemies.State
             // Cleanup coroutines on exit
             if (_qteCoroutine != null)
             {
+                if (PlayerVariables.Instance.stateManager.state == PlayerState.Stunned)
+                    PlayerVariables.Instance.stateManager.SetState(PlayerState.Idle);
+                
                 _enemy.StopCoroutine(_qteCoroutine);
                 _qteCoroutine = null;
             }
