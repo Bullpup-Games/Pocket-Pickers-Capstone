@@ -10,6 +10,29 @@ namespace _Scripts.Player
         // public bool inCardStance;
         [HideInInspector] public PlayerStateManager stateManager;
         [HideInInspector] public Collider2D Collider2D;
+        
+        //sin variables
+        public int sinHeld;//how much you have picked up
+        public int sinAccrued;//how much sin you have commited in game
+        public int sinThreshold;//how much sinAccrued you have to reach in order to release a new sin
+        
+        public void CollectSin(int weight)
+        {
+            Debug.Log("Collected sin of weight " + weight);
+            sinHeld += weight;
+            Debug.Log("Total sin collected: " + sinHeld);
+        }
+
+        public void CommitSin(int weight)
+        {
+            Debug.Log("Committed sin of weight " + weight);
+            this.sinAccrued += weight;
+            Debug.Log("Total sin commited: " + this.sinAccrued);
+            if (sinAccrued >= sinThreshold)
+            {
+                Debug.Log("Should add a new sin to the bank vault");
+            }
+        }
 
         #region Singleton
 

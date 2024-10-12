@@ -8,6 +8,8 @@ TagManager:
   - enemy
   - wall
   - permeable
+  - Sin
+  - PotentialSin
   layers:
   - Default
   - TransparentFX
@@ -18,7 +20,7 @@ TagManager:
   - Environment
   - Card
   - Enemy
-  - 
+  - Sin
   - 
   - 
   - 

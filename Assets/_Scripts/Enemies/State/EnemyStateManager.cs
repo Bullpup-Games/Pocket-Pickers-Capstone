@@ -1,5 +1,6 @@
 using System;
 using _Scripts.Enemies.ViewTypes;
+using _Scripts.Player;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -31,6 +32,9 @@ namespace _Scripts.Enemies.State
         [HideInInspector] public LayerMask environmentLayer;
         [HideInInspector] public LayerMask enemyLayer;
         [HideInInspector] public LayerMask playerLayer;
+        
+        [Header("Sin Values")]
+        public int sinPenalty;
 
         private void Awake()
         {
@@ -204,6 +208,13 @@ namespace _Scripts.Enemies.State
                     Gizmos.DrawSphere(rightPoint, patrolPointRadius);
                 }
             }
+        }
+        
+        public void KillEnemy()
+        {
+
+            PlayerVariables.Instance.CommitSin(sinPenalty);
+            TransitionToState(this.DisabledState);
         }
 
         #region State Getters

@@ -187,7 +187,8 @@ namespace _Scripts.Card
                 //todo if the card hits an enemy, incapacitate the enemy and destroy the card
                 Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
                 var enemy = col.gameObject.GetComponent<EnemyStateManager>();
-                enemy.TransitionToState(enemy.DisabledState);
+                enemy.KillEnemy();
+                // enemy.TransitionToState(enemy.DisabledState);
                 DestroyCard();
                 return;
             }
