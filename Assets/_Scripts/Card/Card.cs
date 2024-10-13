@@ -43,27 +43,7 @@ namespace _Scripts.Card
        private static Card _instance;
        #endregion
 
-       /*
-       The plan:
-       x Add a constant public speed, and a direction vector
-       x add a variable for total possible ricochets and a second variable
-       for number of ricochets that have happened 
-       Make collision detection with tag recognition for four scenarios
-           x 1. It hit a wall
-               If we have done all our ricochets
-                   we will switch to a falling state
-               Otherwise
-                   We will bounce off the wall and keep our speed (calculate
-                   the normal of the wall, do an angle reflection calculation,
-                   set that as the new direction, normalize that, and multiply by
-                   speed to set new velocity)
-           x 2. It hits the player
-               Card goes through player, nothing happens
-           3. Card hits a grate/bars
-               Card goes through the bars, but the player cant go through the bars
-           4. Card hits an enemy
-               Card disapears, enemy is incapacitated, add sin
-       */
+       
         
 
         /*

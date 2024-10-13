@@ -10,6 +10,7 @@ TagManager:
   - permeable
   - Sin
   - PotentialSin
+  - EscapeRout
   layers:
   - Default
   - TransparentFX

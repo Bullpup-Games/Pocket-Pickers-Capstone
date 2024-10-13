@@ -13,17 +13,7 @@ namespace _Scripts.Card
      * and sends them out to the necessary scripts.
     */
     
-    /*
-     * The plan:
-     * x Make card a singleton
-     * x When you recieve the card throw event:
-     * x Check if inStance is true
-     * x if true, throw card
-     * x else, call teleport function
-     * x teleport will check if instance of card is null
-     * x if it is not null, call event Teleport
-     * x If it is null do nothing
-     */
+ 
     public class CardManager : MonoBehaviour
     {
         public InputHandler inputHandler;
@@ -74,13 +64,7 @@ namespace _Scripts.Card
 
         private void OnEnable()
         {
-            // enter card stance
-            // inputHandler.OnEnterCardStance += HandleEnterCardStance;
-            // inputHandler.OnExitCardStance += HandleExitCardStance;
-        
-            // enable card stance directional arrow
-            // inputHandler.OnEnterCardStance += HandleShowDirectionalArrow;
-            // inputHandler.OnExitCardStance += HandleHideDirectionalArrow;
+            
             
             // Subscribe to the card throw event
             inputHandler.OnCardThrow += HandleCardAction;
@@ -88,13 +72,7 @@ namespace _Scripts.Card
 
         private void OnDisable()
         {
-            // exit Card Stance
-            // inputHandler.OnEnterCardStance -= HandleEnterCardStance;
-            // inputHandler.OnExitCardStance -= HandleExitCardStance;
-        
-            // disable card stance directional arrow
-            // inputHandler.OnEnterCardStance -= HandleShowDirectionalArrow;
-            // inputHandler.OnExitCardStance -= HandleHideDirectionalArrow;
+           
             
             // Unsubscribe from the card throw event
             inputHandler.OnCardThrow -= HandleCardAction;
