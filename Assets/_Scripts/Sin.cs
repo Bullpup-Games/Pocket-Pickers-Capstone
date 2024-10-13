@@ -22,7 +22,8 @@ namespace _Scripts
         {
             if (col.gameObject.CompareTag("Player"))
             {
-
+                Debug.Log("Collided with a sin");
+                Debug.Log("Colision is with " + col.gameObject.name);
                 Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
 
                 GameManager.Instance.CollectSin(gameObject);
