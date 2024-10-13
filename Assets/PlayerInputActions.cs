@@ -53,6 +53,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CancelCardThrow"",
+                    ""type"": ""Button"",
+                    ""id"": ""8166bec4-7ba7-44c4-bef2-724a6c89bd4c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -93,28 +102,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""137f7767-d2ff-43d5-bd57-f2a8ec45bd6d"",
                     ""path"": ""<Keyboard>/1"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Throw"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""9eee67ae-915c-46f1-bc28-498858f81909"",
-                    ""path"": ""<XInputController>/rightShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Throw"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""1919dbea-37e2-4aef-9ba8-22afaae30a7d"",
-                    ""path"": ""<DualShockGamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -198,6 +185,39 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""FalseTrigger"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""32fa6955-821d-4a99-974b-7e4a980573b3"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CancelCardThrow"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""faa2313c-1b4e-4943-8bc9-d76bf8cce0e6"",
+                    ""path"": ""<DualShockGamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CancelCardThrow"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e4d764c9-8751-43bf-89e8-dfa32dee3289"",
+                    ""path"": ""<XInputController>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CancelCardThrow"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -209,6 +229,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
         m_Player_Throw = m_Player.FindAction("Throw", throwIfNotFound: true);
         m_Player_FalseTrigger = m_Player.FindAction("FalseTrigger", throwIfNotFound: true);
+        m_Player_CancelCardThrow = m_Player.FindAction("CancelCardThrow", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -273,6 +294,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Aim;
     private readonly InputAction m_Player_Throw;
     private readonly InputAction m_Player_FalseTrigger;
+    private readonly InputAction m_Player_CancelCardThrow;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -280,6 +302,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Aim => m_Wrapper.m_Player_Aim;
         public InputAction @Throw => m_Wrapper.m_Player_Throw;
         public InputAction @FalseTrigger => m_Wrapper.m_Player_FalseTrigger;
+        public InputAction @CancelCardThrow => m_Wrapper.m_Player_CancelCardThrow;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -298,6 +321,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @FalseTrigger.started += instance.OnFalseTrigger;
             @FalseTrigger.performed += instance.OnFalseTrigger;
             @FalseTrigger.canceled += instance.OnFalseTrigger;
+            @CancelCardThrow.started += instance.OnCancelCardThrow;
+            @CancelCardThrow.performed += instance.OnCancelCardThrow;
+            @CancelCardThrow.canceled += instance.OnCancelCardThrow;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -311,6 +337,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @FalseTrigger.started -= instance.OnFalseTrigger;
             @FalseTrigger.performed -= instance.OnFalseTrigger;
             @FalseTrigger.canceled -= instance.OnFalseTrigger;
+            @CancelCardThrow.started -= instance.OnCancelCardThrow;
+            @CancelCardThrow.performed -= instance.OnCancelCardThrow;
+            @CancelCardThrow.canceled -= instance.OnCancelCardThrow;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -333,5 +362,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnAim(InputAction.CallbackContext context);
         void OnThrow(InputAction.CallbackContext context);
         void OnFalseTrigger(InputAction.CallbackContext context);
+        void OnCancelCardThrow(InputAction.CallbackContext context);
     }
 }

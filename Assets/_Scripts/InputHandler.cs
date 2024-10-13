@@ -42,6 +42,7 @@ namespace _Scripts
             _inputActions.Player.Aim.canceled += OnLookCanceled;
 
             _inputActions.Player.Throw.performed += OnThrowPerformed;
+            _inputActions.Player.CancelCardThrow.performed += OnCancelCardThrow;
             _inputActions.Player.FalseTrigger.performed += OnFalseTriggerPerformed;
         }
 
@@ -51,6 +52,7 @@ namespace _Scripts
             _inputActions.Player.Aim.canceled -= OnLookCanceled;
 
             _inputActions.Player.Throw.performed -= OnThrowPerformed;
+            _inputActions.Player.CancelCardThrow.performed -= OnCancelCardThrow;
             _inputActions.Player.FalseTrigger.performed -= OnFalseTriggerPerformed;
             
             _inputActions.Player.Disable();
@@ -104,6 +106,13 @@ namespace _Scripts
                  */
                 Debug.Log("False Trigger Input");
                 OnFalseTrigger?.Invoke();
+        }
+
+        public event Action OnCancelActiveCard;
+        private void OnCancelCardThrow(InputAction.CallbackContext context)
+        {
+            Debug.Log("Cancel throw");
+            OnCancelActiveCard?.Invoke();
         }
     }
 }
