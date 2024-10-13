@@ -40,6 +40,23 @@ namespace _Scripts.Player
         public event Action Jumped;
 
         #endregion
+        #region Singleton
+
+        public static PlayerMovementController Instance
+        {
+            get
+            {
+                if (_instance == null)
+                    _instance = FindObjectOfType(typeof(PlayerMovementController)) as PlayerMovementController;
+
+                return _instance;
+            }
+            set { _instance = value; }
+        }
+
+        private static PlayerMovementController _instance;
+
+        #endregion
 
         private float _time;
 
@@ -148,6 +165,7 @@ namespace _Scripts.Player
         private float _frameLeftGrounded = float.MinValue;
         private bool _grounded;
 
+        public bool isGrounded() { return _grounded;}
         private void CheckCollisions()
         {
             Physics2D.queriesStartInColliders = false;
