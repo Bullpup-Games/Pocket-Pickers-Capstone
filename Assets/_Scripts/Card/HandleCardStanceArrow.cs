@@ -44,18 +44,12 @@ namespace _Scripts.Card
                 Quaternion.identity,
                 PlayerVariables.Instance.transform
             );
-            
-            //TODO: Fix the horizontal starting position
-            // Calculate the starting rotation angle based on the direction
-            // var angle = (PlayerVariables.Instance.isFacingRight) ? 90f : -90f; // Left: 90°, Right: -90°
-            // Debug.Log(angle);
-            // _directionalArrowInstance.transform.rotation = Quaternion.Euler(0, 0, angle);
         }
 
         private void Update()
         {
-            // if (_directionalArrowInstance == null) return;
-            // UpdateArrow();
+            if (CardManager.Instance.IsCardInScene() && _directionalArrowInstance != null)
+                DestroyDirectionalArrow();
         }
 
         private void OnEnable()
@@ -65,13 +59,6 @@ namespace _Scripts.Card
 
         private void UpdateArrow(Vector2 directions)
         {
-            // Get the joystick input (currently left joystick)
-            // var horizontal = Input.GetAxis("Horizontal");
-            // var vertical = Input.GetAxis("Vertical");
-
-            // var inputDirection = new Vector2(horizontal, vertical);
-            
-            
             currentDirection = directions;
             // Debug.Log(currentDirection);
 
@@ -99,7 +86,6 @@ namespace _Scripts.Card
             _directionalArrowInstance.transform.rotation = Quaternion.Euler(0, 0, angleDeg - 90f);
         }
 
-        // Destroys the directional arrow when the player leaves card stance or throws a card TODO: link up card throwing
         public void DestroyDirectionalArrow()
         {
             if (_directionalArrowInstance == null) return;

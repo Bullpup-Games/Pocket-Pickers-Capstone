@@ -91,6 +91,7 @@ namespace _Scripts.Card
         {
             // TODO: InputHandler.Instance.OnEnterCardStance += DestroyCard;
             InputHandler.Instance.OnFalseTrigger += ActivateFalseTrigger;
+            InputHandler.Instance.OnCancelActiveCard += DestroyCard;
             CardManager.Instance.Teleport += CatchTeleport;
         }
 
@@ -99,6 +100,7 @@ namespace _Scripts.Card
         {
             // TODO: InputHandler.Instance.OnEnterCardStance -= DestroyCard;
             InputHandler.Instance.OnFalseTrigger -= ActivateFalseTrigger;
+            InputHandler.Instance.OnCancelActiveCard -= DestroyCard;
             CardManager.Instance.Teleport -= CatchTeleport;
         }
 
