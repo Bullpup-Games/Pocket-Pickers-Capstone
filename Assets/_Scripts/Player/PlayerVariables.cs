@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Timeline;
+using Random = UnityEngine.Random;
 
 namespace _Scripts.Player
 {
@@ -14,6 +15,9 @@ namespace _Scripts.Player
         //sin variables
         public int sinHeld;//how much you have picked up
         public int sinAccrued;//how much sin you have commited in game
+        public int thresholdRangeStart;
+        public int thresholdRangeEnd;
+        
         public int sinThreshold;//how much sinAccrued you have to reach in order to release a new sin
         
         public void CollectSin(int weight)
@@ -33,6 +37,7 @@ namespace _Scripts.Player
                 Debug.Log("Should add a new sin to the bank vault");
                 GameManager.Instance.releaseSin(sinAccrued);
                 sinAccrued = 0;
+                sinThreshold = Random.Range(thresholdRangeStart, thresholdRangeEnd);
             }
         }
 
@@ -66,6 +71,7 @@ namespace _Scripts.Player
         {
             stateManager = GetComponent<PlayerStateManager>();
             Collider2D = GetComponent<Collider2D>();
+            sinThreshold = Random.Range(thresholdRangeStart, thresholdRangeEnd);
         }
 
         private void Update()
