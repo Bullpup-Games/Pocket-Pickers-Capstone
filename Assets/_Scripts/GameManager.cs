@@ -10,7 +10,7 @@ namespace _Scripts
         public List<GameObject> potentialSins;
         public int remainingSin;
         public int winThreshold;//what is the maximum amount of sin that can remain and you still win
-
+        
 
         //prefabs
         public GameObject sinPrefab;
@@ -74,6 +74,35 @@ namespace _Scripts
 
             //Everything is done, remove the sin object
             Destroy(sin);
+        }
+
+        public void releaseSin(int weight)
+        {
+            //making sure that if you have filled every possible potential sin location, we can return safely
+            if (potentialSins.Count == 0)
+            {
+                Debug.Log("It is impossible to hold more sins");
+                return;
+            }
+            
+            //choosing the location
+            int location = Random.Range(0, potentialSins.Count-1);
+            
+            //remove the old potential sin
+            GameObject potentialSin = potentialSins[location];
+            GameObject newSin = GameObject.Instantiate(sinPrefab, potentialSin.transform.position, Quaternion.identity);
+            
+            potentialSins.RemoveAt(location);
+            Destroy(potentialSin);
+            
+            //create a new sin
+            newSin.GetComponent<Sin>().weight = weight;
+            activeSins.Add(newSin);
+
+            remainingSin += weight;
+            
+            Debug.Log("Number of potential sins: " + potentialSins.Count);
+            Debug.Log("Remaining sin " + remainingSin);
         }
     }
 }

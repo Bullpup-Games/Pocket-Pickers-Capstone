@@ -31,6 +31,8 @@ namespace _Scripts.Player
             if (sinAccrued >= sinThreshold)
             {
                 Debug.Log("Should add a new sin to the bank vault");
+                GameManager.Instance.releaseSin(sinAccrued);
+                sinAccrued = 0;
             }
         }
 
