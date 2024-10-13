@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 702037076750895846}
   - component: {fileID: 5309799760890062432}
   m_Layer: 9
-  m_Name: Sin
+  m_Name: Small sin
   m_TagString: Sin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
