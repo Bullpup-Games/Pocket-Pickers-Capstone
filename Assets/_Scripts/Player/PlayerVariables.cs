@@ -78,5 +78,12 @@ namespace _Scripts.Player
         {
             isFacingRight = transform.localScale.x > 0; 
         }
+
+        public void escape()
+        {
+            //release all of the sin you hold
+            sinHeld = 0;
+            GameManager.Instance.checkForGameComplete(sinAccrued);
+        }
     }
 }

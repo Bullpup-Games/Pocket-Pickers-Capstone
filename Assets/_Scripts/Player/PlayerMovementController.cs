@@ -2,6 +2,7 @@ using System;
 using _Scripts.Card;
 using _Scripts.Enemies;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _Scripts.Player
@@ -271,6 +272,16 @@ namespace _Scripts.Player
 
         #endregion
 
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.CompareTag("EscapeRout"))
+            {
+                PlayerVariables.Instance.escape();
+            }
+        }
+
+       
         private void ApplyMovement() => _rb.velocity = _frameVelocity;
 
 #if UNITY_EDITOR
