@@ -22,7 +22,7 @@ namespace _Scripts
     V* 8. For sin held, when the player picks up a sin, add its weight to sin held.
      * 9. 
     V* 10. For sin accrued, when the player commits a sin such as killing, add to sin accrued
-     * 11. For threshold, it should be a random value within a possible range.
+    V* 11. For threshold, it should be a random value within a possible range.
      *      This should reset each time they create a new sin
     V* 12. When the players sin accrued goes over the threshold, a potential sin should
      *      be chosen at random, and become a real sin with the weight of the players sin accrued
@@ -74,6 +74,7 @@ namespace _Scripts
         public void Awake()
         {
             activeSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("Sin"));
+            Debug.Log("Number of sins: " +activeSins.Count);
             foreach (GameObject sin in activeSins)
             {
                 remainingSin += sin.GetComponent<Sin>().weight;
