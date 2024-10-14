@@ -42,6 +42,7 @@ namespace _Scripts.Card
  
 
         public event Action <Vector2> Teleport ;
+        public event Action cardCreated;
         
         #region Singleton
 
@@ -137,7 +138,8 @@ namespace _Scripts.Card
             var cardSpawnLocation = player.position + offset;
 
             _instantiatedCard = Instantiate(cardPrefab, cardSpawnLocation, Quaternion.Euler(currentDirection.x, currentDirection.y, 0));
-
+            cardCreated?.Invoke();
+            
             // Get the Card script component from the instantiated card to call its Launch function
             cardScript = _instantiatedCard.GetComponent<Card>();
 

@@ -1,4 +1,5 @@
 using System;
+using _Scripts.Card;
 using UnityEngine;
 
 namespace _Scripts.Player
@@ -99,7 +100,7 @@ namespace _Scripts.Player
         public void setListeners()
         {
            // PlayerMovementController.Instance.Jumped += OnJumpDown;
-            
+           CardManager.Instance.cardCreated += doThrowAnimation;
         }
 
         public void deleteListeners()
@@ -133,6 +134,11 @@ namespace _Scripts.Player
         private void OnMove(Vector2 input)
         {
             _animator.SetFloat(Speed, Mathf.Abs(input.x));
+        }
+
+        private void doThrowAnimation()
+        {
+            _animator.SetTrigger("Throw");
         }
     }
 }
