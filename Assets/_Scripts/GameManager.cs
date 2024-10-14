@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using _Scripts.Player;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace _Scripts
 {
@@ -12,7 +13,7 @@ namespace _Scripts
         public List<GameObject> potentialSins;
         public int remainingSin;
         public int winThreshold;//what is the maximum amount of sin that can remain and you still win
-        
+        //public Scene credits;
 
         //prefabs
         public GameObject sinPrefab;
@@ -123,7 +124,7 @@ namespace _Scripts
             {
                 
                 Debug.Log("You win!");
-                //todo end game and show final cutscene / credits
+                SceneManager.LoadScene("winScreenPlaytest1");
                 return true;
                
             }
