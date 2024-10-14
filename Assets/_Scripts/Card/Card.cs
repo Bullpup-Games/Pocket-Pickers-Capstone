@@ -61,6 +61,7 @@ namespace _Scripts.Card
         private void OnEnable()
         {
             SetListeners();
+            
         }
 
         private void OnDestroy()

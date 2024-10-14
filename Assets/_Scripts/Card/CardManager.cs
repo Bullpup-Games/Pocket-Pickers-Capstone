@@ -136,7 +136,7 @@ namespace _Scripts.Card
             var offset = new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad) + verticalOffset, 0) * horizontalOffset;
             var cardSpawnLocation = player.position + offset;
 
-            _instantiatedCard = Instantiate(cardPrefab, cardSpawnLocation, Quaternion.identity);
+            _instantiatedCard = Instantiate(cardPrefab, cardSpawnLocation, Quaternion.Euler(currentDirection.x, currentDirection.y, 0));
 
             // Get the Card script component from the instantiated card to call its Launch function
             cardScript = _instantiatedCard.GetComponent<Card>();
