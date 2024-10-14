@@ -54,3 +54,6 @@ TagManager:
   - name: GameObjects
     uniqueID: 1194353315
     locked: 0
+  - name: Walls
+    uniqueID: 2346808991
+    locked: 0
