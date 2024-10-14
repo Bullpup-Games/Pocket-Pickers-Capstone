@@ -10139,19 +10139,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb09df9db553ffc4ab6600e3070de9eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _anim: {fileID: 2969068313154050966}
-  _sprite: {fileID: 2969068313154050967}
-  _maxIdleSpeed: 2
-  _maxTilt: 5
-  _tiltSpeed: 20
-  _jumpParticles: {fileID: 2969068312619346371}
-  _launchParticles: {fileID: 2969068312669941334}
-  _moveParticles: {fileID: 2969068311631949152}
-  _landParticles: {fileID: 2969068312368229178}
-  _footsteps:
-  - {fileID: 8300000, guid: 5d94063f45167b04ab62585e436da58c, type: 3}
-  - {fileID: 8300000, guid: b5803c17557c59c40bf3a6d69cb46cb3, type: 3}
-  - {fileID: 8300000, guid: 1876767bf7cbf284394dc3817af9593c, type: 3}
+  environmentLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!95 &7362660203605736779
 Animator:
   serializedVersion: 5
@@ -29874,7 +29864,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2969068313184073012
 Transform:
   m_ObjectHideFlags: 0
