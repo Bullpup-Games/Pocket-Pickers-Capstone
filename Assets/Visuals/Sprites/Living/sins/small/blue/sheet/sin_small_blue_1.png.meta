@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -108,7 +108,91 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: sin_small_blue_1_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 9
+        width: 41
+        height: 247
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5872daeaaf688c84eafe277dee37405e
+      internalID: -1476837517
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sin_small_blue_1_1
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 9
+        width: 41
+        height: 247
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 33c8e866bf1f5ff4faed780ba9e082f1
+      internalID: -40475859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sin_small_blue_1_2
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 9
+        width: 41
+        height: 247
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 735a4c20537793a4c8b147a55a2f5d4e
+      internalID: -1977676985
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sin_small_blue_1_3
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 9
+        width: 41
+        height: 247
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f84500ae56a1f849b9e10dc56757c70
+      internalID: 770634912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -119,7 +203,11 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      sin_small_blue_1_0: -1476837517
+      sin_small_blue_1_1: -40475859
+      sin_small_blue_1_2: -1977676985
+      sin_small_blue_1_3: 770634912
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
