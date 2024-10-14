@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using _Scripts.Enemies;
 using _Scripts.Enemies.State;
@@ -215,6 +216,15 @@ namespace _Scripts.Card
         {
             Debug.Log("caught teleport");
             DestroyCard();
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            Debug.Log("OnTriggerEnter");
+            if (other.gameObject.CompareTag("EscapeRout"))
+            {
+                DestroyCard();
+            }
         }
 
         // CALL THIS FUNCTION TO DESTROY CARDS, DONT START FROM THE CARD MANAGER!

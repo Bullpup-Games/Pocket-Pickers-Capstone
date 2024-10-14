@@ -508,7 +508,7 @@ GameObject:
   - component: {fileID: 487279044}
   - component: {fileID: 487279043}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: EscapeRout
   m_TagString: EscapeRout
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
