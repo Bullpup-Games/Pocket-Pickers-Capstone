@@ -160,7 +160,7 @@ namespace _Scripts.Card
                 var newDirection = Vector2.Reflect(_direction, hit.normal).normalized;
 
                 // If the new direction is too similar to the old direction invert the direction, the card will get stuck in corners without this
-                if (Vector2.Dot(newDirection, _direction) > 0.99f)
+                if (Vector2.Dot(newDirection, _direction) > 0.9f)
                 {
                     newDirection = -_direction;
                     Debug.Log("Inverted direction due to corner collision.");
