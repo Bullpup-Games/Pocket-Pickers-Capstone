@@ -120,13 +120,13 @@ namespace _Scripts.Player
         
         private void OnJumpDown()
         {
-            Debug.Log("Attempting to jump");
+           //  Debug.Log("Attempting to jump");
             _animator.SetBool(Jumping, true);
         }
 
         private void OnLanded()
         {
-            Debug.Log("Landed");
+            // Debug.Log("Landed");
             
             _animator.SetBool(Jumping, false);
         }

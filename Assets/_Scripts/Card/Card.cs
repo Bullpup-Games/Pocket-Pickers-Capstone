@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using _Scripts.Enemies;
 using _Scripts.Enemies.State;
 using _Scripts.Player;
@@ -10,108 +9,104 @@ namespace _Scripts.Card
     public class Card : MonoBehaviour
     {
         [Header("False Trigger Settings")]
-        [SerializeField]private float falseTriggerRadius = 4f;
+        [SerializeField] private float falseTriggerRadius = 4f;
         [SerializeField] private Color gizmoColor = Color.cyan;
-        
-        //private Rigidbody2D _rigidbody;
-        private Vector2 direction; // Direction in which the card is launched
-        public float speed = 15;
-        private Vector2 velocity;
-        private float _startTime;
-        //total bounces is how many ricochets are allowed. Bounces is 
-        //how many ricochets have happened
-        public int totalBounces;
-        public int bounces;
 
-       // public Vector2 directon;
-       
-       #region Singleton
+        public float speed = 20f; // Speed of the card
+        public int totalBounces;  // Total allowed bounces
+        public int bounces;       // Current number of bounces
 
-       public static Card Instance
-       {
-           get
-           {
-               if (_instance == null)
-                   _instance = FindObjectOfType(typeof(Card)) as Card;
+        private Vector2 _direction;   // Current movement direction
+        private Vector2 _velocity;    // Current velocity
+        private float _startTime;    // Time when the card was instantiated
 
-               return _instance;
-           }
-           set
-           {
-               _instance = value;
-           }
-       }
-       private static Card _instance;
-       #endregion
+        private Rigidbody2D _rb;
+        private Vector2 _previousPosition; // Position in the previous frame
 
-       
-        
+        private const float MinMoveDistance = 0.01f; // Minimum movement distance to prevent sticking
 
-        /*
-        When this object first exists, get everything set up.
-        When it gets destroyed, tear everything down.
-        It is a prefab, so some things we can't set in the editor
-        I am putting a lot of things in seperate functions, and then
-        calling those functions, just to make it more readable.
-        For example, I'm calling setListeners and deleteListeners,
-        and those functions are seperate
-        */
+        #region Singleton
 
+        public static Card Instance
+        {
+            get
+            {
+                if (_instance == null)
+                    _instance = FindObjectOfType(typeof(Card)) as Card;
+
+                return _instance;
+            }
+            set => _instance = value;
+        }
+
+        private static Card _instance;
+
+        #endregion
 
         private void OnEnable()
         {
             SetListeners();
-            
         }
 
         private void OnDestroy()
         {
             DeleteListeners();
         }
-        
+
         private void SetListeners()
         {
-            // TODO: InputHandler.Instance.OnEnterCardStance += DestroyCard;
-            InputHandler.Instance.OnFalseTrigger += ActivateFalseTrigger;
-            InputHandler.Instance.OnCancelActiveCard += DestroyCard;
-            CardManager.Instance.Teleport += CatchTeleport;
+            if (InputHandler.Instance != null)
+            {
+                InputHandler.Instance.OnFalseTrigger += ActivateFalseTrigger;
+                InputHandler.Instance.OnCancelActiveCard += DestroyCard;
+            }
+
+            if (CardManager.Instance != null)
+            {
+                CardManager.Instance.Teleport += CatchTeleport;
+            }
         }
 
-        //todo sometimes when the card gets deleted, it doesn't have the inputHandler item
         private void DeleteListeners()
         {
-            // TODO: InputHandler.Instance.OnEnterCardStance -= DestroyCard;
-            InputHandler.Instance.OnFalseTrigger -= ActivateFalseTrigger;
-            InputHandler.Instance.OnCancelActiveCard -= DestroyCard;
-            CardManager.Instance.Teleport -= CatchTeleport;
+            if (InputHandler.Instance != null)
+            {
+                InputHandler.Instance.OnFalseTrigger -= ActivateFalseTrigger;
+                InputHandler.Instance.OnCancelActiveCard -= DestroyCard;
+            }
+
+            if (CardManager.Instance != null)
+            {
+                CardManager.Instance.Teleport -= CatchTeleport;
+            }
         }
 
         private void Awake()
         {
-            //we start with 0 bounces, each time we bounce off a wall we incriment it
+            _rb = GetComponent<Rigidbody2D>();
+            _rb.isKinematic = true;
             bounces = 0;
-            
-            
-            //if we don't have this, a card throw up or down will push the player around
-            var col = PlayerVariables.Instance.gameObject.GetComponent<BoxCollider2D>();
-            Physics2D.IgnoreCollision(col, GetComponent<Collider2D>());
-            
-           
-            this.direction = HandleCardStanceArrow.Instance.currentDirection;
+
+            // Ignore collisions with the player to avoid pushing on Awake frame
+            var playerCollider = PlayerVariables.Instance.gameObject.GetComponent<Collider2D>();
+            Physics2D.IgnoreCollision(playerCollider, GetComponent<Collider2D>());
+
             _startTime = Time.time;
+            
+            // Calculate initial velocity
+            _direction = HandleCardStanceArrow.Instance.currentDirection.normalized;
+            CalculateVelocity(_direction);
         }
 
         public void Launch(Vector2 direction)
         {
-            this.direction = direction.normalized;
-            CalculateVelocity(this.direction);
-
-            
+            _direction = direction.normalized;
+            CalculateVelocity(_direction);
         }
 
-        private void CalculateVelocity(Vector2 direction) {
-            var velocity = direction * this.speed;
-            this.velocity = velocity;
+        private void CalculateVelocity(Vector2 direction)
+        {
+            _velocity = direction * speed;
         }
 
         private void Update()
@@ -121,15 +116,78 @@ namespace _Scripts.Card
             {
                 DestroyCard();
             }
-            
+        }
+
+        private void FixedUpdate()
+        {
             MoveCard();
-           
         }
 
         private void MoveCard()
         {
-            Vector3 newPosition = ((Vector2)transform.position) + (velocity * Time.deltaTime);
-            this.transform.position = newPosition;
+            // Store the previous position
+            _previousPosition = transform.position;
+
+            // Calculate movement
+            var movement = _velocity * Time.fixedDeltaTime;
+            var newPosition = _previousPosition + movement;
+
+            // If movement amount is too small skip to prevent sticking
+            if (movement.magnitude < MinMoveDistance)
+            {
+                movement = _direction * MinMoveDistance;
+                newPosition = _previousPosition + movement;
+            }
+
+            // Perform a raycast from previousPosition to newPosition to check for collisions in between frames
+            var hit = Physics2D.Raycast(
+                _previousPosition,
+                movement.normalized,
+                movement.magnitude,
+                LayerMask.GetMask("Environment")
+            );
+
+            if (hit.collider != null)
+            {
+                // Adjust position to point of collision
+                newPosition = hit.point;
+
+                // Reflect the direction off the hit normal
+                var newDirection = Vector2.Reflect(_direction, hit.normal).normalized;
+
+                // If the new direction is too similar to the old direction invert the direction, the card will get stuck in corners without this
+                if (Vector2.Dot(newDirection, _direction) > 0.99f)
+                {
+                    newDirection = -_direction;
+                    Debug.Log("Inverted direction due to corner collision.");
+                }
+
+                _direction = newDirection;
+                CalculateVelocity(_direction);
+
+                /*
+                 * Don't increment bounces here as the card needs to bounce several times in a corner
+                 * So if bounces are incremented here and in OnCollisionEnter2D then it will appear as if
+                 * the card just disappears when it hits a corner
+                 */
+                
+                // bounces++;
+
+                // Safety check if we entered with max bounces
+                if (bounces >= totalBounces)
+                {
+                    DestroyCard();
+                    return;
+                }
+
+                // Adjust position slightly along the new direction to prevent immediate re-collision
+                newPosition += _direction * MinMoveDistance;
+
+                Debug.Log("Reflected off Environment. New direction: " + _direction);
+            }
+
+            // Move the card to the new position
+            transform.position = newPosition;
         }
 
         private void ActivateFalseTrigger()
@@ -157,15 +215,12 @@ namespace _Scripts.Card
 
         private void OnCollisionEnter2D(Collision2D col)
         {
-            
-            Debug.Log("Card collision");
             // Ignore collisions with the player
             if (col.gameObject.CompareTag("Player"))
             {
                 Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
                 return;
             }
-
             if (col.gameObject.CompareTag("enemy"))
             {
                 //todo if the card hits an enemy, incapacitate the enemy and destroy the card
@@ -176,29 +231,6 @@ namespace _Scripts.Card
                 DestroyCard();
                 return;
             }
-            // TODO: Add a check for walls and count bounces
-            if (col.gameObject.CompareTag("wall"))
-            {
-                bounces++;
-                
-                //todo deflect the card and change its direction
-                if (bounces >= totalBounces)
-                {
-                    Debug.Log("no more ricochets");
-                    //todo eventually we will not destroy the card, we will change states
-                    DestroyCard();
-                }
-                
-                //changes the direction of the card, and sets it to move in that direction
-                Vector3 wallNormal = col.GetContact(0).normal;
-                direction = Vector2.Reflect(direction, wallNormal);
-                CalculateVelocity(direction);
-                
-                //Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
-                return;
-                
-            }
-
             if (col.gameObject.CompareTag("permeable"))
             {
                 //this tag exists because we want the player and enemies to be stopped
@@ -206,40 +238,80 @@ namespace _Scripts.Card
                 Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
                 return;
             }
-            
-            //Debug.Log("Card collision");
-        }
+            if (col.gameObject.CompareTag("wall"))
+            {
+                // Handle collision with walls (if not already handled by the raycast)
+                bounces++;
 
-        //the teleport event needs to be caught by a function that takes in a vector2
-        //all this function does is take in a vector 2 so that it can catch the Teleport
-        //event, and then run DestroyCard.
-        private void CatchTeleport(Vector2 noop)
-        {
-            Debug.Log("caught teleport");
-            DestroyCard();
+                if (bounces >= totalBounces)
+                {
+                    DestroyCard();
+                    return;
+                }
+
+                // Calculate the combined normal from ALL contact points
+                var combinedNormal = Vector2.zero;
+                var contactCount = col.contactCount;
+
+                for (var i = 0; i < contactCount; i++)
+                {
+                    combinedNormal += col.GetContact(i).normal;
+                }
+
+                combinedNormal = combinedNormal.normalized;
+
+                // Reflect the direction and recalculate velocity
+                var newDirection = Vector2.Reflect(_direction, combinedNormal).normalized;
+
+                // If the new direction is too similar to the old direction, invert the direction
+                if (Vector2.Dot(newDirection, _direction) > 0.99f)
+                {
+                    newDirection = -_direction;
+                    Debug.Log("Inverted direction due to corner collision.");
+                }
+
+                _direction = newDirection;
+                CalculateVelocity(_direction);
+
+                // Adjust position slightly along the new direction to prevent immediate re-collision
+                transform.position += (Vector3)(_direction * MinMoveDistance);
+
+                return;
+            }
+            if (col.gameObject.CompareTag("EscapeRout"))
+            {
+                DestroyCard();
+            }
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            Debug.Log("OnTriggerEnter");
             if (other.gameObject.CompareTag("EscapeRout"))
             {
                 DestroyCard();
             }
         }
 
-        // CALL THIS FUNCTION TO DESTROY CARDS, DONT START FROM THE CARD MANAGER!
+        private void CatchTeleport(Vector2 noop)
+        {
+            DestroyCard();
+        }
+
+        // CALL THIS FUNCTION TO DESTROY CARDS, DON'T START FROM THE CARD MANAGER!
         public void DestroyCard()
         {
             // Notify the CardManager that the card has been destroyed
-            CardManager.Instance.OnCardDestroyed();
+            if (CardManager.Instance != null)
+            {
+                CardManager.Instance.OnCardDestroyed();
+            }
             Destroy(gameObject);
         }
-        
+
         private void OnDrawGizmos()
         {
             Gizmos.color = gizmoColor;
             Gizmos.DrawWireSphere(transform.position, falseTriggerRadius);
-        } 
+        }
     }
 }

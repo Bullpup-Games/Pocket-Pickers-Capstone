@@ -103,7 +103,7 @@ namespace _Scripts.Card
             // Check if the cooldown has passed
             if (Time.time - _lastCardThrowTime <= cooldown)
             {
-                Debug.Log("Card throw is on cooldown.");
+                // Debug.Log("Card throw is on cooldown.");
                 return;
             }
             
