@@ -220,6 +220,56 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""UI"",
+            ""id"": ""d7510c25-a264-4cda-a330-7d3846ad057e"",
+            ""actions"": [
+                {
+                    ""name"": ""PauseEvent"",
+                    ""type"": ""Button"",
+                    ""id"": ""a4956b8c-4d7b-44a7-9c83-906a6962b19a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""70df759b-7261-4016-836a-2f63778059c4"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PauseEvent"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bcc7031c-2420-4378-8331-06c2cde75aa6"",
+                    ""path"": ""<DualShockGamepad>/{Menu}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PauseEvent"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""44122144-1058-4b3a-a4f6-445e0115ff49"",
+                    ""path"": ""<XInputController>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PauseEvent"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -230,6 +280,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Throw = m_Player.FindAction("Throw", throwIfNotFound: true);
         m_Player_FalseTrigger = m_Player.FindAction("FalseTrigger", throwIfNotFound: true);
         m_Player_CancelCardThrow = m_Player.FindAction("CancelCardThrow", throwIfNotFound: true);
+        // UI
+        m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
+        m_UI_PauseEvent = m_UI.FindAction("PauseEvent", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -357,11 +410,61 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
+
+    // UI
+    private readonly InputActionMap m_UI;
+    private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
+    private readonly InputAction m_UI_PauseEvent;
+    public struct UIActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public UIActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @PauseEvent => m_Wrapper.m_UI_PauseEvent;
+        public InputActionMap Get() { return m_Wrapper.m_UI; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
+        public void AddCallbacks(IUIActions instance)
+        {
+            if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
+            @PauseEvent.started += instance.OnPauseEvent;
+            @PauseEvent.performed += instance.OnPauseEvent;
+            @PauseEvent.canceled += instance.OnPauseEvent;
+        }
+
+        private void UnregisterCallbacks(IUIActions instance)
+        {
+            @PauseEvent.started -= instance.OnPauseEvent;
+            @PauseEvent.performed -= instance.OnPauseEvent;
+            @PauseEvent.canceled -= instance.OnPauseEvent;
+        }
+
+        public void RemoveCallbacks(IUIActions instance)
+        {
+            if (m_Wrapper.m_UIActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IUIActions instance)
+        {
+            foreach (var item in m_Wrapper.m_UIActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_UIActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public UIActions @UI => new UIActions(this);
     public interface IPlayerActions
     {
         void OnAim(InputAction.CallbackContext context);
         void OnThrow(InputAction.CallbackContext context);
         void OnFalseTrigger(InputAction.CallbackContext context);
         void OnCancelCardThrow(InputAction.CallbackContext context);
+    }
+    public interface IUIActions
+    {
+        void OnPauseEvent(InputAction.CallbackContext context);
     }
 }

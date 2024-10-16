@@ -36,6 +36,7 @@ namespace _Scripts
             }
 
             _inputActions.Player.Enable();
+            _inputActions.UI.Enable();
 
             // Subscribe to input events
             _inputActions.Player.Aim.performed += OnLookPerformed;
@@ -44,6 +45,8 @@ namespace _Scripts
             _inputActions.Player.Throw.performed += OnThrowPerformed;
             _inputActions.Player.CancelCardThrow.performed += OnCancelCardThrow;
             _inputActions.Player.FalseTrigger.performed += OnFalseTriggerPerformed;
+
+            _inputActions.UI.PauseEvent.performed += OnPausePerformed;
         }
 
         private void OnDisable()
@@ -55,7 +58,9 @@ namespace _Scripts
             _inputActions.Player.CancelCardThrow.performed -= OnCancelCardThrow;
             _inputActions.Player.FalseTrigger.performed -= OnFalseTriggerPerformed;
             
+            _inputActions.UI.PauseEvent.performed -= OnPausePerformed;
             _inputActions.Player.Disable();
+            _inputActions.UI.Disable();
         }
 
         // Event for updating direction while in card stance
@@ -113,6 +118,14 @@ namespace _Scripts
         {
             // Debug.Log("Cancel throw");
             OnCancelActiveCard?.Invoke();
+        }
+
+        public event Action OnPausePressed;
+
+        private void OnPausePerformed(InputAction.CallbackContext context)
+        {
+            Debug.Log("Pause Pressed");
+            OnPausePressed?.Invoke();
         }
     }
 }
