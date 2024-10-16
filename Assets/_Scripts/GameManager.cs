@@ -18,6 +18,8 @@ namespace _Scripts
         //prefabs
         public GameObject sinPrefab;
         public GameObject potentialSinPrefab;
+
+        public GameObject quicktimeEventPanel;
         #region Singleton
 
         public static GameManager Instance
