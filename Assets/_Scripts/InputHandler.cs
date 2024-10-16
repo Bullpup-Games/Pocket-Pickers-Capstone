@@ -92,7 +92,7 @@ namespace _Scripts
         private void OnThrowPerformed(InputAction.CallbackContext context)
         {
             if (PlayerVariables.Instance.stateManager.state == PlayerState.Stunned) return;
-            Debug.Log("Throw Input");
+            // Debug.Log("Throw Input");
             OnCardThrow?.Invoke();
         }
         
@@ -104,14 +104,14 @@ namespace _Scripts
                  * of escaping one regardless if the player already has an active card out and near the enemy.
                  * So, allow FalseTrigger input even if the player is stunned
                  */
-                Debug.Log("False Trigger Input");
+                // Debug.Log("False Trigger Input");
                 OnFalseTrigger?.Invoke();
         }
 
         public event Action OnCancelActiveCard;
         private void OnCancelCardThrow(InputAction.CallbackContext context)
         {
-            Debug.Log("Cancel throw");
+            // Debug.Log("Cancel throw");
             OnCancelActiveCard?.Invoke();
         }
     }
