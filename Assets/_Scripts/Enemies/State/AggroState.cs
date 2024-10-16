@@ -318,6 +318,8 @@ namespace _Scripts.Enemies.State
 
             var playerRb = PlayerVariables.Instance.gameObject.GetComponent<Rigidbody2D>();
             
+            GameManager.Instance.quicktimeEventPanel.SetActive(true);
+            
             // Make sure the card throw arrow isn't active
             HandleCardStanceArrow.Instance.DestroyDirectionalArrow();
             
@@ -384,6 +386,7 @@ namespace _Scripts.Enemies.State
             }
             finally
             {
+                GameManager.Instance.quicktimeEventPanel.SetActive(false);
                 InputHandler.Instance.OnFalseTrigger -= OnFalseTriggerHandler;
                 _hasExecuted = true;
                 _qteCoroutine = null;
