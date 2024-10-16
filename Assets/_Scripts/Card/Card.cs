@@ -3,6 +3,7 @@ using _Scripts.Enemies;
 using _Scripts.Enemies.State;
 using _Scripts.Player;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Scripts.Card
 {
@@ -22,6 +23,7 @@ namespace _Scripts.Card
 
         private Rigidbody2D _rb;
         private Vector2 _previousPosition; // Position in the previous frame
+        public Vector2 lastSafePosition; // Keep track of safe positions to teleport as the card travels
 
         private const float MinMoveDistance = 0.01f; // Minimum movement distance to prevent sticking
 
@@ -91,6 +93,7 @@ namespace _Scripts.Card
             var playerCollider = PlayerVariables.Instance.gameObject.GetComponent<Collider2D>();
             Physics2D.IgnoreCollision(playerCollider, GetComponent<Collider2D>());
 
+            lastSafePosition = transform.position;
             _startTime = Time.time;
             
             // Calculate initial velocity
@@ -121,6 +124,7 @@ namespace _Scripts.Card
         private void FixedUpdate()
         {
             MoveCard();
+            UpdateSafePosition();
         }
 
         private void MoveCard()
@@ -190,6 +194,31 @@ namespace _Scripts.Card
             transform.position = newPosition;
         }
 
+        /*
+         * Keeps track of the last known safe position to teleport to each frame the card is alive
+         * to prevent teleportation into walls or objects
+         */
+        private void UpdateSafePosition()
+        {
+            var playerCollider = PlayerVariables.Instance.Collider2D;
+            var colliderSize = playerCollider.bounds.size;
+            var colliderOffset = playerCollider.offset;
+            
+            // get the current collider position with the player offset to cast from when checking for hits
+            var colliderPos = (Vector2)transform.position + colliderOffset;
+            
+            // Check for obstructions that would prevent a teleport in this location
+            var hits = Physics2D.OverlapBoxAll(
+                colliderPos,
+                colliderSize,
+                0f,
+                LayerMask.GetMask("Environment", "Enemy")
+            );
+            
+            if (hits.Length == 0)
+                lastSafePosition = transform.position;
+        }
+
         private void ActivateFalseTrigger()
         {
             if (CardManager.Instance.falseTriggerOnCooldown)
@@ -200,7 +229,7 @@ namespace _Scripts.Card
 
             var colliders = Physics2D.OverlapCircleAll(transform.position, falseTriggerRadius, LayerMask.GetMask("Enemy"));
 
-            foreach (Collider2D col in colliders)
+            foreach (var col in colliders)
             {
                 var enemyStateManager = col.GetComponent<EnemyStateManager>();
                 if (enemyStateManager != null)

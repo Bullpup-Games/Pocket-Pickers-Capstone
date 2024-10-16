@@ -162,7 +162,7 @@ namespace _Scripts.Card
         {
             if (Card.Instance != null)
             {
-                Teleport.Invoke(Card.Instance.transform.position);
+                Teleport.Invoke(Card.Instance.lastSafePosition);
             }
         }
 
