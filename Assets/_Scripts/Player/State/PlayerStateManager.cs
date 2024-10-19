@@ -60,6 +60,23 @@ namespace _Scripts.Player.State
 
         private void Update()
         {
+            if (CurrentState == FreeMovingState)
+            {
+                enumState = PlayerState.FreeMoving;
+            }
+            else if (CurrentState == StunnedState)
+            {
+                enumState = PlayerState.Stunned;
+            }
+            else if (CurrentState == DashingState)
+            {
+                enumState = PlayerState.Dashing;
+            }
+            else if (CurrentState == WallState)
+            {
+                enumState = PlayerState.Wall;
+            }
+            
             CurrentState.HandleInput();
             CurrentState.UpdateState();
         }

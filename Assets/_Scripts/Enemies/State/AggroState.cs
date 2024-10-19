@@ -301,7 +301,6 @@ namespace _Scripts.Enemies.State
         {
             // If the player is already in the QTE with this guard it shouldn't start again
             if (_qteCoroutine != null) return;
-            var playerStateManager = PlayerVariables.Instance.GetComponent<PlayerStateManager>();
             // If the player is already in the QTE with a different guard this one shouldn't be able to start another
             if (PlayerStateManager.Instance.IsStunnedState()) return;
             
@@ -317,8 +316,6 @@ namespace _Scripts.Enemies.State
             var counter = 0;
             var timeElapsed = 0f;
 
-            var playerRb = PlayerVariables.Instance.gameObject.GetComponent<Rigidbody2D>();
-            
             GameManager.Instance.quicktimeEventPanel.SetActive(true);
             
             // Make sure the card throw arrow isn't active
@@ -357,7 +354,7 @@ namespace _Scripts.Enemies.State
                     }
                     // Stop any movement from the guard or player
                     _enemy.StopMoving();
-                    playerRb.velocity = Vector2.zero; // TODO: The player should use a FSM eventually too, change this when it is
+                    PlayerVariables.Instance.RigidBody2D.velocity = Vector2.zero; // TODO: The player should use a FSM eventually too, change this when it is
 
                     timeElapsed += Time.deltaTime;
                     yield return null;

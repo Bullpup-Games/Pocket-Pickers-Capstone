@@ -4,9 +4,11 @@ namespace _Scripts.Player.State
 {
     public class StunnedState : IPlayerState
     {
+        private PlayerStateManager _player;
         public void EnterState(PlayerStateManager player)
         {
-            
+            _player = player;
+            Debug.Log("entered stun state");
         }
 
         public void UpdateState()

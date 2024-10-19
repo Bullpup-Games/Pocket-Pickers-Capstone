@@ -17,39 +17,8 @@ namespace _Scripts.Player.State
         private bool _cachedQueryStartInColliders;
         private float _time;
 
-        // public Vector2 FrameInput => PlayerStateManager.Instance.FrameInput.Move;
         public event Action<bool, float> GroundedChanged;
         public event Action Jumped;
-        // private void Update()
-        // {
-        //     // if (_stateManager.state != PlayerState.Stunned)
-        //     // {
-        //     //     GatherInput();
-        //     // }
-        // }
-        //
-        // public void EnterCardStance()
-        // {
-        //     // _stateManager.SetState(PlayerState.CardStance);
-        // }
-        //
-        // public void ExitCardStance()
-        // {
-        //     // _stateManager.SetState(PlayerState.Idle);
-        // }
-        //
-        // private void FixedUpdate()
-        // {
-        //     CheckCollisions();
-        //
-        //     HandleJump();
-        //     HandleDirection();
-        //     HandleGravity();
-        //
-        //     ApplyMovement();
-        // }
-
-      
 
         public void EnterState(PlayerStateManager player)
         {

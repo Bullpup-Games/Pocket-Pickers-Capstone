@@ -13,6 +13,8 @@ namespace _Scripts.Enemies.State
         public void EnterState(EnemyStateManager enemy)
         {
             _enemy = enemy;
+            _enemy.Rigidbody2D.isKinematic = false;
+            _enemy.Collider2D.enabled = true;
             _enemy.StopMoving();
             _searchTimer = 0f;
             _isSearching = true;
@@ -48,6 +50,11 @@ namespace _Scripts.Enemies.State
         {
             while (_searchTimer < _enemy.Settings.totalSearchTime && _isSearching)
             {
+                if (_enemy.IsPlayerDetected())
+                {
+                    _enemy.TransitionToState(_enemy.AggroState);
+                    yield break;
+                }
                 // Flip the enemy to look in the other direction
                 _enemy.Settings.FlipLocalScale();
 
