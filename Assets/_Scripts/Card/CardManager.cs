@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using _Scripts.Player;
+using _Scripts.Player.State;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -17,7 +18,7 @@ namespace _Scripts.Card
     public class CardManager : MonoBehaviour
     {
         public InputHandler inputHandler;
-        public PlayerMovementController playerMovementController;
+        // public PlayerMovementController playerMovementController;
         public HandleCardStanceArrow cardStanceArrow;
         private PlayerStateManager _playerStateManager;
 
@@ -84,7 +85,7 @@ namespace _Scripts.Card
         //if not, you should test for teleportation
         private void HandleCardAction()
         {
-            if (PlayerVariables.Instance.stateManager.state != PlayerState.Stunned &&  _instantiatedCard == null)
+            if (!PlayerStateManager.Instance.IsStunnedState() &&  _instantiatedCard == null)
             {
                 HandleCardThrow();
             }
@@ -194,24 +195,24 @@ namespace _Scripts.Card
             Destroy(_instantiatedCard);
         }
         
-        private void HandleEnterCardStance()
-        {
-            playerMovementController.EnterCardStance();
-        }
+        // private void HandleEnterCardStance()
+        // {
+        //     playerMovementController.EnterCardStance();
+        // }
+        //
+        // private void HandleExitCardStance()
+        // {
+        //     playerMovementController.ExitCardStance();
+        // }
 
-        private void HandleExitCardStance()
-        {
-            playerMovementController.ExitCardStance();
-        }
-
-        private void HandleShowDirectionalArrow()
-        {
-            cardStanceArrow.InstantiateDirectionalArrow(); 
-        }
-
-        private void HandleHideDirectionalArrow()
-        {
-            cardStanceArrow.DestroyDirectionalArrow();
-        }
+        // private void HandleShowDirectionalArrow()
+        // {
+        //     cardStanceArrow.InstantiateDirectionalArrow(); 
+        // }
+        //
+        // private void HandleHideDirectionalArrow()
+        // {
+        //     cardStanceArrow.DestroyDirectionalArrow();
+        // }
     }
 }

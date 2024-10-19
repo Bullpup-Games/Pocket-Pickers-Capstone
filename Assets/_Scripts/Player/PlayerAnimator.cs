@@ -1,5 +1,6 @@
 using System;
 using _Scripts.Card;
+using _Scripts.Player.State;
 using UnityEngine;
 
 namespace _Scripts.Player
@@ -79,16 +80,16 @@ namespace _Scripts.Player
             }
            
             
-            if (PlayerMovementController.Instance.FrameInput == Vector2.zero && touchingGround)
+            if (PlayerStateManager.Instance.FrameInput.Move == Vector2.zero && touchingGround)
             {
                 //be idle
                 _animator.SetFloat(Speed, 0);
 
             }
-            else if (PlayerMovementController.Instance.FrameInput != Vector2.zero && touchingGround)
+            else if (PlayerStateManager.Instance.FrameInput.Move != Vector2.zero && touchingGround)
             {
                 //be moving
-                _animator.SetFloat(Speed,Mathf.Abs(PlayerMovementController.Instance.FrameInput.x) );
+                _animator.SetFloat(Speed,Mathf.Abs(PlayerStateManager.Instance.FrameInput.Move.x) );
 
             }
 

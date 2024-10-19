@@ -1,4 +1,5 @@
 using System;
+using _Scripts.Player.State;
 using UnityEngine;
 using UnityEngine.Timeline;
 using Random = UnityEngine.Random;
@@ -10,8 +11,9 @@ namespace _Scripts.Player
         public bool isFacingRight = true;   // Start facing right by default
         // public bool inCardStance;
         [HideInInspector] public PlayerStateManager stateManager;
-        [HideInInspector] public Collider2D Collider2D;
-        
+        [HideInInspector] public BoxCollider2D Collider2D;
+        [HideInInspector] public Rigidbody2D RigidBody2D; 
+        [SerializeField] public ScriptableStats Stats;
         //sin variables
         public int sinHeld;//how much you have picked up
         public int sinAccrued;//how much sin you have commited in game
@@ -70,7 +72,8 @@ namespace _Scripts.Player
         private void Awake()
         {
             stateManager = GetComponent<PlayerStateManager>();
-            Collider2D = GetComponent<Collider2D>();
+            Collider2D = GetComponent<BoxCollider2D>();
+            RigidBody2D = GetComponent<Rigidbody2D>();
             sinThreshold = Random.Range(thresholdRangeStart, thresholdRangeEnd);
         }
 
