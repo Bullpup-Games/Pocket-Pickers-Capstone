@@ -62,5 +62,8 @@ namespace _Scripts
         [Tooltip("The cooldown between available dashes in seconds")]
         public float DashCooldown = 1.25f;
 
+        [Tooltip("Falling or 'Sliding' speed when holding onto a wall")]
+        public float WallSlideSpeed = 8f;
+
     }
 }

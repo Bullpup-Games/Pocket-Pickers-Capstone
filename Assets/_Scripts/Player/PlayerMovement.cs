@@ -103,7 +103,9 @@ namespace _Scripts.Player
             gameObject.transform.position = location;
             gameObject.transform.rotation = Quaternion.identity;
             //todo set the player's velocity to 0
-            
+            _frameVelocity.y = 0f;
+            _frameVelocity.x = 0f;
+
         }
 
         #region Collisions
@@ -206,10 +208,6 @@ namespace _Scripts.Player
                 var deceleration = _grounded ? PlayerVariables.Instance.Stats.GroundDeceleration : PlayerVariables.Instance.Stats.AirDeceleration;
                 _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);
             } 
-            // else if (_stateManager.state == PlayerState.Stunned)
-            // {
-            //     _frameVelocity.x = 0f;
-            // }
             else
             {
                 _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * PlayerVariables.Instance.Stats.MaxSpeed, PlayerVariables.Instance.Stats.Acceleration * Time.fixedDeltaTime);
@@ -253,6 +251,12 @@ namespace _Scripts.Player
             _frameInput.Move.x = 0f;
             _frameVelocity.x = 0f;
         }
+
+        public void LerpVerticalMomentum()
+        {
+            _frameInput.Move.y = 0f;
+            _frameVelocity.y = Mathf.Lerp(_frameVelocity.y, 0f, Time.deltaTime * 750f);
+        }
         #region Dashing
         public Vector2 DashDirection { get; set; } 
         public void ApplyDashMovement()
@@ -283,6 +287,16 @@ namespace _Scripts.Player
         public bool IsWalled()
         {
             return Physics2D.OverlapCircle(wallCheck.position, 0.2f, wallLayer);
+        }
+        
+        /*
+         * Handles the downward slide when on a wall as well as preventing any horizontal player movement
+         */
+        public void WallSlideMovement()
+        {
+            var wallSlideSpeed = PlayerVariables.Instance.Stats.WallSlideSpeed;
+            _frameVelocity.y = Mathf.MoveTowards(_frameVelocity.y, -PlayerVariables.Instance.Stats.WallSlideSpeed, Time.fixedDeltaTime);
+            _frameVelocity.x = 0f;
         }
 
         #endregion
