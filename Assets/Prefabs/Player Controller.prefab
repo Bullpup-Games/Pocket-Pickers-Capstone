@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1544650614272011795}
   - component: {fileID: -1215777316475583348}
   - component: {fileID: -2201557181826163083}
+  - component: {fileID: 7406740131789768211}
   - component: {fileID: 1544650614272011793}
   - component: {fileID: 1544650614272011794}
   - component: {fileID: 5847566070567403621}
@@ -50,7 +51,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ed69aef4a074bc399fee73abbce1d11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enumState: 0
 --- !u!114 &-2201557181826163083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,6 +64,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFacingRight: 1
+  isGrounded: 0
   stateManager: {fileID: 0}
   Collider2D: {fileID: 0}
   RigidBody2D: {fileID: 0}
@@ -73,6 +74,18 @@ MonoBehaviour:
   thresholdRangeStart: 0
   thresholdRangeEnd: 0
   sinThreshold: 0
+--- !u!114 &7406740131789768211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1544650614272011804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2491c80c9e8c45e681edf8d9ac71c6de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!50 &1544650614272011793
 Rigidbody2D:
   serializedVersion: 4

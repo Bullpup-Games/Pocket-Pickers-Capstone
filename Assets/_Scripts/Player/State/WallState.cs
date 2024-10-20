@@ -4,7 +4,7 @@ namespace _Scripts.Player.State
 {
     public class WallState : IPlayerState
     {
-        public void EnterState(PlayerStateManager player)
+        public void EnterState()
         {
             
         }
@@ -23,15 +23,5 @@ namespace _Scripts.Player.State
         {
             
         }
-
-        public void HandleInput()
-        {
-            
-        }
-
-        public void OnCollisionEnter2D(Collision2D col)
-        {
-            
-        }  
     }
 }

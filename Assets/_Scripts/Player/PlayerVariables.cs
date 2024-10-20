@@ -9,6 +9,8 @@ namespace _Scripts.Player
     public class PlayerVariables : MonoBehaviour
     {
         public bool isFacingRight = true;   // Start facing right by default
+
+        public bool isGrounded;
         // public bool inCardStance;
         [HideInInspector] public PlayerStateManager stateManager;
         [HideInInspector] public BoxCollider2D Collider2D;
@@ -82,7 +84,7 @@ namespace _Scripts.Player
             isFacingRight = transform.localScale.x > 0; 
         }
 
-        public void escape()
+        public void Escape()
         {
             //release all of the sin you hold
             sinHeld = 0;

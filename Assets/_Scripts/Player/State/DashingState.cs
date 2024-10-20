@@ -4,7 +4,7 @@ namespace _Scripts.Player.State
 {
     public class DashingState : IPlayerState
     {
-        public void EnterState(PlayerStateManager player)
+        public void EnterState()
         {
             
         }
@@ -28,10 +28,5 @@ namespace _Scripts.Player.State
         {
             
         }
-
-        public void OnCollisionEnter2D(Collision2D col)
-        {
-            
-        } 
     }
 }
