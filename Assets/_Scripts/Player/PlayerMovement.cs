@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using _Scripts.Card;
 using UnityEngine;
 
@@ -105,7 +107,15 @@ namespace _Scripts.Player
             //todo set the player's velocity to 0
             _frameVelocity.y = 0f;
             _frameVelocity.x = 0f;
+            StartCoroutine(TeleportHangTime());
+        }
 
+        private bool _isHangingAfterTp;
+        private IEnumerator TeleportHangTime()
+        {
+            _isHangingAfterTp = true;
+            yield return new WaitForSeconds(PlayerVariables.Instance.Stats.TeleportHangTime);
+            _isHangingAfterTp = false;
         }
 
         #region Collisions
@@ -223,6 +233,10 @@ namespace _Scripts.Player
             if (_grounded && _frameVelocity.y <= 0f)
             {
                 _frameVelocity.y = PlayerVariables.Instance.Stats.GroundingForce;
+            }
+            else if (_isHangingAfterTp)
+            {
+                _frameVelocity.y = Mathf.Lerp(_frameVelocity.y, -PlayerVariables.Instance.Stats.MaxFallSpeed, Time.deltaTime * 2f);
             }
             else
             {

@@ -27,9 +27,11 @@ MonoBehaviour:
   JumpPower: 25
   MaxFallSpeed: 30
   FallAcceleration: 60
+  TeleportHangTime: 0.35
   JumpEndEarlyGravityModifier: 2
   CoyoteTime: 0.15
   JumpBuffer: 0.1
   DashSpeed: 22
   DashDuration: 0.1
   DashCooldown: 1.25
+  WallSlideSpeed: 3

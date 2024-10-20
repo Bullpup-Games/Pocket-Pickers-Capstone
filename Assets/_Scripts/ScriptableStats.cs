@@ -44,6 +44,11 @@ namespace _Scripts
         [Tooltip("The player's capacity to gain fall speed. a.k.a. In Air Gravity")]
         public float FallAcceleration = 110;
 
+        [Tooltip(
+            "The amount of time in seconds that the player will spend gradually transitioning to the max fall speed instead of hitting it straight await." +
+            "This is just meant to help players track the character better after teleporting in the air, and makes the teleport feel more forgiving")]
+        public float TeleportHangTime = 0.35f;
+
         [Tooltip("The gravity multiplier added when jump is released early")]
         public float JumpEndEarlyGravityModifier = 3;
 
