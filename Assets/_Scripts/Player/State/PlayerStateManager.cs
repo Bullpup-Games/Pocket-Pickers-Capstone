@@ -80,19 +80,26 @@ namespace _Scripts.Player.State
         }
 
         #region Dash Transition
-        private Action _onDashAction;
-
+        private float _lastDashTime;
         private void OnEnable()
         {
-            if (IsStunnedState()) return;
-            
-            _onDashAction = () => TransitionToState(DashingState);
-            InputHandler.Instance.OnDash += _onDashAction;
+            InputHandler.Instance.OnDash += OnDashAction;
         }
-
         private void OnDisable()
         {
-            InputHandler.Instance.OnDash -= _onDashAction;
+            InputHandler.Instance.OnDash -= OnDashAction;
+        }
+        private void OnDashAction()
+        {
+            // Cooldown check
+            if (_lastDashTime + PlayerVariables.Instance.Stats.DashCooldown > PlayerVariables.Instance.Time)
+            {
+                Debug.Log("Dash cooldown");
+                return;
+            };
+            
+            _lastDashTime = PlayerVariables.Instance.Time;
+            TransitionToState(DashingState);
         }
         #endregion
 

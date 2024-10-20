@@ -58,5 +58,9 @@ namespace _Scripts
 
         [Tooltip("The amount of time a dash will last in seconds")]
         public float DashDuration = 0.15f;
+
+        [Tooltip("The cooldown between available dashes in seconds")]
+        public float DashCooldown = 1.25f;
+
     }
 }

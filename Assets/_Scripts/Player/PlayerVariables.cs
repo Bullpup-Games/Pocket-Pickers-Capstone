@@ -16,6 +16,8 @@ namespace _Scripts.Player
         [HideInInspector] public BoxCollider2D Collider2D;
         [HideInInspector] public Rigidbody2D RigidBody2D; 
         [SerializeField] public ScriptableStats Stats;
+
+        [HideInInspector] public float Time;
         //sin variables
         public int sinHeld;//how much you have picked up
         public int sinAccrued;//how much sin you have commited in game
@@ -81,6 +83,7 @@ namespace _Scripts.Player
 
         private void Update()
         {
+            Time = UnityEngine.Time.time;
             isFacingRight = transform.localScale.x > 0; 
         }
 
