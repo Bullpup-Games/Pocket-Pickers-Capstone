@@ -354,7 +354,7 @@ namespace _Scripts.Enemies.State
                     }
                     // Stop any movement from the guard or player
                     _enemy.StopMoving();
-                    PlayerVariables.Instance.RigidBody2D.velocity = new Vector2(0f, PlayerVariables.Instance.RigidBody2D.velocity.y); // TODO: The player should use a FSM eventually too, change this when it is
+                    // PlayerVariables.Instance.RigidBody2D.velocity = new Vector2(0f, PlayerVariables.Instance.RigidBody2D.velocity.y); // TODO: The player should use a FSM eventually too, change this when it is
 
                     timeElapsed += Time.deltaTime;
                     yield return null;

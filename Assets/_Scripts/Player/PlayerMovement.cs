@@ -263,6 +263,14 @@ namespace _Scripts.Player
             _frameInput.Move.x = 0f;
             _frameVelocity.x = 0f;
         }
+        #region Dashing
+        public Vector2 DashDirection { get; set; } 
+        public void ApplyDashMovement()
+        {
+            _frameVelocity = DashDirection * PlayerVariables.Instance.Stats.DashSpeed;
+            ApplyMovement();
+        }
+        #endregion
 
 #if UNITY_EDITOR
         private void OnValidate()

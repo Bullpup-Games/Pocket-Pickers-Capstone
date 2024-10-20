@@ -56,6 +56,8 @@ namespace _Scripts
             _inputActions.Player.Jump.performed += OnJumpPerformed;
             _inputActions.Player.Jump.canceled += OnJumpCanceled;
 
+            _inputActions.Player.Dash.performed += OnDashPerformed;
+
             _inputActions.UI.PauseEvent.performed += OnPausePerformed;
         }
 
@@ -72,6 +74,8 @@ namespace _Scripts
             _inputActions.Player.Move.canceled -= OnMoveCanceled;
             _inputActions.Player.Jump.performed -= OnJumpPerformed;
             _inputActions.Player.Jump.canceled -= OnJumpCanceled;
+
+            _inputActions.Player.Dash.performed -= OnDashPerformed;
             
             _inputActions.UI.PauseEvent.performed -= OnPausePerformed;
             _inputActions.Player.Disable();
@@ -127,6 +131,7 @@ namespace _Scripts
         
         public event Action OnFalseTrigger;
         private void OnFalseTriggerPerformed(InputAction.CallbackContext context)
+        
         {
                 /*
                  * The False trigger input is used to escape stuns. Even if it wasn't, it would be a clever way
@@ -142,6 +147,13 @@ namespace _Scripts
         {
             // Debug.Log("Cancel throw");
             OnCancelActiveCard?.Invoke();
+        }
+
+        public event Action OnDash;
+
+        private void OnDashPerformed(InputAction.CallbackContext context)
+        {
+            OnDash?.Invoke();
         }
 
         public event Action OnPausePressed;

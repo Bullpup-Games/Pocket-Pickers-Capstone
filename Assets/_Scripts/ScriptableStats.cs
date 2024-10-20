@@ -52,5 +52,11 @@ namespace _Scripts
 
         [Tooltip("The amount of time we buffer a jump. This allows jump input before actually hitting the ground")]
         public float JumpBuffer = .2f;
+
+        [Tooltip("The speed the player will travel during their dash")]
+        public float DashSpeed = 22f;
+
+        [Tooltip("The amount of time a dash will last in seconds")]
+        public float DashDuration = 0.15f;
     }
 }

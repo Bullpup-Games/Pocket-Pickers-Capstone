@@ -14,6 +14,8 @@ namespace _Scripts.Player.State
         public IPlayerState CurrentState { get; private set; }
         public IPlayerState PreviousState { get; private set; }
 
+        [SerializeField] private PlayerState enumState;
+
         #region Singleton
 
         public static PlayerStateManager Instance
@@ -46,6 +48,15 @@ namespace _Scripts.Player.State
 
         private void Update()
         {
+            if (CurrentState == FreeMovingState)
+                enumState = PlayerState.FreeMoving;
+            if (CurrentState == StunnedState)
+                enumState = PlayerState.Stunned;
+            if (CurrentState == DashingState)
+                enumState = PlayerState.Dashing;
+            if (CurrentState == WallState)
+                enumState = PlayerState.Wall;
+            
             CurrentState.UpdateState();
         }
 
@@ -56,6 +67,10 @@ namespace _Scripts.Player.State
 
         public void TransitionToState(IPlayerState newState)
         {
+            // State blocks
+            if (CurrentState == StunnedState && newState == DashingState) return;
+            if (CurrentState == StunnedState && newState == WallState) return;
+            
             if (CurrentState != null)
                 CurrentState.ExitState();
 
@@ -63,6 +78,23 @@ namespace _Scripts.Player.State
             CurrentState = newState;
             CurrentState.EnterState();
         }
+
+        #region Dash Transition
+        private Action _onDashAction;
+
+        private void OnEnable()
+        {
+            if (IsStunnedState()) return;
+            
+            _onDashAction = () => TransitionToState(DashingState);
+            InputHandler.Instance.OnDash += _onDashAction;
+        }
+
+        private void OnDisable()
+        {
+            InputHandler.Instance.OnDash -= _onDashAction;
+        }
+        #endregion
 
         public bool IsStunnedState()
         {
