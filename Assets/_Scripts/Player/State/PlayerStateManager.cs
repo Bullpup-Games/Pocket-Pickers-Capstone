@@ -1,6 +1,7 @@
 using System;
 using _Scripts.Card;
 using UnityEngine;
+using UnityEngine.XR;
 
 namespace _Scripts.Player.State
 {
@@ -68,6 +69,7 @@ namespace _Scripts.Player.State
         public void TransitionToState(IPlayerState newState)
         {
             // State blocks
+            if (CurrentState == newState) return;
             if (CurrentState == StunnedState && newState == DashingState) return;
             if (CurrentState == StunnedState && newState == WallState) return;
             
@@ -78,17 +80,22 @@ namespace _Scripts.Player.State
             CurrentState = newState;
             CurrentState.EnterState();
         }
-
-        #region Dash Transition
-        private float _lastDashTime;
+        
         private void OnEnable()
         {
+            if (InputHandler.Instance == null) return;
             InputHandler.Instance.OnDash += OnDashAction;
+            PlayerMovement.Instance.Walled += HandleWallStateTransition;
         }
         private void OnDisable()
         {
+            if (InputHandler.Instance == null) return;
             InputHandler.Instance.OnDash -= OnDashAction;
+            PlayerMovement.Instance.Walled -= HandleWallStateTransition;
         }
+
+        #region Dash Transition
+        private float _lastDashTime;
         private void OnDashAction()
         {
             // Cooldown check
@@ -100,6 +107,23 @@ namespace _Scripts.Player.State
             
             _lastDashTime = PlayerVariables.Instance.Time;
             TransitionToState(DashingState);
+        }
+        #endregion
+        
+        #region Wall Sliding
+
+        private void HandleWallStateTransition(bool isWalled)
+        {
+            Debug.Log("HandleWallStateTransition");
+            if (!isWalled || CurrentState == WallState) return;
+            // If the player is touching a wall, is not grounded, and is moving the left stick in the direction of the wall they hit...
+            if (!PlayerMovement.Instance.IsGrounded() &&
+                ((PlayerVariables.Instance.isFacingRight && PlayerMovement.Instance.FrameInput.x > 0) ||
+                (!PlayerVariables.Instance.isFacingRight && PlayerMovement.Instance.FrameInput.x < 0)))
+            {
+                Debug.Log("Transitioning");
+                TransitionToState(WallState);
+            }
         }
         #endregion
 

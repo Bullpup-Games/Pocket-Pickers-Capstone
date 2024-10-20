@@ -1,8 +1,5 @@
 using System;
 using _Scripts.Card;
-using _Scripts.Enemies;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _Scripts.Player
@@ -20,6 +17,8 @@ namespace _Scripts.Player
         private FrameInput _frameInput;
         private Vector2 _frameVelocity;
         private bool _cachedQueryStartInColliders;
+
+        public LayerMask wallLayer;
 
         #region Interface
 
@@ -60,6 +59,8 @@ namespace _Scripts.Player
         private void Update()
         {
             _time += Time.deltaTime;
+
+            CheckWallStatus();
         }
         
         
@@ -97,17 +98,6 @@ namespace _Scripts.Player
             }
         }
 
-        private void FixedUpdate()
-        {
-            // CheckCollisions();
-            //
-            // HandleJump();
-            // HandleDirection();
-            // HandleGravity();
-            //
-            // ApplyMovement();
-        }
-
         public void TeleportTo(Vector2 location)
         {
             gameObject.transform.position = location;
@@ -121,7 +111,7 @@ namespace _Scripts.Player
         private float _frameLeftGrounded = float.MinValue;
         private bool _grounded;
 
-        public bool isGrounded() { return _grounded;}
+        public bool IsGrounded() { return _grounded;}
         public void CheckCollisions()
         {
             Physics2D.queriesStartInColliders = false;
@@ -270,6 +260,31 @@ namespace _Scripts.Player
             _frameVelocity = DashDirection * PlayerVariables.Instance.Stats.DashSpeed;
             ApplyMovement();
         }
+        #endregion
+        
+        #region WallSliding
+
+        public Transform wallCheck;
+        public Action<bool> Walled;
+        private bool _isWalled;
+
+
+        private void CheckWallStatus()
+        {
+            var wasWalled = _isWalled;
+            _isWalled = IsWalled();
+
+            if (_isWalled != wasWalled)
+            {
+                Walled?.Invoke(_isWalled);
+            }
+        }
+
+        public bool IsWalled()
+        {
+            return Physics2D.OverlapCircle(wallCheck.position, 0.2f, wallLayer);
+        }
+
         #endregion
 
 #if UNITY_EDITOR

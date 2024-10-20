@@ -6,7 +6,7 @@ namespace _Scripts.Player.State
     {
         public void EnterState()
         {
-            
+            Debug.Log("Wall state");
         }
 
         public void UpdateState()
