@@ -57,7 +57,8 @@ namespace _Scripts
             _inputActions.Player.Jump.canceled += OnJumpCanceled;
 
             _inputActions.Player.Dash.performed += OnDashPerformed;
-
+            _inputActions.Player.Crouch.performed += OnCrouchPerformed;
+            
             _inputActions.UI.PauseEvent.performed += OnPausePerformed;
         }
 
@@ -76,6 +77,7 @@ namespace _Scripts
             _inputActions.Player.Jump.canceled -= OnJumpCanceled;
 
             _inputActions.Player.Dash.performed -= OnDashPerformed;
+            _inputActions.Player.Crouch.performed -= OnCrouchPerformed;
             
             _inputActions.UI.PauseEvent.performed -= OnPausePerformed;
             _inputActions.Player.Disable();
@@ -183,6 +185,13 @@ namespace _Scripts
         private void OnJumpCanceled(InputAction.CallbackContext context)
         {
             JumpHeld = false;
+        }
+
+        public Action OnCrouch;
+
+        private void OnCrouchPerformed(InputAction.CallbackContext context)
+        {
+            OnCrouch?.Invoke();
         }
     }
 }

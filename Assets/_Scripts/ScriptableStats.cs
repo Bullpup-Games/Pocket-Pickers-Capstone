@@ -72,6 +72,12 @@ namespace _Scripts
 
         [Tooltip("The amount of time in seconds required in between seperate wall hangs")]
         public float WallHangCooldown = 0.2f;
+        
+        [Tooltip("Unique coyote time for leaving wall hangs")]
+        public float WallCoyoteTime = .25f;
+
+        [Tooltip("The maximum horizontal speed which crouching")]
+        public float MaxCrouchSpeed = 6f;
 
     }
 }

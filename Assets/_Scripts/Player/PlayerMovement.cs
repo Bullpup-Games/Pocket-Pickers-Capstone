@@ -58,7 +58,9 @@ namespace _Scripts.Player
         private void OnEnable()
         {
             CardManager.Instance.Teleport += TeleportTo;
+            InputHandler.Instance.OnCrouch += ToggleCrouching;
         }
+
         private void Update()
         {
             _time += Time.deltaTime;
@@ -213,6 +215,10 @@ namespace _Scripts.Player
 
         #region Horizontal
 
+        private bool _isCrouching;
+
+        private void ToggleCrouching() => _isCrouching = !_isCrouching;
+
         public void HandleDirection()
         {
             if (_frameInput.Move.x == 0)
@@ -220,6 +226,10 @@ namespace _Scripts.Player
                 var deceleration = _grounded ? PlayerVariables.Instance.Stats.GroundDeceleration : PlayerVariables.Instance.Stats.AirDeceleration;
                 _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);
             } 
+            else if (_isCrouching)
+            {
+                _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * PlayerVariables.Instance.Stats.MaxCrouchSpeed, PlayerVariables.Instance.Stats.Acceleration * Time.fixedDeltaTime);
+            }
             else
             {
                 _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * PlayerVariables.Instance.Stats.MaxSpeed, PlayerVariables.Instance.Stats.Acceleration * Time.fixedDeltaTime);
@@ -294,7 +304,7 @@ namespace _Scripts.Player
         private bool _isWalled;
         private float _frameLeftWalled;
         private bool _wallCoyoteUsable;
-        public bool CanUseWallCoyote => _wallCoyoteUsable && !IsWalled() && _time < _frameLeftWalled + PlayerVariables.Instance.Stats.CoyoteTime;
+        public bool CanUseWallCoyote => _wallCoyoteUsable && !IsWalled() && _time < _frameLeftWalled + PlayerVariables.Instance.Stats.WallCoyoteTime;
 
         private void CheckWallStatus()
         {
