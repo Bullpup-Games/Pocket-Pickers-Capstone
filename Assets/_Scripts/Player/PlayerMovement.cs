@@ -301,20 +301,14 @@ namespace _Scripts.Player
             var wasWalled = _isWalled;
             _isWalled = IsWalled();
 
-            if (_isWalled)
-            {
-                _wallCoyoteUsable = true;
-            }
-
             if (wasWalled && !_isWalled)
             {
                 _frameLeftWalled = Time.time;
             }
 
-            if (_isWalled != wasWalled)
-            {
-                Walled?.Invoke(_isWalled);
-            }
+            if (!_isWalled) return;
+            _wallCoyoteUsable = true;
+            Walled?.Invoke(_isWalled);
         }
 
         public bool IsWalled()
