@@ -25,6 +25,8 @@ namespace _Scripts.Card
         public Transform player;
         public GameObject cardPrefab;
         private GameObject _instantiatedCard;
+        private int _airTimeCounter;
+
         public bool IsCardInScene() => _instantiatedCard != null;
         
         [Header("Card and Direction Arrow Offsets")]
@@ -106,6 +108,22 @@ namespace _Scripts.Card
             {
                 // Debug.Log("Card throw is on cooldown.");
                 return;
+            }
+            
+            // Card throw limiter while in the air to keep the player from endlessly flying
+            if (!PlayerMovement.Instance.IsGrounded() && !PlayerMovement.Instance.IsWalled())
+            {
+                if (_airTimeCounter >= PlayerVariables.Instance.Stats.AirTimeCardThrowLimit)
+                {
+                    // Debug.Log("Airtime limit hit");
+                    return;
+                }
+                _airTimeCounter++;
+            }
+            else
+            {
+                // Reset airtime limit when grounded
+                _airTimeCounter = 0;
             }
             
             // If a card is active, destroy the existing card (this shouldn't occur but is here for safety)

@@ -49,6 +49,10 @@ namespace _Scripts
             "This is just meant to help players track the character better after teleporting in the air, and makes the teleport feel more forgiving")]
         public float TeleportHangTime = 0.35f;
 
+        [Tooltip("The amount of times the player is allowed to throw the card while in the air before needing to touch the ground. " +
+                 "If the limit is reached the player will not be able to throw a card again until they are grounded")]
+        public int AirTimeCardThrowLimit = 2;
+
         [Tooltip("The gravity multiplier added when jump is released early")]
         public float JumpEndEarlyGravityModifier = 3;
 

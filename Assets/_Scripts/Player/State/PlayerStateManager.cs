@@ -152,5 +152,10 @@ namespace _Scripts.Player.State
         {
             return CurrentState is StunnedState;
         }
+
+        public bool IsWallState()
+        {
+            return CurrentState is WallState;
+        }
     }
 }

@@ -106,9 +106,10 @@ namespace _Scripts.Player
 
         public void TeleportTo(Vector2 location)
         {
+            // Handle Teleportation
             gameObject.transform.position = location;
             gameObject.transform.rotation = Quaternion.identity;
-            //todo set the player's velocity to 0
+            
             _frameVelocity.y = 0f;
             _frameVelocity.x = 0f;
             StartCoroutine(TeleportHangTime());
