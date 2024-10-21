@@ -25,6 +25,7 @@ namespace _Scripts.Player
         #region Interface
 
         public Vector2 FrameInput => _frameInput.Move;
+        public bool JumpDownFrameInput => _frameInput.JumpDown;
         public event Action<bool, float> GroundedChanged;
         public event Action Jumped;
 
@@ -207,7 +208,7 @@ namespace _Scripts.Player
             _frameVelocity.y = PlayerVariables.Instance.Stats.JumpPower;
             Jumped?.Invoke();
         }
-
+        
         #endregion
 
         #region Horizontal
@@ -263,8 +264,13 @@ namespace _Scripts.Player
 
         public void HaltHorizontalMomentum()
         {
-            _frameInput.Move.x = 0f;
+            // _frameInput.Move.x = 0f;
             _frameVelocity.x = 0f;
+        }
+        
+        public void HaltVerticalMomentum()
+        {
+            _frameVelocity.y = 0f;
         }
 
         public void LerpVerticalMomentum()

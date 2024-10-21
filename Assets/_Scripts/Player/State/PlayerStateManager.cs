@@ -112,18 +112,40 @@ namespace _Scripts.Player.State
         
         #region Wall Sliding
 
+        private float _lastWallHangTime;
+
         private void HandleWallStateTransition(bool isWalled)
         {
-            Debug.Log("HandleWallStateTransition");
-            if (!isWalled || CurrentState == WallState) return;
-            // If the player is touching a wall, is not grounded, and is moving the left stick in the direction of the wall they hit...
+            if (CurrentState == WallState)
+            {
+                _lastWallHangTime = Time.time;
+                return;
+            }
+
+            if (!isWalled)
+            {
+                return;
+            }
+
+            // Cooldown check using Time.time
+            if (_lastWallHangTime + PlayerVariables.Instance.Stats.WallHangCooldown > Time.time)
+            {
+                Debug.Log("Wall hang cooldown");
+                return;
+            }
+
+            // If the player is touching a wall, is not grounded, is moving downwards, and is moving the left stick in the direction of the wall they hit...
             if (!PlayerMovement.Instance.IsGrounded() &&
                 ((PlayerVariables.Instance.isFacingRight && PlayerMovement.Instance.FrameInput.x > 0) ||
-                (!PlayerVariables.Instance.isFacingRight && PlayerMovement.Instance.FrameInput.x < 0)))
+                 (!PlayerVariables.Instance.isFacingRight && PlayerMovement.Instance.FrameInput.x < 0)))
             {
-                Debug.Log("Transitioning");
                 TransitionToState(WallState);
             }
+        }
+        
+        public void SetLastWallHangTime(float time)
+        {
+            _lastWallHangTime = time;
         }
         #endregion
 

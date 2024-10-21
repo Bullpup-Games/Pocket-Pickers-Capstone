@@ -70,5 +70,8 @@ namespace _Scripts
         [Tooltip("Falling or 'Sliding' speed when holding onto a wall")]
         public float WallSlideSpeed = 8f;
 
+        [Tooltip("The amount of time in seconds required in between seperate wall hangs")]
+        public float WallHangCooldown = 0.2f;
+
     }
 }
