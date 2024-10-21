@@ -14,6 +14,7 @@ namespace _Scripts.Player.State
             PlayerMovement.Instance.GatherInput();
             PlayerMovement.Instance.WallSlideMovement();
             
+            PlayerMovement.Instance.HandleWallJump();
             CheckWallAndGroundConditions();
             CheckInputIsPresent();
         }

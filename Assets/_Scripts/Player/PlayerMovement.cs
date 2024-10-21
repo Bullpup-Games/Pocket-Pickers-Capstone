@@ -192,7 +192,7 @@ namespace _Scripts.Player
 
             if (!_jumpToConsume && !HasBufferedJump) return;
 
-            if (_grounded || CanUseCoyote) ExecuteJump();
+            if (_grounded || CanUseCoyote || CanUseWallCoyote) ExecuteJump();
 
             _jumpToConsume = false;
         }
@@ -203,6 +203,7 @@ namespace _Scripts.Player
             _timeJumpWasPressed = 0;
             _bufferedJumpUsable = false;
             _coyoteUsable = false;
+            _wallCoyoteUsable = false;
             _frameVelocity.y = PlayerVariables.Instance.Stats.JumpPower;
             Jumped?.Invoke();
         }
@@ -285,12 +286,24 @@ namespace _Scripts.Player
         public Transform wallCheck;
         public Action<bool> Walled;
         private bool _isWalled;
-
+        private float _frameLeftWalled;
+        private bool _wallCoyoteUsable;
+        public bool CanUseWallCoyote => _wallCoyoteUsable && !IsWalled() && _time < _frameLeftWalled + PlayerVariables.Instance.Stats.CoyoteTime;
 
         private void CheckWallStatus()
         {
             var wasWalled = _isWalled;
             _isWalled = IsWalled();
+
+            if (_isWalled)
+            {
+                _wallCoyoteUsable = true;
+            }
+
+            if (wasWalled && !_isWalled)
+            {
+                _frameLeftWalled = Time.time;
+            }
 
             if (_isWalled != wasWalled)
             {
@@ -311,6 +324,18 @@ namespace _Scripts.Player
             var wallSlideSpeed = PlayerVariables.Instance.Stats.WallSlideSpeed;
             _frameVelocity.y = Mathf.MoveTowards(_frameVelocity.y, -PlayerVariables.Instance.Stats.WallSlideSpeed, Time.fixedDeltaTime);
             _frameVelocity.x = 0f;
+        }
+        
+        
+        public void HandleWallJump()
+        {
+            if (!_endedJumpEarly && !_grounded && !_frameInput.JumpHeld && PlayerVariables.Instance.RigidBody2D.velocity.y > 0) _endedJumpEarly = true;
+
+            if (!_jumpToConsume && !HasBufferedJump) return;
+
+            if (IsWalled() || CanUseWallCoyote) ExecuteJump();
+
+            _jumpToConsume = false;
         }
 
         #endregion
