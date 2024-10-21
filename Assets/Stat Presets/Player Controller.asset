@@ -35,4 +35,6 @@ MonoBehaviour:
   DashDuration: 0.1
   DashCooldown: 1.25
   WallSlideSpeed: 3
-  WallHangCooldown: 0.4
+  WallHangCooldown: 0.825
+  WallCoyoteTime: 0.25
+  MaxCrouchSpeed: 3

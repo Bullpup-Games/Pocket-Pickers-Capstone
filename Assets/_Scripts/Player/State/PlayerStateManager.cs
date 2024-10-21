@@ -112,13 +112,13 @@ namespace _Scripts.Player.State
         
         #region Wall Sliding
 
-        private float _lastWallHangTime;
+        public float lastWallHangTime;
 
         private void HandleWallStateTransition(bool isWalled)
         {
             if (CurrentState == WallState)
             {
-                _lastWallHangTime = Time.time;
+                lastWallHangTime = Time.time;
                 return;
             }
 
@@ -127,7 +127,7 @@ namespace _Scripts.Player.State
                 return;
             }
 
-            if (_lastWallHangTime + PlayerVariables.Instance.Stats.WallHangCooldown > Time.time)
+            if (lastWallHangTime + PlayerVariables.Instance.Stats.WallHangCooldown > Time.time)
             {
                 Debug.Log("Wall hang cooldown");
                 return;
@@ -144,7 +144,7 @@ namespace _Scripts.Player.State
         
         public void SetLastWallHangTime(float time)
         {
-            _lastWallHangTime = time;
+            lastWallHangTime = time;
         }
         #endregion
 

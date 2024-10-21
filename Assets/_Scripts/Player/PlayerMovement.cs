@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using _Scripts.Card;
+using _Scripts.Player.State;
 using UnityEngine;
 
 namespace _Scripts.Player
@@ -302,19 +303,19 @@ namespace _Scripts.Player
         public Transform wallCheck;
         public Action<bool> Walled;
         private bool _isWalled;
-        private float _frameLeftWalled;
+        // private float _frameLeftWalledWhileWalledState;
         private bool _wallCoyoteUsable;
-        public bool CanUseWallCoyote => _wallCoyoteUsable && !IsWalled() && _time < _frameLeftWalled + PlayerVariables.Instance.Stats.WallCoyoteTime;
+        public bool CanUseWallCoyote => _wallCoyoteUsable && !IsWalled() && _time < PlayerStateManager.Instance.lastWallHangTime + PlayerVariables.Instance.Stats.WallCoyoteTime;
 
         private void CheckWallStatus()
         {
             var wasWalled = _isWalled;
             _isWalled = IsWalled();
 
-            if (wasWalled && !_isWalled)
-            {
-                _frameLeftWalled = Time.time;
-            }
+            // if (wasWalled && !_isWalled)
+            // {
+            //     _frameLeftWalled = Time.time;
+            // }
 
             if (!_isWalled) return;
             _wallCoyoteUsable = true;
