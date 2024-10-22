@@ -211,7 +211,14 @@ namespace _Scripts.Player
             _bufferedJumpUsable = false;
             _coyoteUsable = false;
             _wallCoyoteUsable = false;
-            _frameVelocity.y = PlayerVariables.Instance.Stats.JumpPower;
+            if (!_isCrouching)
+            {
+                _frameVelocity.y = PlayerVariables.Instance.Stats.JumpPower;
+            }
+            else
+            {
+                _frameVelocity.y = PlayerVariables.Instance.Stats.CrouchJumpPower; 
+            }
             Jumped?.Invoke();
         }
         

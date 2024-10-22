@@ -85,6 +85,9 @@ namespace _Scripts
 
         [Tooltip("The maximum horizontal speed which crouching")]
         public float MaxCrouchSpeed = 6f;
+        
+        [Tooltip("Jump power when crouching")]
+        public float CrouchJumpPower = 21f;
 
     }
 }
