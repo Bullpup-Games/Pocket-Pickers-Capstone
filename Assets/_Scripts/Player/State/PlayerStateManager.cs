@@ -127,12 +127,7 @@ namespace _Scripts.Player.State
                 return;
             }
 
-            if (PlayerMovement.Instance.JumpHeldFrameInput)
-            {
-                return;
-            }
-
-            if (PlayerMovement.Instance.CurrentFrameVelocity.y > 0f)
+            if (PlayerMovement.Instance.JumpHeldFrameInput && PlayerMovement.Instance.CurrentFrameVelocity.y > 0f)
             {
                 return;
             }

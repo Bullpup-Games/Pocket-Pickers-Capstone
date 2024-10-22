@@ -215,6 +215,17 @@ namespace _Scripts.Player
             Jumped?.Invoke();
         }
         
+        public void ExecuteWallJump()
+        {
+            _endedJumpEarly = false;
+            _timeJumpWasPressed = 0;
+            _bufferedJumpUsable = false;
+            _coyoteUsable = false;
+            _wallCoyoteUsable = false;
+            _frameVelocity.y = PlayerVariables.Instance.Stats.WallJumpPower;
+            Jumped?.Invoke();
+        }
+        
         #endregion
 
         #region Horizontal
@@ -347,7 +358,7 @@ namespace _Scripts.Player
 
             if (!_jumpToConsume && !HasBufferedJump) return;
 
-            if (IsWalled() || CanUseWallCoyote) ExecuteJump();
+            if (IsWalled() || CanUseWallCoyote) ExecuteWallJump();
 
             _jumpToConsume = false;
         }

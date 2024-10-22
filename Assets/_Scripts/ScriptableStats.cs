@@ -75,10 +75,13 @@ namespace _Scripts
         public float WallSlideSpeed = 8f;
 
         [Tooltip("The amount of time in seconds required in between seperate wall hangs")]
-        public float WallHangCooldown = 0.2f;
+        public float WallHangCooldown = 0.525f;
         
         [Tooltip("Unique coyote time for leaving wall hangs")]
         public float WallCoyoteTime = .25f;
+        
+        [Tooltip("Jump power when wall hanging")]
+        public float WallJumpPower = 18f;
 
         [Tooltip("The maximum horizontal speed which crouching")]
         public float MaxCrouchSpeed = 6f;
