@@ -132,7 +132,7 @@ namespace _Scripts.Player.State
                 return;
             }
 
-            if (PlayerMovement.Instance.FrameInput.y > 0f)
+            if (PlayerMovement.Instance.CurrentFrameVelocity.y > 0f)
             {
                 return;
             }

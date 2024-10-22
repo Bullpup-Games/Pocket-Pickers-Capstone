@@ -28,6 +28,7 @@ namespace _Scripts.Player
         public Vector2 FrameInput => _frameInput.Move;
         public bool JumpDownFrameInput => _frameInput.JumpDown;
         public bool JumpHeldFrameInput => _frameInput.JumpHeld;
+        public Vector2 CurrentFrameVelocity => _frameVelocity;
         public event Action<bool, float> GroundedChanged;
         public event Action Jumped;
 
