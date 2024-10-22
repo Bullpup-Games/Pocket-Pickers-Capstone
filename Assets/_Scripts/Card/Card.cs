@@ -93,7 +93,7 @@ namespace _Scripts.Card
             var playerCollider = PlayerVariables.Instance.gameObject.GetComponent<Collider2D>();
             Physics2D.IgnoreCollision(playerCollider, GetComponent<Collider2D>());
 
-            lastSafePosition = transform.position;
+            lastSafePosition = PlayerVariables.Instance.transform.position;
             _startTime = Time.time;
             
             // Calculate initial velocity
