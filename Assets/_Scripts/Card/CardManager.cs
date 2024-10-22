@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using _Scripts.Player;
 using _Scripts.Player.State;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -81,7 +82,15 @@ namespace _Scripts.Card
             // Unsubscribe from the card throw event
             inputHandler.OnCardThrow -= HandleCardAction;
         }
-        
+
+        private void Update()
+        {
+            if (PlayerMovement.Instance.IsGrounded() || PlayerMovement.Instance.IsWalled())
+            {
+                _airTimeCounter = 0; 
+            }
+        }
+
         //decide if you should throw card or teleport
         //if you are in the card stance you should throw a card.
         //if not, you should test for teleportation
@@ -97,6 +106,7 @@ namespace _Scripts.Card
             }
         }
 
+        private bool _cardThrowLimitHit;
         /**
         * Called when the player triggers a card throw, responsible for instantiating a new card
         */
@@ -109,22 +119,13 @@ namespace _Scripts.Card
                 // Debug.Log("Card throw is on cooldown.");
                 return;
             }
-            
-            // Card throw limiter while in the air to keep the player from endlessly flying
-            if (!PlayerMovement.Instance.IsGrounded() && !PlayerMovement.Instance.IsWalled())
+
+            if (_airTimeCounter >= PlayerVariables.Instance.Stats.AirTimeCardThrowLimit)
             {
-                if (_airTimeCounter >= PlayerVariables.Instance.Stats.AirTimeCardThrowLimit)
-                {
-                    // Debug.Log("Airtime limit hit");
-                    return;
-                }
-                _airTimeCounter++;
+                Debug.Log("Airtime limit hit" + _airTimeCounter);
+                return;
             }
-            else
-            {
-                // Reset airtime limit when grounded
-                _airTimeCounter = 0;
-            }
+            _airTimeCounter++;  
             
             // If a card is active, destroy the existing card (this shouldn't occur but is here for safety)
             Card cardScript;
@@ -158,6 +159,9 @@ namespace _Scripts.Card
 
             _instantiatedCard = Instantiate(cardPrefab, cardSpawnLocation, Quaternion.Euler(currentDirection.x, currentDirection.y, 0));
             cardCreated?.Invoke();
+            
+            
+            Debug.Log("Card Thrown");
             
             // Get the Card script component from the instantiated card to call its Launch function
             cardScript = _instantiatedCard.GetComponent<Card>();
