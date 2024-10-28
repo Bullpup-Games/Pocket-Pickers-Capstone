@@ -161,7 +161,7 @@ namespace _Scripts.Card
             cardCreated?.Invoke();
             
             
-            Debug.Log("Card Thrown");
+            // Debug.Log("Card Thrown");
             
             // Get the Card script component from the instantiated card to call its Launch function
             cardScript = _instantiatedCard.GetComponent<Card>();

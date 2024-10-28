@@ -21,6 +21,7 @@ namespace _Scripts.Player
         private FrameInput _frameInput;
         private Vector2 _frameVelocity;
         private bool _cachedQueryStartInColliders;
+        private bool _reduceInputsWhileReadingWallJumpApex;
 
         public LayerMask wallLayer;
 
@@ -78,17 +79,36 @@ namespace _Scripts.Player
             _time += Time.deltaTime;
 
             CheckWallStatus();
+
+            // Allow full player control again after reaching the apex of a wall jump
+            if (_reduceInputsWhileReadingWallJumpApex && _frameVelocity.y <= 0)
+                _reduceInputsWhileReadingWallJumpApex = false;
         }
         
         
         public void GatherInput()
         {
-            _frameInput = new FrameInput
+            if (_reduceInputsWhileReadingWallJumpApex)
             {
-                JumpDown = _jumpPressedThisFrame,
-                JumpHeld = InputHandler.Instance.JumpHeld,
-                Move = InputHandler.Instance.MovementInput
-            };
+                _frameInput = new FrameInput
+                {
+                    JumpHeld = InputHandler.Instance.JumpHeld,
+                    // Reduce the amount of control the player has while in a wall jump to force horizontal movement
+                    // in the opposite direction without feeling clunky
+                    Move = InputHandler.Instance.MovementInput * new Vector2(0.25f, 0.25f)
+                };
+            }
+            else
+            {
+                // Normal input tracking
+                _frameInput = new FrameInput
+                {
+                    JumpDown = _jumpPressedThisFrame,
+                    JumpHeld = InputHandler.Instance.JumpHeld,
+                    Move = InputHandler.Instance.MovementInput
+                }; 
+            }
+
             
             // Track the facing direction based on the last non-zero horizontal input
             if (_frameInput.Move.x != 0)
@@ -210,8 +230,19 @@ namespace _Scripts.Player
             if (!_endedJumpEarly && !_grounded && !_frameInput.JumpHeld && PlayerVariables.Instance.RigidBody2D.velocity.y > 0) _endedJumpEarly = true;
             
             if (!_jumpToConsume && !HasBufferedJump) return;
-            
-            if (_grounded || CanUseCoyote || CanUseWallCoyote) ExecuteJump();
+
+            if (_grounded || CanUseCoyote || CanUseWallCoyote)
+            {
+                /*Debug.Log("======================");
+                Debug.Log("Jump Report:");
+                Debug.Log("Grounded: " + _grounded);
+                Debug.Log("Coyote: " + CanUseCoyote);
+                Debug.Log("Wall Coyote: " + CanUseWallCoyote);
+                Debug.Log("Walled: " + _isWalled);
+                Debug.Log("Last wall hang: " + PlayerStateManager.Instance.lastWallHangTime);
+                Debug.Log("======================");*/
+                ExecuteJump();
+            }
             
 
             _jumpToConsume = false;
@@ -234,7 +265,8 @@ namespace _Scripts.Player
             }
             Jumped?.Invoke();
         }
-        
+
+
         public void ExecuteWallJump()
         {
             _endedJumpEarly = false;
@@ -243,6 +275,12 @@ namespace _Scripts.Player
             _coyoteUsable = false;
             _wallCoyoteUsable = false;
             _frameVelocity.y = PlayerVariables.Instance.Stats.WallJumpPower;
+            
+            // TODO: Adjust this?
+            _frameVelocity.x = PlayerVariables.Instance.isFacingRight ? -_frameVelocity.y : _frameVelocity.y; 
+            PlayerVariables.Instance.FlipLocalScale();
+            _reduceInputsWhileReadingWallJumpApex = true;
+            
             Jumped?.Invoke();
         }
         
@@ -352,7 +390,8 @@ namespace _Scripts.Player
             // }
 
             if (!_isWalled) return;
-            _wallCoyoteUsable = true;
+            if (!_reduceInputsWhileReadingWallJumpApex)
+                _wallCoyoteUsable = true;
             Walled?.Invoke(_isWalled);
         }
 

@@ -15,18 +15,16 @@ namespace _Scripts.Player.State
             var inputDirection = PlayerMovement.Instance.FrameInput;
 
             // If no input is given or it is too small to recognize default to the facing direction
-            if (inputDirection.sqrMagnitude < 0.01f)
+            /*if (Mathf.Abs(inputDirection.x) < 0.1f && Mathf.Abs(inputDirection.y) < 0.1f)
             {
                 inputDirection = PlayerVariables.Instance.isFacingRight ? Vector2.right : Vector2.left;
             }
-            else
-            {
-                inputDirection.Normalize();
-            }
+            
+            _dashDirection = inputDirection;*/
 
-            _dashDirection = inputDirection;
-
-            PlayerMovement.Instance.DashDirection = _dashDirection;
+            // PlayerMovement.Instance.DashDirection = _dashDirection;
+            PlayerMovement.Instance.DashDirection = 
+                PlayerVariables.Instance.isFacingRight ? Vector2.right : Vector2.left;
 
             _dashCoroutine = PlayerStateManager.Instance.StartCoroutine(DashCoroutine());
         }

@@ -137,7 +137,7 @@ namespace _Scripts.Player.State
 
             if (lastWallHangTime + PlayerVariables.Instance.Stats.WallHangCooldown > Time.time)
             {
-                Debug.Log("Wall hang cooldown");
+                // Debug.Log("Wall hang cooldown");
                 return;
             }
 

@@ -27,17 +27,17 @@ MonoBehaviour:
   JumpPower: 25
   MaxFallSpeed: 30
   FallAcceleration: 60
-  AirTimeCardThrowLimit: 2
   JumpEndEarlyGravityModifier: 2
   CoyoteTime: 0.15
   JumpBuffer: 0.1
   DashSpeed: 22
   DashDuration: 0.1
   DashCooldown: 1.25
-  WallSlideSpeed: 3
+  WallSlideSpeed: 2.75
   WallHangCooldown: 0.525
   WallCoyoteTime: 0.25
   WallJumpPower: 18
   MaxCrouchSpeed: 4
   CrouchJumpPower: 21
   TeleportHangTime: 0.35
+  AirTimeCardThrowLimit: 2
