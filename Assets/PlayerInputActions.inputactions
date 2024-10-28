@@ -27,7 +27,7 @@
                     "name": "FalseTrigger",
                     "type": "Button",
                     "id": "1e5114a3-b0f9-4260-af09-5a19fcd412b0",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -36,7 +36,7 @@
                     "name": "CancelCardThrow",
                     "type": "Button",
                     "id": "8166bec4-7ba7-44c4-bef2-724a6c89bd4c",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
