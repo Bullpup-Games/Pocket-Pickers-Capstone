@@ -76,6 +76,10 @@ namespace _Scripts.Player.State
             if (CurrentState == StunnedState && newState == DashingState) return;
             if (CurrentState == StunnedState && newState == WallState) return;
             
+            // State blocks for movement being disabled
+            if (newState == DashingState && !PlayerVariables.Instance.isDashEnabled) return;
+            if (newState == WallState && !PlayerVariables.Instance.isWallClimbEnabled) return;
+            
             if (CurrentState != null)
                 CurrentState.ExitState();
 

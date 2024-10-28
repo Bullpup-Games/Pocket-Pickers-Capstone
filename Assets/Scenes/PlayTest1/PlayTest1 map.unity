@@ -38000,8 +38000,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -2201557181826163083, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
+      propertyPath: isDashEnabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -2201557181826163083, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
       propertyPath: thresholdRangeEnd
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: -2201557181826163083, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
+      propertyPath: isWallClimbEnabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -2201557181826163083, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
       propertyPath: thresholdRangeStart

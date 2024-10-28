@@ -17,6 +17,11 @@ namespace _Scripts.Player
         [SerializeField] public ScriptableStats Stats;
 
         [HideInInspector] public float Time;
+
+        [Header("Movement Options")] 
+        public bool isDashEnabled = true;
+        public bool isWallClimbEnabled = true;
+        
         //sin variables
         public int sinHeld;//how much you have picked up
         public int sinAccrued;//how much sin you have commited in game
