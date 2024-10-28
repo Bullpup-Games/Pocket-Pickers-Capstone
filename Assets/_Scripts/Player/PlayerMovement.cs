@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using _Scripts.Card;
 using _Scripts.Player.State;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace _Scripts.Player
 {
@@ -62,6 +63,14 @@ namespace _Scripts.Player
         {
             CardManager.Instance.Teleport += TeleportTo;
             InputHandler.Instance.OnCrouch += ToggleCrouching;
+            InputHandler.Instance.OnJumpPressed += HandleJumpPressed;
+
+        }
+
+        private bool _jumpPressedThisFrame;
+        private void HandleJumpPressed()
+        {
+            _jumpPressedThisFrame = true;
         }
 
         private void Update()
@@ -76,7 +85,7 @@ namespace _Scripts.Player
         {
             _frameInput = new FrameInput
             {
-                JumpDown = InputHandler.Instance.JumpPressed,
+                JumpDown = _jumpPressedThisFrame,
                 JumpHeld = InputHandler.Instance.JumpHeld,
                 Move = InputHandler.Instance.MovementInput
             };
@@ -104,6 +113,8 @@ namespace _Scripts.Player
                 _jumpToConsume = true;
                 _timeJumpWasPressed = _time;
             }
+
+            _jumpPressedThisFrame = false;
         }
 
         public void TeleportTo(Vector2 location)
@@ -195,11 +206,13 @@ namespace _Scripts.Player
 
         public void HandleJump()
         {
+            
             if (!_endedJumpEarly && !_grounded && !_frameInput.JumpHeld && PlayerVariables.Instance.RigidBody2D.velocity.y > 0) _endedJumpEarly = true;
-
+            
             if (!_jumpToConsume && !HasBufferedJump) return;
-
+            
             if (_grounded || CanUseCoyote || CanUseWallCoyote) ExecuteJump();
+            
 
             _jumpToConsume = false;
         }
@@ -375,7 +388,7 @@ namespace _Scripts.Player
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (PlayerVariables.Instance.Stats == null) Debug.LogWarning("Please assign a ScriptableStats asset to the Player Controller's Stats slot", this);
+            if (PlayerVariables.Instance != null && PlayerVariables.Instance.Stats == null) Debug.LogWarning("Please assign a ScriptableStats asset to the Player Controller's Stats slot", this);
         }
 #endif
     }

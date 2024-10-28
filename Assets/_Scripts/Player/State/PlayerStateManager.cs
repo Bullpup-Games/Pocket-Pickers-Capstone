@@ -42,7 +42,10 @@ namespace _Scripts.Player.State
             DashingState = new DashingState();
             WallState = new WallState();
             StunnedState = new StunnedState();
+        }
 
+        private void Start()
+        {
             // Set Initial State
             TransitionToState(FreeMovingState);
         }

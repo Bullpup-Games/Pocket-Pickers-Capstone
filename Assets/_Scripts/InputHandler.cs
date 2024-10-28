@@ -175,11 +175,13 @@ namespace _Scripts
         {
             MovementInput = Vector2.zero;
         }
-
+        public event Action OnJumpPressed;
+        
         private void OnJumpPerformed(InputAction.CallbackContext context)
         {
-            JumpPressed = true;
+            // JumpPressed = true;
             JumpHeld = true;
+            OnJumpPressed?.Invoke();
         }
 
         private void OnJumpCanceled(InputAction.CallbackContext context)
