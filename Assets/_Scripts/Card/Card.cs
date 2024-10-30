@@ -2,6 +2,7 @@ using System;
 using _Scripts.Enemies;
 using _Scripts.Enemies.State;
 using _Scripts.Player;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -136,6 +137,7 @@ namespace _Scripts.Card
             var movement = _velocity * Time.fixedDeltaTime;
             var newPosition = _previousPosition + movement;
 
+            CheckForHit(movement, ref newPosition);
             // If movement amount is too small skip to prevent sticking
             if (movement.magnitude < MinMoveDistance)
             {
@@ -143,57 +145,49 @@ namespace _Scripts.Card
                 newPosition = _previousPosition + movement;
             }
 
+            // Move the card to the new position
+            transform.position = newPosition;
+        }
+
+        private void CheckForHit(Vector2 movement, ref Vector2 newPosition)
+        {
             // Perform a raycast from previousPosition to newPosition to check for collisions in between frames
             var hit = Physics2D.Raycast(
                 _previousPosition,
                 movement.normalized,
                 movement.magnitude,
-                LayerMask.GetMask("Environment")
+                LayerMask.GetMask("Environment","Enemy")
             );
 
-            if (hit.collider != null)
+            
+
+            if (!hit.collider.IsUnityNull())
             {
-                // Adjust position to point of collision
-                newPosition = hit.point;
-
-                // Reflect the direction off the hit normal
-                var newDirection = Vector2.Reflect(_direction, hit.normal).normalized;
-
-                // If the new direction is too similar to the old direction invert the direction, the card will get stuck in corners without this
-                // if (Vector2.Dot(newDirection, _direction) > 0.9f)
-                // {
-                //    // newDirection = -_direction;
-                //     Debug.Log("Inverted direction due to corner collision.");
-                // }
-
-                _direction = newDirection;
-                CalculateVelocity(_direction);
-
-                /*
-                 * Don't increment bounces here as the card needs to bounce several times in a corner
-                 * So if bounces are incremented here and in OnCollisionEnter2D then it will appear as if
-                 * the card just disappears when it hits a corner
-                 */
                 
-                // bounces++;
-
-                // Safety check if we entered with max bounces
-                if (bounces >= totalBounces)
+                /*
+                 * This is here so that eventually, I can move all layer interactions into here.
+                 * We want to check to make sure that we can get the layer from a hit, and interact with
+                 * it by name
+                 * LayerMask.LayerToName(5)
+                 * takes a layer id number and returns its name
+                 * LayerMask.NameToLayer("Layer Name")
+                 * takes a layer name and returns its id number
+                 */
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Environment"))
                 {
-                    DestroyCard();
+                    CollideWithWall(hit, ref newPosition);
                     return;
                 }
 
-                // Adjust position slightly along the new direction to prevent immediate re-collision
-                newPosition += _direction * MinMoveDistance;
-
-                Debug.Log("Reflected off Environment. New direction: " + _direction);
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+                {
+                    CollideWithEnemy(hit);
+                    return;
+                }
+                
+                
             }
-
-            // Move the card to the new position
-            transform.position = newPosition;
         }
-
         /*
          * Keeps track of the last known safe position to teleport to each frame the card is alive
          * to prevent teleportation into walls or objects
@@ -247,72 +241,80 @@ namespace _Scripts.Card
             // Ignore collisions with the player
             if (col.gameObject.CompareTag("Player"))
             {
-                Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
+                CollideWithPlayer(col);
                 return;
             }
-            if (col.gameObject.CompareTag("enemy"))
-            {
-                //todo if the card hits an enemy, incapacitate the enemy and destroy the card
-                Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
-                var enemy = col.gameObject.GetComponent<EnemyStateManager>();
-                enemy.KillEnemy();
-                // enemy.TransitionToState(enemy.DisabledState);
-                DestroyCard();
-                return;
-            }
+            
             if (col.gameObject.CompareTag("permeable"))
             {
                 //this tag exists because we want the player and enemies to be stopped
                 //by permeable objects, but not the card.
-                Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
+               CollideWithPermeable(col);
                 return;
             }
-            if (col.gameObject.CompareTag("wall"))
+            
+            if (col.gameObject.CompareTag("EscapeRout"))
             {
-                // Handle collision with walls (if not already handled by the raycast)
+                DestroyCard();
+            }
+            //if it collides with something else, we don't want it to do anything
+            return;
+        }
+
+        #region CollisionManagement
+
+            private void CollideWithWall(RaycastHit2D hit, ref Vector2  newPosition)
+            {
+                
+                    
+                // Adjust position to point of collision
+                newPosition = hit.point;
+
+                // Reflect the direction off the hit normal
+                var newDirection = Vector2.Reflect(_direction, hit.normal).normalized;
+
+                _direction = newDirection;
+                CalculateVelocity(_direction);
+
+                /*
+                     When you hit a corner, it will count as 2 bounces because it bounces off of both corners
+                     at the same time
+                */
                 bounces++;
 
+                // Safety check if we entered with max bounces
                 if (bounces >= totalBounces)
                 {
                     DestroyCard();
                     return;
                 }
 
-                // // Calculate the combined normal from ALL contact points
-                // var combinedNormal = Vector2.zero;
-                // var contactCount = col.contactCount;
-                //
-                // for (var i = 0; i < contactCount; i++)
-                // {
-                //     combinedNormal += col.GetContact(i).normal;
-                // }
-                //
-                // combinedNormal = combinedNormal.normalized;
-                //
-                // // Reflect the direction and recalculate velocity
-                // var newDirection = Vector2.Reflect(_direction, combinedNormal).normalized;
-                //
-                // // If the new direction is too similar to the old direction, invert the direction
-                // if (Vector2.Dot(newDirection, _direction) > 0.99f)
-                // {
-                //     newDirection = -_direction;
-                //     Debug.Log("Inverted direction due to corner collision.");
-                // }
-                //
-                // _direction = newDirection;
-                // CalculateVelocity(_direction);
-                //
-                // // Adjust position slightly along the new direction to prevent immediate re-collision
-                // transform.position += (Vector3)(_direction * MinMoveDistance);
+                // Adjust position slightly along the new direction to prevent immediate re-collision
+                newPosition += _direction * MinMoveDistance;
 
-                return;
+                Debug.Log("Reflected off Environment. New direction: " + _direction);
             }
-            if (col.gameObject.CompareTag("EscapeRout"))
+
+            private void CollideWithPlayer(Collision2D col)
             {
+                Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
+            }
+
+            private void CollideWithEnemy(RaycastHit2D hit)
+            {
+                Physics2D.IgnoreCollision(hit.collider, GetComponent<Collider2D>());
+                var enemy = hit.collider.gameObject.GetComponent<EnemyStateManager>();
+                enemy.KillEnemy();
                 DestroyCard();
             }
-        }
 
+            private void CollideWithPermeable(Collision2D col)
+            {
+                Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
+            }
+
+        #endregion
+       
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.gameObject.CompareTag("EscapeRout"))
