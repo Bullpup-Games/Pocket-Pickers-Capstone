@@ -155,7 +155,13 @@ namespace _Scripts.Card
             
             // Calculate the card's starting position relative to the player
             var offset = new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad) + verticalOffset, 0) * horizontalOffset;
-            var cardSpawnLocation = player.position + offset;
+            
+            var playerCollider = PlayerVariables.Instance.Collider2D;
+            var colliderOffset = playerCollider.offset;
+            
+            var colliderPos = (Vector2)transform.position + colliderOffset;
+            
+            var cardSpawnLocation = player.position + (Vector3)colliderPos;
 
             _instantiatedCard = Instantiate(cardPrefab, cardSpawnLocation, Quaternion.Euler(currentDirection.x, currentDirection.y, 0));
             cardCreated?.Invoke();
