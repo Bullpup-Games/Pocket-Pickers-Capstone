@@ -93,7 +93,7 @@ namespace _Scripts.Card
             var playerCollider = PlayerVariables.Instance.gameObject.GetComponent<Collider2D>();
             Physics2D.IgnoreCollision(playerCollider, GetComponent<Collider2D>());
 
-            lastSafePosition = transform.position;
+            lastSafePosition = PlayerVariables.Instance.transform.position;
             _startTime = Time.time;
             
             // Calculate initial velocity
@@ -160,11 +160,11 @@ namespace _Scripts.Card
                 var newDirection = Vector2.Reflect(_direction, hit.normal).normalized;
 
                 // If the new direction is too similar to the old direction invert the direction, the card will get stuck in corners without this
-                if (Vector2.Dot(newDirection, _direction) > 0.9f)
-                {
-                    newDirection = -_direction;
-                    Debug.Log("Inverted direction due to corner collision.");
-                }
+                // if (Vector2.Dot(newDirection, _direction) > 0.9f)
+                // {
+                //    // newDirection = -_direction;
+                //     Debug.Log("Inverted direction due to corner collision.");
+                // }
 
                 _direction = newDirection;
                 CalculateVelocity(_direction);
@@ -278,32 +278,32 @@ namespace _Scripts.Card
                     return;
                 }
 
-                // Calculate the combined normal from ALL contact points
-                var combinedNormal = Vector2.zero;
-                var contactCount = col.contactCount;
-
-                for (var i = 0; i < contactCount; i++)
-                {
-                    combinedNormal += col.GetContact(i).normal;
-                }
-
-                combinedNormal = combinedNormal.normalized;
-
-                // Reflect the direction and recalculate velocity
-                var newDirection = Vector2.Reflect(_direction, combinedNormal).normalized;
-
-                // If the new direction is too similar to the old direction, invert the direction
-                if (Vector2.Dot(newDirection, _direction) > 0.99f)
-                {
-                    newDirection = -_direction;
-                    Debug.Log("Inverted direction due to corner collision.");
-                }
-
-                _direction = newDirection;
-                CalculateVelocity(_direction);
-
-                // Adjust position slightly along the new direction to prevent immediate re-collision
-                transform.position += (Vector3)(_direction * MinMoveDistance);
+                // // Calculate the combined normal from ALL contact points
+                // var combinedNormal = Vector2.zero;
+                // var contactCount = col.contactCount;
+                //
+                // for (var i = 0; i < contactCount; i++)
+                // {
+                //     combinedNormal += col.GetContact(i).normal;
+                // }
+                //
+                // combinedNormal = combinedNormal.normalized;
+                //
+                // // Reflect the direction and recalculate velocity
+                // var newDirection = Vector2.Reflect(_direction, combinedNormal).normalized;
+                //
+                // // If the new direction is too similar to the old direction, invert the direction
+                // if (Vector2.Dot(newDirection, _direction) > 0.99f)
+                // {
+                //     newDirection = -_direction;
+                //     Debug.Log("Inverted direction due to corner collision.");
+                // }
+                //
+                // _direction = newDirection;
+                // CalculateVelocity(_direction);
+                //
+                // // Adjust position slightly along the new direction to prevent immediate re-collision
+                // transform.position += (Vector3)(_direction * MinMoveDistance);
 
                 return;
             }

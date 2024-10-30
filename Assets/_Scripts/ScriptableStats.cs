@@ -52,5 +52,46 @@ namespace _Scripts
 
         [Tooltip("The amount of time we buffer a jump. This allows jump input before actually hitting the ground")]
         public float JumpBuffer = .2f;
+
+        [Header("DASH")] 
+        [Tooltip("The speed the player will travel during their dash")]
+        public float DashSpeed = 22f;
+
+        [Tooltip("The amount of time a dash will last in seconds")]
+        public float DashDuration = 0.15f;
+
+        [Tooltip("The cooldown between available dashes in seconds")]
+        public float DashCooldown = 1.25f;
+
+        [Header("WALL")] 
+        [Tooltip("Falling or 'Sliding' speed when holding onto a wall")]
+        public float WallSlideSpeed = 8f;
+
+        [Tooltip("The amount of time in seconds required in between seperate wall hangs")]
+        public float WallHangCooldown = 0.525f;
+        
+        [Tooltip("Unique coyote time for leaving wall hangs")]
+        public float WallCoyoteTime = .25f;
+        
+        [Tooltip("Jump power when wall hanging")]
+        public float WallJumpPower = 18f;
+
+        [Header("CROUCH")] 
+        [Tooltip("The maximum horizontal speed which crouching")]
+        public float MaxCrouchSpeed = 6f;
+        
+        [Tooltip("Jump power when crouching")]
+        public float CrouchJumpPower = 21f;
+        
+        [Header("TELPORT")] 
+        [Tooltip(
+            "The amount of time in seconds that the player will spend gradually transitioning to the max fall speed instead of hitting it straight await." +
+            "This is just meant to help players track the character better after teleporting in the air, and makes the teleport feel more forgiving")]
+        public float TeleportHangTime = 0.35f;
+        
+        [Tooltip("The amount of times the player is allowed to throw the card while in the air before needing to touch the ground. " +
+                 "If the limit is reached the player will not be able to throw a card again until they are grounded")]
+        public int AirTimeCardThrowLimit = 2;
+
     }
 }

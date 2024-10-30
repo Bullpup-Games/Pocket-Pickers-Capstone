@@ -6,6 +6,7 @@ namespace _Scripts.Enemies.State
 {
     public class StunnedState : IEnemyState
     {
+        // TODO: Find a way to enable the collider for the card only so the enemy can still be disabled even in stun state
         private EnemyStateManager _enemy;
         private Coroutine _stunCoroutine;
         private Collider2D _col;
@@ -36,6 +37,7 @@ namespace _Scripts.Enemies.State
         {
             _enemy.Rigidbody2D.isKinematic = false;
             _enemy.Collider2D.enabled = true;
+            Physics2D.IgnoreCollision(PlayerVariables.Instance.Collider2D, _enemy.Collider2D, false);
             if (_stunCoroutine != null)
                 _enemy.StopCoroutine(_stunCoroutine);
         }

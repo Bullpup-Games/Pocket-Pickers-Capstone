@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using _Scripts.Player;
+using _Scripts.Player.State;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -17,13 +19,15 @@ namespace _Scripts.Card
     public class CardManager : MonoBehaviour
     {
         public InputHandler inputHandler;
-        public PlayerMovementController playerMovementController;
+        // public PlayerMovementController playerMovementController;
         public HandleCardStanceArrow cardStanceArrow;
         private PlayerStateManager _playerStateManager;
 
         public Transform player;
         public GameObject cardPrefab;
         private GameObject _instantiatedCard;
+        private int _airTimeCounter;
+
         public bool IsCardInScene() => _instantiatedCard != null;
         
         [Header("Card and Direction Arrow Offsets")]
@@ -78,13 +82,21 @@ namespace _Scripts.Card
             // Unsubscribe from the card throw event
             inputHandler.OnCardThrow -= HandleCardAction;
         }
-        
+
+        private void Update()
+        {
+            if (PlayerMovement.Instance.IsGrounded() || PlayerMovement.Instance.IsWalled())
+            {
+                _airTimeCounter = 0; 
+            }
+        }
+
         //decide if you should throw card or teleport
         //if you are in the card stance you should throw a card.
         //if not, you should test for teleportation
         private void HandleCardAction()
         {
-            if (PlayerVariables.Instance.stateManager.state != PlayerState.Stunned &&  _instantiatedCard == null)
+            if (!PlayerStateManager.Instance.IsStunnedState() &&  _instantiatedCard == null)
             {
                 HandleCardThrow();
             }
@@ -94,6 +106,7 @@ namespace _Scripts.Card
             }
         }
 
+        private bool _cardThrowLimitHit;
         /**
         * Called when the player triggers a card throw, responsible for instantiating a new card
         */
@@ -106,6 +119,13 @@ namespace _Scripts.Card
                 // Debug.Log("Card throw is on cooldown.");
                 return;
             }
+
+            if (_airTimeCounter >= PlayerVariables.Instance.Stats.AirTimeCardThrowLimit)
+            {
+                Debug.Log("Airtime limit hit" + _airTimeCounter);
+                return;
+            }
+            _airTimeCounter++;  
             
             // If a card is active, destroy the existing card (this shouldn't occur but is here for safety)
             Card cardScript;
@@ -139,6 +159,9 @@ namespace _Scripts.Card
 
             _instantiatedCard = Instantiate(cardPrefab, cardSpawnLocation, Quaternion.Euler(currentDirection.x, currentDirection.y, 0));
             cardCreated?.Invoke();
+            
+            
+            // Debug.Log("Card Thrown");
             
             // Get the Card script component from the instantiated card to call its Launch function
             cardScript = _instantiatedCard.GetComponent<Card>();
@@ -194,24 +217,24 @@ namespace _Scripts.Card
             Destroy(_instantiatedCard);
         }
         
-        private void HandleEnterCardStance()
-        {
-            playerMovementController.EnterCardStance();
-        }
+        // private void HandleEnterCardStance()
+        // {
+        //     playerMovementController.EnterCardStance();
+        // }
+        //
+        // private void HandleExitCardStance()
+        // {
+        //     playerMovementController.ExitCardStance();
+        // }
 
-        private void HandleExitCardStance()
-        {
-            playerMovementController.ExitCardStance();
-        }
-
-        private void HandleShowDirectionalArrow()
-        {
-            cardStanceArrow.InstantiateDirectionalArrow(); 
-        }
-
-        private void HandleHideDirectionalArrow()
-        {
-            cardStanceArrow.DestroyDirectionalArrow();
-        }
+        // private void HandleShowDirectionalArrow()
+        // {
+        //     cardStanceArrow.InstantiateDirectionalArrow(); 
+        // }
+        //
+        // private void HandleHideDirectionalArrow()
+        // {
+        //     cardStanceArrow.DestroyDirectionalArrow();
+        // }
     }
 }

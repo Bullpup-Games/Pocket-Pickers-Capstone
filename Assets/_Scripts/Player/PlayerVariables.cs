@@ -1,4 +1,5 @@
 using System;
+using _Scripts.Player.State;
 using UnityEngine;
 using UnityEngine.Timeline;
 using Random = UnityEngine.Random;
@@ -8,9 +9,18 @@ namespace _Scripts.Player
     public class PlayerVariables : MonoBehaviour
     {
         public bool isFacingRight = true;   // Start facing right by default
+
         // public bool inCardStance;
         [HideInInspector] public PlayerStateManager stateManager;
-        [HideInInspector] public Collider2D Collider2D;
+        [HideInInspector] public BoxCollider2D Collider2D;
+        [HideInInspector] public Rigidbody2D RigidBody2D; 
+        [SerializeField] public ScriptableStats Stats;
+
+        [HideInInspector] public float Time;
+
+        [Header("Movement Options")] 
+        public bool isDashEnabled = true;
+        public bool isWallClimbEnabled = true;
         
         //sin variables
         public int sinHeld;//how much you have picked up
@@ -70,16 +80,18 @@ namespace _Scripts.Player
         private void Awake()
         {
             stateManager = GetComponent<PlayerStateManager>();
-            Collider2D = GetComponent<Collider2D>();
+            Collider2D = GetComponent<BoxCollider2D>();
+            RigidBody2D = GetComponent<Rigidbody2D>();
             sinThreshold = Random.Range(thresholdRangeStart, thresholdRangeEnd);
         }
 
         private void Update()
         {
+            Time = UnityEngine.Time.time;
             isFacingRight = transform.localScale.x > 0; 
         }
 
-        public void escape()
+        public void Escape()
         {
             //release all of the sin you hold
             sinHeld = 0;

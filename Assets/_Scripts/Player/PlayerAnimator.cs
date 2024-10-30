@@ -1,5 +1,6 @@
 using System;
 using _Scripts.Card;
+using _Scripts.Player.State;
 using UnityEngine;
 
 namespace _Scripts.Player
@@ -9,8 +10,6 @@ namespace _Scripts.Player
     /// </summary>
     public class PlayerAnimator : MonoBehaviour
      {
-   
-    
         private SpriteRenderer _spriteRenderer;
         private Animator _animator;
         private static readonly int Speed = Animator.StringToHash("Speed");
@@ -79,16 +78,16 @@ namespace _Scripts.Player
             }
            
             
-            if (PlayerMovementController.Instance.FrameInput == Vector2.zero && touchingGround)
+            if (PlayerMovement.Instance.FrameInput == Vector2.zero && touchingGround)
             {
                 //be idle
                 _animator.SetFloat(Speed, 0);
 
             }
-            else if (PlayerMovementController.Instance.FrameInput != Vector2.zero && touchingGround)
+            else if (PlayerMovement.Instance.FrameInput != Vector2.zero && touchingGround)
             {
                 //be moving
-                _animator.SetFloat(Speed,Mathf.Abs(PlayerMovementController.Instance.FrameInput.x) );
+                _animator.SetFloat(Speed,Mathf.Abs(PlayerMovement.Instance.FrameInput.x) );
 
             }
 

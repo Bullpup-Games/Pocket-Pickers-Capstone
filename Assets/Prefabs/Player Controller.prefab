@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1544650614272011795}
   - component: {fileID: -1215777316475583348}
   - component: {fileID: -2201557181826163083}
-  - component: {fileID: 1544650614272011792}
+  - component: {fileID: 7406740131789768211}
   - component: {fileID: 1544650614272011793}
   - component: {fileID: 1544650614272011794}
   - component: {fileID: 5847566070567403621}
@@ -37,6 +37,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2969068311962969430}
+  - {fileID: 4692322747907789912}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &-1215777316475583348
@@ -51,7 +52,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ed69aef4a074bc399fee73abbce1d11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 0
+  enumState: 0
 --- !u!114 &-2201557181826163083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,14 +66,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFacingRight: 1
+  isGrounded: 0
   stateManager: {fileID: 0}
   Collider2D: {fileID: 0}
+  RigidBody2D: {fileID: 0}
+  Stats: {fileID: 11400000, guid: 05e6a06c5af93134ab98ff12e2c27265, type: 2}
+  Time: 0
   sinHeld: 0
   sinAccrued: 0
   thresholdRangeStart: 0
   thresholdRangeEnd: 0
   sinThreshold: 0
---- !u!114 &1544650614272011792
+--- !u!114 &7406740131789768211
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -81,10 +86,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1544650614272011804}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f61c64124c8575748994f087b9dc1b8a, type: 3}
+  m_Script: {fileID: 11500000, guid: 2491c80c9e8c45e681edf8d9ac71c6de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _stats: {fileID: 11400000, guid: 05e6a06c5af93134ab98ff12e2c27265, type: 2}
+  wallCheck: {fileID: 0}
 --- !u!50 &1544650614272011793
 Rigidbody2D:
   serializedVersion: 4
@@ -233,6 +238,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 8166bec4-7ba7-44c4-bef2-724a6c89bd4c
     m_ActionName: Player/CancelCardThrow[/Keyboard/3]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: cd575373-bc3a-425a-ab85-17c97fcfaae9
+    m_ActionName: Player/Move[/Keyboard/a,/Keyboard/leftArrow,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 32fbd8ae-dbb9-4863-a756-79dffcc35bdb
+    m_ActionName: Player/Jump[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a4956b8c-4d7b-44a7-9c83-906a6962b19a
+    m_ActionName: UI/PauseEvent[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 371b4a69-9aa8-435a-b5aa-b2b3f88919a5
+    m_ActionName: Player/Dash[/DualSenseGamepadHID/buttonEast,/Keyboard/shift]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -29754,12 +29775,12 @@ GameObject:
   - component: {fileID: 2969068313154050967}
   - component: {fileID: 2969068313154050966}
   m_Layer: 3
-  m_Name: Sprite
+  m_Name: SlimeSprite
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2969068313154050965
 Transform:
   m_ObjectHideFlags: 0
@@ -34881,3 +34902,34 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &4946288813376623048
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4692322747907789912}
+  m_Layer: 3
+  m_Name: WallCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4692322747907789912
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4946288813376623048}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.344, y: 0.653, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1544650614272011795}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

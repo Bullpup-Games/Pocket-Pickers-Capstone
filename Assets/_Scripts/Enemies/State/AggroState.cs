@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using _Scripts.Card;
 using _Scripts.Player;
+using _Scripts.Player.State;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Android;
@@ -91,8 +92,8 @@ namespace _Scripts.Enemies.State
             // Cleanup coroutines on exit
             if (_qteCoroutine != null)
             {
-                if (PlayerVariables.Instance.stateManager.state == PlayerState.Stunned)
-                    PlayerVariables.Instance.stateManager.SetState(PlayerState.Idle);
+                if (PlayerStateManager.Instance.IsStunnedState())
+                    PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
                 
                 _enemy.StopCoroutine(_qteCoroutine);
                 _qteCoroutine = null;
@@ -300,11 +301,10 @@ namespace _Scripts.Enemies.State
         {
             // If the player is already in the QTE with this guard it shouldn't start again
             if (_qteCoroutine != null) return;
-            var playerStateManager = PlayerVariables.Instance.GetComponent<PlayerStateManager>();
             // If the player is already in the QTE with a different guard this one shouldn't be able to start another
-            if (playerStateManager.state == PlayerState.Stunned) return; // TODO: Change this when turning player into a FSM
+            if (PlayerStateManager.Instance.IsStunnedState()) return;
             
-            playerStateManager.SetState(PlayerState.Stunned);
+            PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.StunnedState);
             _qteCoroutine = _enemy.StartCoroutine(StartQuicktimeEvent());
         }
         
@@ -316,8 +316,6 @@ namespace _Scripts.Enemies.State
             var counter = 0;
             var timeElapsed = 0f;
 
-            var playerRb = PlayerVariables.Instance.gameObject.GetComponent<Rigidbody2D>();
-            
             GameManager.Instance.quicktimeEventPanel.SetActive(true);
             
             // Make sure the card throw arrow isn't active
@@ -338,7 +336,8 @@ namespace _Scripts.Enemies.State
                     // Break out of the QTE if the enemy gets hit with a card (Probably don't need this check anymore?)
                     if (_enemy.IsDisabledState())
                     {
-                        PlayerVariables.Instance.GetComponent<PlayerStateManager>().SetState(PlayerState.Idle); // TODO: The player should use a FSM eventually too, change this when it is
+                        // PlayerVariables.Instance.GetComponent<PlayerStateManager>().SetState(PlayerState.Idle); // TODO: The player should use a FSM eventually too, change this when it is
+                        PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
                         _hasExecuted = true;
                         yield break;
                     }
@@ -348,13 +347,14 @@ namespace _Scripts.Enemies.State
                         Mathf.Abs(_enemy.transform.position.y - PlayerVariables.Instance.transform.position.y) > 2f)
                     {
                         Debug.Log("Breaking out of QTE bc of distance");
-                        PlayerVariables.Instance.GetComponent<PlayerStateManager>().SetState(PlayerState.Idle); // TODO: The player should use a FSM eventually too, change this when it is
+                        // PlayerVariables.Instance.GetComponent<PlayerStateManager>().SetState(PlayerState.Idle); // TODO: The player should use a FSM eventually too, change this when it is
+                        PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
                         _hasExecuted = true;
                         yield break; 
                     }
                     // Stop any movement from the guard or player
                     _enemy.StopMoving();
-                    playerRb.velocity = Vector2.zero; // TODO: The player should use a FSM eventually too, change this when it is
+                    // PlayerVariables.Instance.RigidBody2D.velocity = new Vector2(0f, PlayerVariables.Instance.RigidBody2D.velocity.y); // TODO: The player should use a FSM eventually too, change this when it is
 
                     timeElapsed += Time.deltaTime;
                     yield return null;
@@ -362,7 +362,8 @@ namespace _Scripts.Enemies.State
 
                 if (_hasExecuted)
                 {
-                    PlayerVariables.Instance.GetComponent<PlayerStateManager>().SetState(PlayerState.Idle); // TODO: The player should use a FSM eventually too, change this when it is
+                    // PlayerVariables.Instance.GetComponent<PlayerStateManager>().SetState(PlayerState.Idle); // TODO: The player should use a FSM eventually too, change this when it is
+                    PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
                     yield break;
                 }
 
@@ -370,7 +371,8 @@ namespace _Scripts.Enemies.State
                 if (counter >= _enemy.Settings.counterGoal)
                 {
                     Debug.Log("QTE Passed");
-                    PlayerVariables.Instance.GetComponent<PlayerStateManager>().SetState(PlayerState.Idle); // TODO: The player should use a FSM eventually too, change this when it is
+                    // PlayerVariables.Instance.GetComponent<PlayerStateManager>().SetState(PlayerState.Idle); // TODO: The player should use a FSM eventually too, change this when it is
+                    PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
                     _enemy.Settings.counterGoal += 2;
                     if (_enemy.Settings.qteTimeLimit > 2f)
                         _enemy.Settings.qteTimeLimit -= _enemy.Settings.timeLostPerEncounter;
@@ -392,6 +394,7 @@ namespace _Scripts.Enemies.State
                 _qteCoroutine = null;
             }
         }
+
 
         private IEnumerator FlipAfterDelay(float delay)
         {

@@ -1044,19 +1044,19 @@ CompositeCollider2D:
   - m_Collider: {fileID: 286866441}
     m_ColliderPaths:
     - - X: 1197968768
-        Y: -35156248
+        Y: -37656248
       - X: -412968736
-        Y: -35156248
+        Y: -37656248
       - X: -412968736
-        Y: -44843752
+        Y: -47343752
       - X: 1197968768
-        Y: -44843752
+        Y: -47343752
   m_CompositePaths:
     m_Paths:
-    - - {x: 119.79685, y: -4.4843755}
-      - {x: 119.79685, y: -3.5156248}
-      - {x: -41.296875, y: -3.515654}
-      - {x: -41.296844, y: -4.4843755}
+    - - {x: 119.79685, y: -4.7343755}
+      - {x: 119.79685, y: -3.7656248}
+      - {x: -41.296875, y: -3.765654}
+      - {x: -41.296844, y: -4.7343755}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
@@ -33265,7 +33265,7 @@ PrefabInstance:
     - target: {fileID: 2204501328560629039, guid: c6f9bd836282842348fab8839a2de283, type: 3}
       propertyPath: playerMovementController
       value: 
-      objectReference: {fileID: 1906975204}
+      objectReference: {fileID: 0}
     - target: {fileID: 4787900142952941893, guid: c6f9bd836282842348fab8839a2de283, type: 3}
       propertyPath: winThreshold
       value: 20
@@ -33587,6 +33587,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 535ba02606e90ae4fb28971a9fcf05cf, type: 3}
+--- !u!4 &1502882085 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4692322747907789912, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
+  m_PrefabInstance: {fileID: 1906975198}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1564157255 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 688209925135982725, guid: 268ba90ff130346c39849a989450fb44, type: 3}
@@ -37995,8 +38000,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -2201557181826163083, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
+      propertyPath: isDashEnabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -2201557181826163083, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
       propertyPath: thresholdRangeEnd
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: -2201557181826163083, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
+      propertyPath: isWallClimbEnabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -2201557181826163083, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
       propertyPath: thresholdRangeStart
@@ -38066,6 +38079,14 @@ PrefabInstance:
       propertyPath: _sprite
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 7406740131789768211, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
+      propertyPath: wallCheck
+      value: 
+      objectReference: {fileID: 1502882085}
+    - target: {fileID: 7406740131789768211, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
+      propertyPath: wallLayer.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7362660203605736779, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
     m_RemovedGameObjects:
@@ -38081,17 +38102,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1544650614272011795, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
   m_PrefabInstance: {fileID: 1906975198}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1906975204 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1544650614272011792, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
-  m_PrefabInstance: {fileID: 1906975198}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f61c64124c8575748994f087b9dc1b8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1959611735
 PrefabInstance:
   m_ObjectHideFlags: 0
