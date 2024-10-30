@@ -2,6 +2,7 @@ using System;
 using _Scripts.Enemies;
 using _Scripts.Enemies.State;
 using _Scripts.Player;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -136,6 +137,7 @@ namespace _Scripts.Card
             var movement = _velocity * Time.fixedDeltaTime;
             var newPosition = _previousPosition + movement;
 
+            CheckForHit(movement, ref newPosition);
             // If movement amount is too small skip to prevent sticking
             if (movement.magnitude < MinMoveDistance)
             {
@@ -143,17 +145,23 @@ namespace _Scripts.Card
                 newPosition = _previousPosition + movement;
             }
 
+            // Move the card to the new position
+            transform.position = newPosition;
+        }
+
+        private void CheckForHit(Vector2 movement, ref Vector2 newPosition)
+        {
             // Perform a raycast from previousPosition to newPosition to check for collisions in between frames
             var hit = Physics2D.Raycast(
                 _previousPosition,
                 movement.normalized,
                 movement.magnitude,
-                LayerMask.GetMask("Environment")
+                LayerMask.GetMask("Environment","Enemy")
             );
 
             
 
-            if (hit.collider != null)
+            if (!hit.collider.IsUnityNull())
             {
                 
                 /*
@@ -165,13 +173,21 @@ namespace _Scripts.Card
                  * LayerMask.NameToLayer("Layer Name")
                  * takes a layer name and returns its id number
                  */
-                CollideWithWall(hit, ref newPosition);
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Environment"))
+                {
+                    CollideWithWall(hit, ref newPosition);
+                    return;
+                }
+
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+                {
+                    CollideWithEnemy(hit);
+                    return;
+                }
+                
+                
             }
-
-            // Move the card to the new position
-            transform.position = newPosition;
         }
-
         /*
          * Keeps track of the last known safe position to teleport to each frame the card is alive
          * to prevent teleportation into walls or objects
@@ -228,11 +244,7 @@ namespace _Scripts.Card
                 CollideWithPlayer(col);
                 return;
             }
-            if (col.gameObject.CompareTag("enemy"))
-            {
-                CollideWithEnemy(col);
-                return;
-            }
+            
             if (col.gameObject.CompareTag("permeable"))
             {
                 //this tag exists because we want the player and enemies to be stopped
@@ -240,14 +252,13 @@ namespace _Scripts.Card
                CollideWithPermeable(col);
                 return;
             }
-            if (col.gameObject.CompareTag("wall"))
-            {
-                return;
-            }
+            
             if (col.gameObject.CompareTag("EscapeRout"))
             {
                 DestroyCard();
             }
+            //if it collides with something else, we don't want it to do anything
+            return;
         }
 
         #region CollisionManagement
@@ -289,10 +300,10 @@ namespace _Scripts.Card
                 Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
             }
 
-            private void CollideWithEnemy(Collision2D col)
+            private void CollideWithEnemy(RaycastHit2D hit)
             {
-                Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
-                var enemy = col.gameObject.GetComponent<EnemyStateManager>();
+                Physics2D.IgnoreCollision(hit.collider, GetComponent<Collider2D>());
+                var enemy = hit.collider.gameObject.GetComponent<EnemyStateManager>();
                 enemy.KillEnemy();
                 DestroyCard();
             }
