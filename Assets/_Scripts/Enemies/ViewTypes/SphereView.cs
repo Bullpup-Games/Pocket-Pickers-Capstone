@@ -1,5 +1,6 @@
 using System;
-using _Scripts.Enemies.State;
+using _Scripts.Enemies.Guard;
+using _Scripts.Enemies.Guard.State;
 using UnityEngine;
 
 namespace _Scripts.Enemies.ViewTypes

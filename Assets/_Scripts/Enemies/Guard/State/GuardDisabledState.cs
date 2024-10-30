@@ -1,10 +1,9 @@
 using _Scripts.Player;
-using Unity.VisualScripting;
 using UnityEngine;
 
-namespace _Scripts.Enemies.State
+namespace _Scripts.Enemies.Guard.State
 {
-    public class DisabledState : IEnemyState
+    public class GuardDisabledState : IEnemyState
     {
         private EnemyStateManager _enemy;
 

@@ -1,6 +1,6 @@
-namespace _Scripts.Enemies.State
+namespace _Scripts.Enemies.Guard.State
 {
-    public enum EnemyState
+    public enum GuardState
     {
         // THIS ENUM IS JUST FOR DEBUGGING IN THE INSPECTOR NOW, IT HAS NO IMPACT ON BEHAVIOR WHATSOEVER
         // ALL STATE LOGIC IS HANDLED IN THE ENEMY STATE MANAGER

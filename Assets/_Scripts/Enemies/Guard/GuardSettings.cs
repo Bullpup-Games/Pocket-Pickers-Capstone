@@ -2,7 +2,7 @@ using System;
 using _Scripts.Enemies.ViewTypes;
 using UnityEngine;
 
-namespace _Scripts.Enemies
+namespace _Scripts.Enemies.Guard
 {
     public class EnemySettings : MonoBehaviour
     {

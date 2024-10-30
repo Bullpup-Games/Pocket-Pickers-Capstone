@@ -1,6 +1,6 @@
 using System;
 using _Scripts.Enemies;
-using _Scripts.Enemies.State;
+using _Scripts.Enemies.Guard.State;
 using _Scripts.Player;
 using UnityEngine;
 using UnityEngine.Serialization;

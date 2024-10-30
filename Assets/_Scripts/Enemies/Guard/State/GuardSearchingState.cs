@@ -1,9 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
-namespace _Scripts.Enemies.State
+namespace _Scripts.Enemies.Guard.State
 {
-    public class SearchingState : IEnemyState
+    public class GuardSearchingState : IEnemyState
     {
         private EnemyStateManager _enemy;
         private float _searchTimer;

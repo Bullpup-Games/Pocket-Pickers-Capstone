@@ -1,6 +1,7 @@
+using _Scripts.Enemies.Guard.State;
 using UnityEngine;
 
-namespace _Scripts.Enemies.State
+namespace _Scripts.Enemies
 {
     public interface IEnemyState
     {

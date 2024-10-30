@@ -1,9 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
-namespace _Scripts.Enemies.State
+namespace _Scripts.Enemies.Guard.State
 {
-    public class DetectingState : IEnemyState
+    public class GuardDetectingState : IEnemyState
     {
         private float _detectionTimer;
         private EnemyStateManager _enemy;

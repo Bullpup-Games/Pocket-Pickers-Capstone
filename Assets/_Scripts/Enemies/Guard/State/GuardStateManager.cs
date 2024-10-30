@@ -1,10 +1,8 @@
-using System;
 using _Scripts.Enemies.ViewTypes;
 using _Scripts.Player;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace _Scripts.Enemies.State
+namespace _Scripts.Enemies.Guard.State
 {
     public class EnemyStateManager : MonoBehaviour
     {
@@ -18,7 +16,7 @@ namespace _Scripts.Enemies.State
         public IEnemyState CurrentState { get; private set; }
         public IEnemyState PreviousState { get; private set; }
         
-        [SerializeField] private EnemyState enumState;
+        [SerializeField] private GuardState enumState;
 
         [HideInInspector] public EnemySettings Settings;
         [HideInInspector] public Rigidbody2D Rigidbody2D;
@@ -47,13 +45,13 @@ namespace _Scripts.Enemies.State
             playerLayer = LayerMask.GetMask("Enemy");
             playerLayer = LayerMask.GetMask("Player");
 
-            PatrollingState = new PatrollingState(this, transform.position ,Settings.leftPatrolDistance, Settings.rightPatrolDistance);
-            DetectingState = new DetectingState();
-            AggroState = new AggroState();
-            SearchingState = new SearchingState();
-            ReturningState = new ReturningState();
-            StunnedState = new StunnedState();
-            DisabledState = new DisabledState();
+            PatrollingState = new GuardPatrollingState(this, transform.position ,Settings.leftPatrolDistance, Settings.rightPatrolDistance);
+            DetectingState = new GuardDetectingState();
+            AggroState = new GuardAggroState();
+            SearchingState = new GuardSearchingState();
+            ReturningState = new GuardReturningState();
+            StunnedState = new GuardStunnedState();
+            DisabledState = new GuardDisabledState();
 
             // Set the initial state
             CurrentState = PatrollingState;
@@ -73,31 +71,31 @@ namespace _Scripts.Enemies.State
             // ENUM State is currently ONLY for debugging in inspector
             if (IsPatrollingState())
             {
-                enumState = EnemyState.Patrolling;
+                enumState = GuardState.Patrolling;
             }
             else if (IsDetectingState())
             {
-                enumState = EnemyState.Detecting;
+                enumState = GuardState.Detecting;
             }
             else if (IsAggroState())
             {
-                enumState = EnemyState.Aggro;
+                enumState = GuardState.Aggro;
             }
             else if (IsSearchingState())
             {
-                enumState = EnemyState.Searching;
+                enumState = GuardState.Searching;
             }
             else if (IsReturningState())
             {
-                enumState = EnemyState.Returning;
+                enumState = GuardState.Returning;
             }
             else if (IsStunnedState())
             {
-                enumState = EnemyState.Stunned;
+                enumState = GuardState.Stunned;
             }
             else if (IsDisabledState())
             {
-                enumState = EnemyState.Disabled;
+                enumState = GuardState.Disabled;
             }
         }
 
@@ -183,7 +181,7 @@ namespace _Scripts.Enemies.State
         {
             if (PatrollingState != null)
             {
-                var patrolState = PatrollingState as PatrollingState;
+                var patrolState = PatrollingState as GuardPatrollingState;
                 if (patrolState != null)
                 {
                     // Get patrol points
@@ -220,37 +218,37 @@ namespace _Scripts.Enemies.State
         #region State Getters
         public bool IsPatrollingState()
         {
-            return CurrentState is PatrollingState;
+            return CurrentState is GuardPatrollingState;
         }
         public bool IsDetectingState()
         {
-            return CurrentState is DetectingState;
+            return CurrentState is GuardDetectingState;
         }
         public bool IsAggroState()
         {
-            return CurrentState is AggroState;
+            return CurrentState is GuardAggroState;
         }
         public bool IsSearchingState()
         {
-            return CurrentState is SearchingState;
+            return CurrentState is GuardSearchingState;
         }
         public bool IsReturningState()
         {
-            return CurrentState is ReturningState;
+            return CurrentState is GuardReturningState;
         }
         public bool IsStunnedState()
         {
-            return CurrentState is StunnedState;
+            return CurrentState is GuardStunnedState;
         }
         public bool IsDisabledState()
         {
-            return CurrentState is DisabledState;
+            return CurrentState is GuardDisabledState;
         }
         
         // Alerted is not an actual state but is used to denote an increase in view radius / distance
         public bool IsAlertedState()
         {
-            return CurrentState is AggroState || CurrentState is SearchingState;
+            return CurrentState is GuardAggroState || CurrentState is GuardSearchingState;
         }
         #endregion
     }

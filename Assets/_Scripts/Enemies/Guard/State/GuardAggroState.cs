@@ -3,14 +3,12 @@ using System.Collections;
 using _Scripts.Card;
 using _Scripts.Player;
 using _Scripts.Player.State;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Android;
 using UnityEngine.SceneManagement;
 
-namespace _Scripts.Enemies.State
+namespace _Scripts.Enemies.Guard.State
 {
-    public class AggroState : IEnemyState
+    public class GuardAggroState : IEnemyState
     {
         private EnemyStateManager _enemy;
         private float _lastFlipTime = -Mathf.Infinity;

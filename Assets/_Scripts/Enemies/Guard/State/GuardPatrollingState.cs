@@ -1,11 +1,9 @@
-using System;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
-namespace _Scripts.Enemies.State
+namespace _Scripts.Enemies.Guard.State
 {
-    public class PatrollingState : IEnemyState
+    public class GuardPatrollingState : IEnemyState
     {
         private EnemyStateManager _enemy;
         private Vector2 _originPosition;
@@ -18,7 +16,7 @@ namespace _Scripts.Enemies.State
         public Vector2 LeftPatrolPoint() => _leftPatrolPoint;
         public Vector2 RightPatrolPoint() => _rightPatrolPoint;
         public Vector2 OriginPosition => _originPosition;
-        public PatrollingState(EnemyStateManager enemy, Vector2 originPosition, float leftPatrolDistance, float rightPatrolDistance)
+        public GuardPatrollingState(EnemyStateManager enemy, Vector2 originPosition, float leftPatrolDistance, float rightPatrolDistance)
         {
             _enemy = enemy;
             _originPosition = originPosition;
