@@ -159,23 +159,14 @@ namespace _Scripts.Card
                 // Reflect the direction off the hit normal
                 var newDirection = Vector2.Reflect(_direction, hit.normal).normalized;
 
-                // If the new direction is too similar to the old direction invert the direction, the card will get stuck in corners without this
-                // if (Vector2.Dot(newDirection, _direction) > 0.9f)
-                // {
-                //    // newDirection = -_direction;
-                //     Debug.Log("Inverted direction due to corner collision.");
-                // }
-
                 _direction = newDirection;
                 CalculateVelocity(_direction);
 
-                /*
-                 * Don't increment bounces here as the card needs to bounce several times in a corner
-                 * So if bounces are incremented here and in OnCollisionEnter2D then it will appear as if
-                 * the card just disappears when it hits a corner
-                 */
-                
-                // bounces++;
+               /*
+                    When you hit a corner, it will count as 2 bounces because it bounces off of both corners 
+                    at the same time
+               */
+                 bounces++;
 
                 // Safety check if we entered with max bounces
                 if (bounces >= totalBounces)
@@ -270,13 +261,13 @@ namespace _Scripts.Card
             if (col.gameObject.CompareTag("wall"))
             {
                 // Handle collision with walls (if not already handled by the raycast)
-                bounces++;
+               // bounces++;
 
-                if (bounces >= totalBounces)
-                {
-                    DestroyCard();
-                    return;
-                }
+                //if (bounces >= totalBounces)
+                //{
+                //    DestroyCard();
+                //    return;
+                //}
 
                 // // Calculate the combined normal from ALL contact points
                 // var combinedNormal = Vector2.zero;
