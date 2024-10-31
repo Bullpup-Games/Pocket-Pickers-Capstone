@@ -28,6 +28,26 @@ namespace _Scripts.Enemies.Sniper.State
         
         [Header("Sin Values")]
         public int sinPenalty;
+        private void Awake()
+        {
+            Settings = GetComponent<SniperSettings>();
+            Rigidbody2D = GetComponent<Rigidbody2D>();
+            Collider2D = GetComponent<Collider2D>();
+            ViewTypes = GetComponents<IViewType>();
+            
+            environmentLayer = LayerMask.GetMask("Environment");
+            playerLayer = LayerMask.GetMask("Enemy");
+            playerLayer = LayerMask.GetMask("Player");
+
+            PatrollingState = new SniperPatrollingState();
+            DetectingState = new SniperDetectingState();
+            ChargingState = new SniperChargingState();
+            ReloadingState = new SniperReloadingState();
+
+            // Set the initial state
+            CurrentState = PatrollingState;
+            CurrentState.EnterState(this);
+        }
         public void TransitionToState(IEnemyState<SniperStateManager> newState)
         {
             

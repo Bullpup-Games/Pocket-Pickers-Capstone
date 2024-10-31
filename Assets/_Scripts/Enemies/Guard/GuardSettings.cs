@@ -4,11 +4,12 @@ using UnityEngine;
 
 namespace _Scripts.Enemies.Guard
 {
-    public class EnemySettings : MonoBehaviour
+    public class GuardSettings : MonoBehaviour, IEnemySettings
     {
         [Header("General Settings")]
         public bool isFacingRight = true;
         public float movementSpeed = 4f;
+        public bool IsFacingRight() => isFacingRight;
         
 
         [Header("Patrol Settings")]

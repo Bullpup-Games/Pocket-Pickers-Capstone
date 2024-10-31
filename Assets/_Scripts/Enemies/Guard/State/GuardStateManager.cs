@@ -18,7 +18,7 @@ namespace _Scripts.Enemies.Guard.State
         
         [SerializeField] private GuardState enumState;
 
-        [HideInInspector] public EnemySettings Settings;
+        [HideInInspector] public GuardSettings Settings;
         [HideInInspector] public Rigidbody2D Rigidbody2D;
         [HideInInspector] public Collider2D Collider2D;
         [HideInInspector] public IViewType[] ViewTypes;
@@ -36,7 +36,7 @@ namespace _Scripts.Enemies.Guard.State
 
         private void Awake()
         {
-            Settings = GetComponent<EnemySettings>();
+            Settings = GetComponent<GuardSettings>();
             Rigidbody2D = GetComponent<Rigidbody2D>();
             Collider2D = GetComponent<Collider2D>();
             ViewTypes = GetComponents<IViewType>();
