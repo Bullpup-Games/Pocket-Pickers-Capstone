@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace _Scripts.Enemies.Guard.State
 {
-    public class GuardDisabledState : IEnemyState
+    public class GuardDisabledState : IEnemyState<GuardStateManager>
     {
-        private EnemyStateManager _enemy;
+        private GuardStateManager _enemy;
 
-        public void EnterState(EnemyStateManager enemy)
+        public void EnterState(GuardStateManager enemy)
         {
             _enemy = enemy;
             _enemy.StopMoving();

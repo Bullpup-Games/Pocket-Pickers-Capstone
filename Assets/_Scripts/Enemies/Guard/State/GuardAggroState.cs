@@ -8,9 +8,9 @@ using UnityEngine.SceneManagement;
 
 namespace _Scripts.Enemies.Guard.State
 {
-    public class GuardAggroState : IEnemyState
+    public class GuardAggroState : IEnemyState<GuardStateManager>
     {
-        private EnemyStateManager _enemy;
+        private GuardStateManager _enemy;
         private float _lastFlipTime = -Mathf.Infinity;
         private float _flipCooldown = 1f;
         private bool _movingToLastKnownPosition;
@@ -23,7 +23,7 @@ namespace _Scripts.Enemies.Guard.State
         private float _playerWidth;
         private bool _handlingTopCollision;
  
-        public void EnterState(EnemyStateManager enemy)
+        public void EnterState(GuardStateManager enemy)
         {
             _enemy = enemy;
             _movingToLastKnownPosition = false;

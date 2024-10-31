@@ -32,7 +32,7 @@ namespace _Scripts.Enemies.ViewTypes
         private float _viewAngle;
         private float _viewDistance;
         private EnemySettings _settings;
-        private EnemyStateManager _stateManager;
+        private IEnemyStateManagerBase _stateManager;
         private bool _playerDetectedThisFrame = false;
 
         public event Action<bool, float> PlayerDetected;
@@ -180,7 +180,7 @@ namespace _Scripts.Enemies.ViewTypes
         private void InitializeSettings()
         {
             _settings = GetComponent<EnemySettings>();
-            _stateManager = GetComponent<EnemyStateManager>();
+            _stateManager = GetComponent<IEnemyStateManagerBase>();
             if (_settings == null)
             {
                 Debug.LogError("GuardSettings component not found on " + gameObject.name);

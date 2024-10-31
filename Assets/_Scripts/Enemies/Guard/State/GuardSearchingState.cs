@@ -3,14 +3,14 @@ using UnityEngine;
 
 namespace _Scripts.Enemies.Guard.State
 {
-    public class GuardSearchingState : IEnemyState
+    public class GuardSearchingState : IEnemyState<GuardStateManager>
     {
-        private EnemyStateManager _enemy;
+        private GuardStateManager _enemy;
         private float _searchTimer;
         private bool _isSearching;
         private Coroutine _searchCoroutine;
 
-        public void EnterState(EnemyStateManager enemy)
+        public void EnterState(GuardStateManager enemy)
         {
             _enemy = enemy;
             _enemy.Rigidbody2D.isKinematic = false;

@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace _Scripts.Enemies.Guard.State
 {
-    public class GuardPatrollingState : IEnemyState
+    public class GuardPatrollingState : IEnemyState<GuardStateManager>
     {
-        private EnemyStateManager _enemy;
+        private GuardStateManager _enemy;
         private Vector2 _originPosition;
         private Vector2 _leftPatrolPoint;
         private Vector2 _rightPatrolPoint;
@@ -16,7 +16,7 @@ namespace _Scripts.Enemies.Guard.State
         public Vector2 LeftPatrolPoint() => _leftPatrolPoint;
         public Vector2 RightPatrolPoint() => _rightPatrolPoint;
         public Vector2 OriginPosition => _originPosition;
-        public GuardPatrollingState(EnemyStateManager enemy, Vector2 originPosition, float leftPatrolDistance, float rightPatrolDistance)
+        public GuardPatrollingState(GuardStateManager enemy, Vector2 originPosition, float leftPatrolDistance, float rightPatrolDistance)
         {
             _enemy = enemy;
             _originPosition = originPosition;
@@ -26,7 +26,7 @@ namespace _Scripts.Enemies.Guard.State
             _rightPatrolPoint = _originPosition + Vector2.right * rightPatrolDistance;
         }
 
-        public void EnterState(EnemyStateManager enemy)
+        public void EnterState(GuardStateManager enemy)
         {
             _enemy = enemy;
 

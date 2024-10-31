@@ -28,7 +28,7 @@ namespace _Scripts.Enemies.ViewTypes
 
         private float _viewRadius;
         private EnemySettings _settings;
-        private EnemyStateManager _stateManager;
+        private IEnemyStateManagerBase _stateManager;
         private bool _playerDetectedThisFrame = false;
 
         private float _baseNormalViewRadius;
@@ -159,7 +159,7 @@ namespace _Scripts.Enemies.ViewTypes
         private void InitializeSettings()
         {
             _settings = GetComponent<EnemySettings>();
-            _stateManager = GetComponent<EnemyStateManager>();
+            _stateManager = GetComponent<IEnemyStateManagerBase>();
 
             if (_settings == null)
             {

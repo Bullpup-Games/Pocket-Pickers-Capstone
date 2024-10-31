@@ -4,17 +4,17 @@ using UnityEngine;
 
 namespace _Scripts.Enemies.Guard.State
 {
-    public class EnemyStateManager : MonoBehaviour
+    public class GuardStateManager : MonoBehaviour, IEnemyStateManager<GuardStateManager>
     {
-        public IEnemyState PatrollingState { get; private set; }
-        public IEnemyState DetectingState { get; private set; }
-        public IEnemyState AggroState { get; private set; }
-        public IEnemyState SearchingState { get; private set; }
-        public IEnemyState ReturningState { get; private set; }
-        public IEnemyState StunnedState { get; private set; }
-        public IEnemyState DisabledState { get; private set; }
-        public IEnemyState CurrentState { get; private set; }
-        public IEnemyState PreviousState { get; private set; }
+        public IEnemyState<GuardStateManager> PatrollingState { get; private set; }
+        public IEnemyState<GuardStateManager> DetectingState { get; private set; }
+        public IEnemyState<GuardStateManager> AggroState { get; private set; }
+        public IEnemyState<GuardStateManager> SearchingState { get; private set; }
+        public IEnemyState<GuardStateManager> ReturningState { get; private set; }
+        public IEnemyState<GuardStateManager> StunnedState { get; private set; }
+        public IEnemyState<GuardStateManager> DisabledState { get; private set; }
+        public IEnemyState<GuardStateManager> CurrentState { get; private set; }
+        public IEnemyState<GuardStateManager> PreviousState { get; private set; }
         
         [SerializeField] private GuardState enumState;
 
@@ -109,7 +109,7 @@ namespace _Scripts.Enemies.Guard.State
             CurrentState.OnCollisionStay2D(col);
         }
 
-        public void TransitionToState(IEnemyState newState)
+        public void TransitionToState(IEnemyState<GuardStateManager> newState)
         {
             if (CurrentState == newState)
                 return;
@@ -249,6 +249,21 @@ namespace _Scripts.Enemies.Guard.State
         public bool IsAlertedState()
         {
             return CurrentState is GuardAggroState || CurrentState is GuardSearchingState;
+        }
+        
+        public bool IsInvestigatingState()
+        {
+            return false;
+        }
+        
+        // Sniper Specific
+        public bool IsChargingState()
+        {
+            return false;
+        }
+        public bool IsReloadingState()
+        {
+            return false;
         }
         #endregion
     }

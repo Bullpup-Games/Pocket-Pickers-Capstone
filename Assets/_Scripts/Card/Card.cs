@@ -1,6 +1,8 @@
 using System;
 using _Scripts.Enemies;
 using _Scripts.Enemies.Guard.State;
+using _Scripts.Enemies.Sniper;
+using _Scripts.Enemies.Sniper.State;
 using _Scripts.Player;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -225,15 +227,28 @@ namespace _Scripts.Card
 
             foreach (var col in colliders)
             {
-                var enemyStateManager = col.GetComponent<EnemyStateManager>();
-                if (enemyStateManager != null)
+                // Attempt to cast to GuardStateManager type
+                var guardStateManager = col.GetComponent<IEnemyStateManager<GuardStateManager>>();
+                if (guardStateManager != null)
                 {
-                    enemyStateManager.TransitionToState(enemyStateManager.StunnedState);
+                    guardStateManager.TransitionToState(col.GetComponent<GuardStateManager>().StunnedState);
+                    CardManager.Instance.ActivateFalseTriggerCooldown();
+                    DestroyCard();
+                    return;
                 }
-            }
 
-            CardManager.Instance.ActivateFalseTriggerCooldown();
-            DestroyCard();
+                // Attempt to cast to SniperStateManager type
+                var sniperStateManager = col.GetComponent<IEnemyStateManager<SniperStateManager>>();
+                if (sniperStateManager != null)
+                {
+                    sniperStateManager.TransitionToState(col.GetComponent<SniperStateManager>().StunnedState);
+                    CardManager.Instance.ActivateFalseTriggerCooldown();
+                    DestroyCard();
+                    return;
+                }
+                
+                // Attempt to cast to BatStateManager type
+            }
         }
 
         private void OnCollisionEnter2D(Collision2D col)
@@ -249,7 +264,7 @@ namespace _Scripts.Card
             {
                 //this tag exists because we want the player and enemies to be stopped
                 //by permeable objects, but not the card.
-               CollideWithPermeable(col);
+                CollideWithPermeable(col);
                 return;
             }
             
@@ -263,55 +278,76 @@ namespace _Scripts.Card
 
         #region CollisionManagement
 
-            private void CollideWithWall(RaycastHit2D hit, ref Vector2  newPosition)
-            {
+        private void CollideWithWall(RaycastHit2D hit, ref Vector2  newPosition)
+        {
                 
                     
-                // Adjust position to point of collision
-                newPosition = hit.point;
+            // Adjust position to point of collision
+            newPosition = hit.point;
 
-                // Reflect the direction off the hit normal
-                var newDirection = Vector2.Reflect(_direction, hit.normal).normalized;
+            // Reflect the direction off the hit normal
+            var newDirection = Vector2.Reflect(_direction, hit.normal).normalized;
 
-                _direction = newDirection;
-                CalculateVelocity(_direction);
+            _direction = newDirection;
+            CalculateVelocity(_direction);
 
-                /*
-                     When you hit a corner, it will count as 2 bounces because it bounces off of both corners
-                     at the same time
-                */
-                bounces++;
+            /*
+                 When you hit a corner, it will count as 2 bounces because it bounces off of both corners
+                 at the same time
+            */
+            bounces++;
 
-                // Safety check if we entered with max bounces
-                if (bounces >= totalBounces)
-                {
-                    DestroyCard();
-                    return;
-                }
-
-                // Adjust position slightly along the new direction to prevent immediate re-collision
-                newPosition += _direction * MinMoveDistance;
-
-                Debug.Log("Reflected off Environment. New direction: " + _direction);
-            }
-
-            private void CollideWithPlayer(Collision2D col)
+            // Safety check if we entered with max bounces
+            if (bounces >= totalBounces)
             {
-                Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
-            }
-
-            private void CollideWithEnemy(RaycastHit2D hit)
-            {
-                Physics2D.IgnoreCollision(hit.collider, GetComponent<Collider2D>());
-                var enemy = hit.collider.gameObject.GetComponent<EnemyStateManager>();
-                enemy.KillEnemy();
                 DestroyCard();
+                return;
             }
 
-            private void CollideWithPermeable(Collision2D col)
+            // Adjust position slightly along the new direction to prevent immediate re-collision
+            newPosition += _direction * MinMoveDistance;
+
+            Debug.Log("Reflected off Environment. New direction: " + _direction);
+        }
+
+        private void CollideWithPlayer(Collision2D col)
+        {
+            Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
+        }
+
+        private void CollideWithEnemy(RaycastHit2D hit)
+        {
+            Physics2D.IgnoreCollision(hit.collider, GetComponent<Collider2D>());
+
+            // Attempt to cast to GuardStateManager type
+            var guardStateManager = hit.collider.GetComponent<IEnemyStateManager<GuardStateManager>>();
+            if (guardStateManager != null)
             {
-                Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
+                Debug.Log("Guard State Manager Found");
+                guardStateManager.KillEnemy();
+                Debug.Log("Guard Killed");
+                DestroyCard();
+                return;
             }
+
+            // Attempt to cast to SniperStateManager type
+            var sniperStateManager = hit.collider.GetComponent<IEnemyStateManager<SniperStateManager>>();
+            if (sniperStateManager != null)
+            {
+                Debug.Log("Sniper State Manager Found");
+                sniperStateManager.KillEnemy();
+                Debug.Log("Sniper Killed");
+                DestroyCard();
+                return;
+            }
+
+            // Attempt to cast to BatStateManager type
+        }
+
+        private void CollideWithPermeable(Collision2D col)
+        {
+            Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
+        }
 
         #endregion
        
