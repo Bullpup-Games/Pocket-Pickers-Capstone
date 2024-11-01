@@ -6,7 +6,13 @@ using UnityEngine.SceneManagement;
 namespace _Scripts
 {
     
-    
+    /*
+     * The plan:
+     * 1. Add an event that is called whenever the player picks up a sin
+     * 2. Have all of the enemies listen for the event
+     * 3. When the enemies hear the event, they will look at the player's sin held (not the sin accrued)
+     * 4. The enemies will adjust their fov and distance based on how much sin the player is holding
+     */
     public class GameManager : MonoBehaviour
     {
         public List<GameObject> activeSins;
