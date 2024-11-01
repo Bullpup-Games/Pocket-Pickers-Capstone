@@ -122,6 +122,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &29138542 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4744662754737605925, guid: f34e9c6523b7ece4482721e6060d0e6d, type: 3}
+  m_PrefabInstance: {fileID: 3447567856364397827}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1511d3fdecbd30745acf0218ea9e6540, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &98427534 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2969068311962969429, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
@@ -33259,13 +33270,13 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2111037776}
     - target: {fileID: 2204501328560629039, guid: c6f9bd836282842348fab8839a2de283, type: 3}
+      propertyPath: effectHandler
+      value: 
+      objectReference: {fileID: 29138542}
+    - target: {fileID: 2204501328560629039, guid: c6f9bd836282842348fab8839a2de283, type: 3}
       propertyPath: cardStanceArrow
       value: 
       objectReference: {fileID: 717996280}
-    - target: {fileID: 2204501328560629039, guid: c6f9bd836282842348fab8839a2de283, type: 3}
-      propertyPath: playerMovementController
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 4787900142952941893, guid: c6f9bd836282842348fab8839a2de283, type: 3}
       propertyPath: winThreshold
       value: 20
@@ -38718,6 +38729,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 047ab0db384a3419dbd633e98b719112, type: 3}
+--- !u!1001 &3447567856364397827
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 560086394362327517, guid: f34e9c6523b7ece4482721e6060d0e6d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -6.4221363
+      objectReference: {fileID: 0}
+    - target: {fileID: 560086394362327517, guid: f34e9c6523b7ece4482721e6060d0e6d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.8396842
+      objectReference: {fileID: 0}
+    - target: {fileID: 560086394362327517, guid: f34e9c6523b7ece4482721e6060d0e6d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.3239647
+      objectReference: {fileID: 0}
+    - target: {fileID: 560086394362327517, guid: f34e9c6523b7ece4482721e6060d0e6d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 560086394362327517, guid: f34e9c6523b7ece4482721e6060d0e6d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 560086394362327517, guid: f34e9c6523b7ece4482721e6060d0e6d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 560086394362327517, guid: f34e9c6523b7ece4482721e6060d0e6d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 560086394362327517, guid: f34e9c6523b7ece4482721e6060d0e6d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 560086394362327517, guid: f34e9c6523b7ece4482721e6060d0e6d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 560086394362327517, guid: f34e9c6523b7ece4482721e6060d0e6d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4892640167694066606, guid: f34e9c6523b7ece4482721e6060d0e6d, type: 3}
+      propertyPath: m_Name
+      value: EffectHandler
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f34e9c6523b7ece4482721e6060d0e6d, type: 3}
 --- !u!1001 &5384045867562126461
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -38850,3 +38918,4 @@ SceneRoots:
   - {fileID: 658588388}
   - {fileID: 328660956285178188}
   - {fileID: 5384045867562126461}
+  - {fileID: 3447567856364397827}
