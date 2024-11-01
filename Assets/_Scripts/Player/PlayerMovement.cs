@@ -146,8 +146,9 @@ namespace _Scripts.Player
             // Handle Teleportation
             gameObject.transform.position = location;
             gameObject.transform.rotation = Quaternion.identity;
+            //gameObject.GetComponent<Rigidbody2D>().AddForceAtPosition(new Vector2(0,1),);
             
-            _frameVelocity.y = 0f;
+            _frameVelocity.y = 15f;
             _frameVelocity.x = 0f;
             StartCoroutine(TeleportHangTime());
         }
