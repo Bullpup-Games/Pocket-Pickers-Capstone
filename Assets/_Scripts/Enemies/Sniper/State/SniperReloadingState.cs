@@ -13,10 +13,7 @@ namespace _Scripts.Enemies.Sniper.State
             _reloadCoroutine = _enemy.StartCoroutine(Reload());
         }
 
-        public void UpdateState()
-        {
-            
-        }
+        public void UpdateState() {}
 
         public void ExitState()
         {
@@ -25,15 +22,9 @@ namespace _Scripts.Enemies.Sniper.State
             _reloadCoroutine = null;
         }
 
-        public void OnCollisionEnter2D(Collision2D col)
-        {
-            
-        }
+        public void OnCollisionEnter2D(Collision2D col) {}
 
-        public void OnCollisionStay2D(Collision2D col)
-        {
-            
-        }
+        public void OnCollisionStay2D(Collision2D col) {}
 
         private IEnumerator Reload()
         {

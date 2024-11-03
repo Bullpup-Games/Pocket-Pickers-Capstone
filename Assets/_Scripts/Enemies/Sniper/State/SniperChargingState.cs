@@ -15,14 +15,7 @@ namespace _Scripts.Enemies.Sniper.State
             _chargeCoroutine = _enemy.StartCoroutine(ChargeShot());
         }
 
-        public void UpdateState()
-        {
-            // If the enemy loses sight of the player they should immediately go back to patrolling
-            // if (!_enemy.IsPlayerDetected())
-            // {
-            //     _enemy.TransitionToState(_enemy.PatrollingState);
-            // }
-        }
+        public void UpdateState() {}
 
         public void ExitState()
         {
@@ -33,17 +26,11 @@ namespace _Scripts.Enemies.Sniper.State
             }
         }
 
-        public void OnCollisionEnter2D(Collision2D col)
-        {
-            
-        }
+        public void OnCollisionEnter2D(Collision2D col) {}
 
-        public void OnCollisionStay2D(Collision2D col)
-        {
-            
-        }
+        public void OnCollisionStay2D(Collision2D col) {}
 
-        private IEnumerator ChargeShot()
+        private IEnumerator ChargeShot() 
         {
             yield return new WaitForSeconds(_enemy.Settings.chargeTime);
             FireShot();

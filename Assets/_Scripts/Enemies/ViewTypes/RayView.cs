@@ -1,10 +1,11 @@
 using System;
-using _Scripts.Enemies.Guard;
-using _Scripts.Enemies.Guard.State;
+using _Scripts.Card;
+using _Scripts.Enemies.Sniper.State;
 using UnityEngine;
 
 namespace _Scripts.Enemies.ViewTypes
 {
+    [RequireComponent(typeof(IEnemyStateManager<SniperStateManager>))]
     public class RayView : MonoBehaviour, IViewType
     {
         [Tooltip(
@@ -24,7 +25,7 @@ namespace _Scripts.Enemies.ViewTypes
         public LayerMask environmentLayer;
 
         private IEnemySettings _settings;
-        private IEnemyStateManagerBase _stateManager;
+        private IEnemyStateManager<SniperStateManager> _stateManager;
         private bool _playerDetectedThisFrame = false;
         private bool _playerDetectedLastFrame = false;
         
@@ -43,6 +44,7 @@ namespace _Scripts.Enemies.ViewTypes
         private bool _isTrackingPlayer = false;
         private bool _isTrackingLastKnownPosition = false;
         private bool _isDisabled = false;
+        private bool _lookingAtFalseTrigger = false;
 
         public event Action<bool, float> PlayerDetected;
         public event Action NoPlayerDetected;
@@ -64,7 +66,19 @@ namespace _Scripts.Enemies.ViewTypes
             {
                 EnterDisabledState();
                 return;
-            } 
+            }
+
+            if (_stateManager.IsInvestigatingState())
+            {
+                LookAtFalseTrigger();
+                CastRay();
+
+                // If the player crosses the ray while the sniper is investigating it will switch to tracking the player
+                if (_playerDetectedThisFrame)
+                    _stateManager.TransitionToState(GetComponent<SniperStateManager>().ChargingState);
+                else
+                    return;
+            }
             
             // The ray is disabled but the enemy is back in a normal state (patrolling, charging, etc)
             if (_isDisabled)
@@ -78,6 +92,7 @@ namespace _Scripts.Enemies.ViewTypes
                 TrackPlayer();
             else if (_isTrackingLastKnownPosition)
                 TrackLastKnownPosition();
+
 
             CastRay();
 
@@ -109,22 +124,25 @@ namespace _Scripts.Enemies.ViewTypes
             }
             else
             {
+                // Player was detected this frame, track them
                 if (_playerDetectedThisFrame)
                 {
                     _isSweeping = false;
                     _isTrackingPlayer = true;
                     _isTrackingLastKnownPosition = false;
                 }
+                // Player was detected last frame but not this one, track the last known position
                 else if (_playerDetectedLastFrame && !_playerDetectedThisFrame)
                 {
-                    // Player was detected last frame but not this frame
                     _lastKnownPlayerPosition = _playerTransform.position;
+                    // Track the last known position until the shot is fired
                     if (_stateManager.IsChargingState())
                     {
                         _isSweeping = false;
                         _isTrackingPlayer = false;
                         _isTrackingLastKnownPosition = true;
                     }
+                    // Shot fired, prepare sweeping state
                     else
                     {
                         _isSweeping = true;
@@ -132,9 +150,9 @@ namespace _Scripts.Enemies.ViewTypes
                         _isTrackingLastKnownPosition = false;
                     }
                 }
+                // Exit tracking last known position when not in Charging State
                 else if (_isTrackingLastKnownPosition && !_stateManager.IsChargingState())
                 {
-                    // Exit tracking last known position when not in Charging State
                     _isSweeping = true;
                     _isTrackingLastKnownPosition = false;
                 }
@@ -223,6 +241,22 @@ namespace _Scripts.Enemies.ViewTypes
                 _currentAngle = Mathf.Sign(angleDifference) * (sweepAngle / 2);
             else
                 _currentAngle = angleDifference;
+        }
+
+        private void LookAtFalseTrigger()
+        {
+            var position = (Vector2)transform.position;
+            var falseTriggerPosition = CardManager.Instance.lastFalseTriggerPosition;
+            var directionToFalseTrigger = (falseTriggerPosition - position).normalized;
+            var angleToFalseTrigger = Mathf.Atan2(directionToFalseTrigger.y, directionToFalseTrigger.x) * Mathf.Rad2Deg;
+
+            var facingDirectionAngle = _settings.IsFacingRight() ? 0 : 180f;
+            var angleDifference = Mathf.DeltaAngle(facingDirectionAngle, angleToFalseTrigger);
+            
+            // Check for out of bounds intentionally left out, false trigger will be out of the sight bounds a lot, but
+            // it should still be able to be used as a distraction.
+
+            _currentAngle = angleDifference;
         }
 
         #endregion
@@ -343,7 +377,7 @@ namespace _Scripts.Enemies.ViewTypes
         private void InitializeSettings()
         {
             _settings = GetComponent<IEnemySettings>();
-            _stateManager = GetComponent<IEnemyStateManagerBase>();
+            _stateManager = GetComponent<IEnemyStateManager<SniperStateManager>>();
             _lineRenderer = GetComponent<LineRenderer>();
             if (_settings == null)
             {

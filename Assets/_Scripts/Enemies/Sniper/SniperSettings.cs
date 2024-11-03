@@ -15,6 +15,9 @@ namespace _Scripts.Enemies.Sniper
         public float chargeTime = 1.5f; // Charge time in seconds
         public float reloadTime = 2f;
 
+        [Header("False Trigger Investigation Settings")]
+        public float investigationTime = 3f; // Time in seconds the sniper will spend looking at the false trigger
+
         #region SinModifiers
         private float _viewModifier = 1.0f; // View width, radius, length, etc modifier for detecting the player
         public event Action<float> OnViewModifierChanged;
