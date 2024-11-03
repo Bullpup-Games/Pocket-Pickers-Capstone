@@ -53,6 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isFacingRight: 1
   chargeTime: 1.5
+  reloadTime: 2
   maxFallSpeed: 20
   gravity: 10
   groundCheckDistance: 0.5
@@ -98,19 +99,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 616c7bc3e6f7412d88cc885164544dc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  quickDetection: 0
-  maxDistanceModifier: 3
-  minDistanceModifier: 0.25
+  maxSweepModifier: 3
+  minSweepModifier: 1
   sweepAngle: 45
   sweepSpeed: 30
+  maxRayDistance: 100
+  offset: {x: -0, y: 0.95}
   targetLayer:
     serializedVersion: 2
     m_Bits: 8
   environmentLayer:
     serializedVersion: 2
     m_Bits: 64
-  offset: {x: -0, y: 0.95}
-  maxRayDistance: 100
 --- !u!61 &806076977170948131
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -182,7 +182,7 @@ Rigidbody2D:
   m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 4
+  m_Constraints: 5
 --- !u!120 &2922755772115506725
 LineRenderer:
   serializedVersion: 2
