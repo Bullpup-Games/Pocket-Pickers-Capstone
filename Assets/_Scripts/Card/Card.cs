@@ -241,7 +241,7 @@ namespace _Scripts.Card
                 var sniperStateManager = col.GetComponent<IEnemyStateManager<SniperStateManager>>();
                 if (sniperStateManager != null)
                 {
-                    sniperStateManager.TransitionToState(col.GetComponent<SniperStateManager>().StunnedState);
+                    sniperStateManager.TransitionToState(col.GetComponent<SniperStateManager>().InvestigatingState);
                     CardManager.Instance.ActivateFalseTriggerCooldown();
                     DestroyCard();
                     return;

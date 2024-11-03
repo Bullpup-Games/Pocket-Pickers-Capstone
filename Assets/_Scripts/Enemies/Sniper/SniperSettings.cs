@@ -12,6 +12,8 @@ namespace _Scripts.Enemies.Sniper
         public bool IsFacingRight() => isFacingRight;
 
         [Header("Charge Settings")]
+        public float chargeTime = 1.5f; // Charge time in seconds
+        public float reloadTime = 2f;
 
         #region SinModifiers
         private float _viewModifier = 1.0f; // View width, radius, length, etc modifier for detecting the player
@@ -54,6 +56,14 @@ namespace _Scripts.Enemies.Sniper
             foreach (var view in _viewTypes)
             {
                 view.SetView();
+            }
+        }
+        
+        private void OnValidate()
+        {
+            if ((isFacingRight && transform.localScale.x < 0) || (!isFacingRight && transform.localScale.x > 0))
+            {
+                FlipLocalScale();
             }
         }
 
