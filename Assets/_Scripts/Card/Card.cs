@@ -235,7 +235,7 @@ namespace _Scripts.Card
                 var guardStateManager = col.GetComponent<IEnemyStateManager<GuardStateManager>>();
                 if (guardStateManager != null)
                 {
-                    guardStateManager.TransitionToState(col.GetComponent<GuardStateManager>().StunnedState);
+                    guardStateManager.TransitionToState(col.GetComponent<GuardStateManager>().InvestigatingState);
                     CardManager.Instance.ActivateFalseTriggerCooldown();
                 }
 
