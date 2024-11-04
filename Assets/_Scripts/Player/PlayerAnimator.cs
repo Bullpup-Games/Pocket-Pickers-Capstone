@@ -100,6 +100,7 @@ namespace _Scripts.Player
         {
            // PlayerMovementController.Instance.Jumped += OnJumpDown;
            CardManager.Instance.cardCreated += doThrowAnimation;
+           CardManager.Instance.Teleport += tuck;
         }
 
         public void deleteListeners()
@@ -138,6 +139,10 @@ namespace _Scripts.Player
         private void doThrowAnimation()
         {
             _animator.SetTrigger("Throw");
+        }
+        
+        private void tuck(Vector2 tuck){
+            _animator.SetTrigger("teleported");
         }
     }
 }
