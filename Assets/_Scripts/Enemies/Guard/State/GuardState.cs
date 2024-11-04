@@ -10,6 +10,7 @@ namespace _Scripts.Enemies.Guard.State
         Aggro, // Fully aware of the player and their position (eye open)
         Searching, // Aware the player is nearby, unaware of the exact position (eye closing)
         Returning, // Pathfinding back to patrol point
+        Investigating, // pathfinding to a false trigger
         Stunned, // Affected by false trigger
         Disabled // Hit by card, dead or knocked out or something
     }
