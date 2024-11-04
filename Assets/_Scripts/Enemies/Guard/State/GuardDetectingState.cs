@@ -1,16 +1,16 @@
 using System.Collections;
 using UnityEngine;
 
-namespace _Scripts.Enemies.State
+namespace _Scripts.Enemies.Guard.State
 {
-    public class DetectingState : IEnemyState
+    public class GuardDetectingState : IEnemyState<GuardStateManager>
     {
         private float _detectionTimer;
-        private EnemyStateManager _enemy;
+        private GuardStateManager _enemy;
         private bool _isWaiting;
         private Coroutine _waitCoroutine;
 
-        public void EnterState(EnemyStateManager enemy)
+        public void EnterState(GuardStateManager enemy)
         {
             _enemy = enemy;
             _detectionTimer = 0f;

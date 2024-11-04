@@ -2,15 +2,15 @@ using System.Collections;
 using _Scripts.Player;
 using UnityEngine;
 
-namespace _Scripts.Enemies.State
+namespace _Scripts.Enemies.Guard.State
 {
-    public class StunnedState : IEnemyState
+    public class GuardStunnedState : IEnemyState<GuardStateManager>
     {
         // TODO: Find a way to enable the collider for the card only so the enemy can still be disabled even in stun state
-        private EnemyStateManager _enemy;
+        private GuardStateManager _enemy;
         private Coroutine _stunCoroutine;
         private Collider2D _col;
-        public void EnterState(EnemyStateManager enemy)
+        public void EnterState(GuardStateManager enemy)
         {
             _enemy = enemy;
             _enemy.StopMoving();

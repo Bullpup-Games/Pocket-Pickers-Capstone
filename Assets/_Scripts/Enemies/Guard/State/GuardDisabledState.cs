@@ -1,14 +1,13 @@
 using _Scripts.Player;
-using Unity.VisualScripting;
 using UnityEngine;
 
-namespace _Scripts.Enemies.State
+namespace _Scripts.Enemies.Guard.State
 {
-    public class DisabledState : IEnemyState
+    public class GuardDisabledState : IEnemyState<GuardStateManager>
     {
-        private EnemyStateManager _enemy;
+        private GuardStateManager _enemy;
 
-        public void EnterState(EnemyStateManager enemy)
+        public void EnterState(GuardStateManager enemy)
         {
             _enemy = enemy;
             _enemy.StopMoving();

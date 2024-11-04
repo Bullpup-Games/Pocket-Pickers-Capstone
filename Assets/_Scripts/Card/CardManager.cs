@@ -43,7 +43,7 @@ namespace _Scripts.Card
         
         public float falseTriggerCooldown = 10f;
         public bool falseTriggerOnCooldown;
- 
+        public Vector2 lastFalseTriggerPosition; // Keeps track of the position of the card when false trigger is activated for enemies to investigate
 
         public event Action <Vector2> Teleport ;
         public event Action cardCreated;

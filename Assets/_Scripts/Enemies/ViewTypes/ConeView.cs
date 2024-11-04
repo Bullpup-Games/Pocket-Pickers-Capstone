@@ -1,5 +1,6 @@
 using System;
-using _Scripts.Enemies.State;
+using _Scripts.Enemies.Guard;
+using _Scripts.Enemies.Guard.State;
 using UnityEngine;
 
 namespace _Scripts.Enemies.ViewTypes
@@ -30,8 +31,8 @@ namespace _Scripts.Enemies.ViewTypes
 
         private float _viewAngle;
         private float _viewDistance;
-        private EnemySettings _settings;
-        private EnemyStateManager _stateManager;
+        private IEnemySettings _settings;
+        private IEnemyStateManagerBase _stateManager;
         private bool _playerDetectedThisFrame = false;
 
         public event Action<bool, float> PlayerDetected;
@@ -70,7 +71,7 @@ namespace _Scripts.Enemies.ViewTypes
             if (_stateManager.IsDisabledState() || _stateManager.IsStunnedState()) return;
             UpdateHorizontalOffset();
             var position = (Vector2)transform.position + offset;
-            var direction = _settings.isFacingRight ? Vector2.right : Vector2.left;
+            var direction = _settings.IsFacingRight() ? Vector2.right : Vector2.left;
 
             // check for player collider within the view distance
             var targetsInViewRadius = Physics2D.OverlapCircleAll(position, _viewDistance, targetLayer);
@@ -146,7 +147,7 @@ namespace _Scripts.Enemies.ViewTypes
             Gizmos.color = Color.red;
             
             var position = (Vector2)transform.position + offset;
-            var direction = _settings.isFacingRight ? Vector2.right : Vector2.left;
+            var direction = _settings.IsFacingRight() ? Vector2.right : Vector2.left;
 
             var leftBoundary = Quaternion.Euler(0, 0, _viewAngle / 2) * direction;
             var rightBoundary = Quaternion.Euler(0, 0, -_viewAngle / 2) * direction;
@@ -165,7 +166,7 @@ namespace _Scripts.Enemies.ViewTypes
          */
         private void UpdateHorizontalOffset()
         {
-            if (_settings.isFacingRight)
+            if (_settings.IsFacingRight())
             {
                 offset.x = -Mathf.Abs(offset.x);
             }
@@ -178,8 +179,8 @@ namespace _Scripts.Enemies.ViewTypes
         // Wrapping GetComponent calls here so they can be called for the Gizmos in editor mode
         private void InitializeSettings()
         {
-            _settings = GetComponent<EnemySettings>();
-            _stateManager = GetComponent<EnemyStateManager>();
+            _settings = GetComponent<IEnemySettings>();
+            _stateManager = GetComponent<IEnemyStateManagerBase>();
             if (_settings == null)
             {
                 Debug.LogError("GuardSettings component not found on " + gameObject.name);

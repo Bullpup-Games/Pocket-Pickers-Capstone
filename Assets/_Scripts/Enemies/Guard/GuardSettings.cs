@@ -2,14 +2,15 @@ using System;
 using _Scripts.Enemies.ViewTypes;
 using UnityEngine;
 
-namespace _Scripts.Enemies
+namespace _Scripts.Enemies.Guard
 {
-    public class EnemySettings : MonoBehaviour
+    public class GuardSettings : MonoBehaviour, IEnemySettings
     {
         [Header("General Settings")]
         public bool isFacingRight = true;
         public float movementSpeed = 4f;
-        
+        public bool IsFacingRight() => isFacingRight;
+        public Collider2D ledgeCheck;
 
         [Header("Patrol Settings")]
         public float leftPatrolDistance = 3f;

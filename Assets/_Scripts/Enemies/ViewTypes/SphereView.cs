@@ -1,5 +1,6 @@
 using System;
-using _Scripts.Enemies.State;
+using _Scripts.Enemies.Guard;
+using _Scripts.Enemies.Guard.State;
 using UnityEngine;
 
 namespace _Scripts.Enemies.ViewTypes
@@ -26,8 +27,8 @@ namespace _Scripts.Enemies.ViewTypes
         public Color color = Color.blue;
 
         private float _viewRadius;
-        private EnemySettings _settings;
-        private EnemyStateManager _stateManager;
+        private IEnemySettings _settings;
+        private IEnemyStateManagerBase _stateManager;
         private bool _playerDetectedThisFrame = false;
 
         private float _baseNormalViewRadius;
@@ -144,7 +145,7 @@ namespace _Scripts.Enemies.ViewTypes
          */
         private void UpdateHorizontalOffset()
         {
-            if (_settings.isFacingRight)
+            if (_settings.IsFacingRight())
             {
                 offset.x = -Mathf.Abs(offset.x);
             }
@@ -157,8 +158,8 @@ namespace _Scripts.Enemies.ViewTypes
         // Initialize components and base view radii
         private void InitializeSettings()
         {
-            _settings = GetComponent<EnemySettings>();
-            _stateManager = GetComponent<EnemyStateManager>();
+            _settings = GetComponent<IEnemySettings>();
+            _stateManager = GetComponent<IEnemyStateManagerBase>();
 
             if (_settings == null)
             {

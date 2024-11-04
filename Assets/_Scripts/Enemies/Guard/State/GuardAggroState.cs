@@ -3,16 +3,14 @@ using System.Collections;
 using _Scripts.Card;
 using _Scripts.Player;
 using _Scripts.Player.State;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Android;
 using UnityEngine.SceneManagement;
 
-namespace _Scripts.Enemies.State
+namespace _Scripts.Enemies.Guard.State
 {
-    public class AggroState : IEnemyState
+    public class GuardAggroState : IEnemyState<GuardStateManager>
     {
-        private EnemyStateManager _enemy;
+        private GuardStateManager _enemy;
         private float _lastFlipTime = -Mathf.Infinity;
         private float _flipCooldown = 1f;
         private bool _movingToLastKnownPosition;
@@ -25,7 +23,7 @@ namespace _Scripts.Enemies.State
         private float _playerWidth;
         private bool _handlingTopCollision;
  
-        public void EnterState(EnemyStateManager enemy)
+        public void EnterState(GuardStateManager enemy)
         {
             _enemy = enemy;
             _movingToLastKnownPosition = false;
@@ -95,6 +93,7 @@ namespace _Scripts.Enemies.State
                 if (PlayerStateManager.Instance.IsStunnedState())
                     PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
                 
+                GameManager.Instance.quicktimeEventPanel.SetActive(false); 
                 _enemy.StopCoroutine(_qteCoroutine);
                 _qteCoroutine = null;
             }
@@ -336,7 +335,6 @@ namespace _Scripts.Enemies.State
                     // Break out of the QTE if the enemy gets hit with a card (Probably don't need this check anymore?)
                     if (_enemy.IsDisabledState())
                     {
-                        // PlayerVariables.Instance.GetComponent<PlayerStateManager>().SetState(PlayerState.Idle); // TODO: The player should use a FSM eventually too, change this when it is
                         PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
                         _hasExecuted = true;
                         yield break;
@@ -347,14 +345,12 @@ namespace _Scripts.Enemies.State
                         Mathf.Abs(_enemy.transform.position.y - PlayerVariables.Instance.transform.position.y) > 2f)
                     {
                         Debug.Log("Breaking out of QTE bc of distance");
-                        // PlayerVariables.Instance.GetComponent<PlayerStateManager>().SetState(PlayerState.Idle); // TODO: The player should use a FSM eventually too, change this when it is
                         PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
                         _hasExecuted = true;
                         yield break; 
                     }
                     // Stop any movement from the guard or player
                     _enemy.StopMoving();
-                    // PlayerVariables.Instance.RigidBody2D.velocity = new Vector2(0f, PlayerVariables.Instance.RigidBody2D.velocity.y); // TODO: The player should use a FSM eventually too, change this when it is
 
                     timeElapsed += Time.deltaTime;
                     yield return null;
@@ -362,7 +358,6 @@ namespace _Scripts.Enemies.State
 
                 if (_hasExecuted)
                 {
-                    // PlayerVariables.Instance.GetComponent<PlayerStateManager>().SetState(PlayerState.Idle); // TODO: The player should use a FSM eventually too, change this when it is
                     PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
                     yield break;
                 }
@@ -371,7 +366,6 @@ namespace _Scripts.Enemies.State
                 if (counter >= _enemy.Settings.counterGoal)
                 {
                     Debug.Log("QTE Passed");
-                    // PlayerVariables.Instance.GetComponent<PlayerStateManager>().SetState(PlayerState.Idle); // TODO: The player should use a FSM eventually too, change this when it is
                     PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
                     _enemy.Settings.counterGoal += 2;
                     if (_enemy.Settings.qteTimeLimit > 2f)
