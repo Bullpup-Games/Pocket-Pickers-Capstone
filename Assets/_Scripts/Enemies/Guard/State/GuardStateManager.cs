@@ -11,6 +11,7 @@ namespace _Scripts.Enemies.Guard.State
         public IEnemyState<GuardStateManager> AggroState { get; private set; }
         public IEnemyState<GuardStateManager> SearchingState { get; private set; }
         public IEnemyState<GuardStateManager> ReturningState { get; private set; }
+        public IEnemyState<GuardStateManager> InvestigatingState { get; private set; }
         public IEnemyState<GuardStateManager> StunnedState { get; private set; }
         public IEnemyState<GuardStateManager> DisabledState { get; private set; }
         public IEnemyState<GuardStateManager> CurrentState { get; private set; }
@@ -50,6 +51,7 @@ namespace _Scripts.Enemies.Guard.State
             AggroState = new GuardAggroState();
             SearchingState = new GuardSearchingState();
             ReturningState = new GuardReturningState();
+            InvestigatingState = new GuardInvestigatingState();
             StunnedState = new GuardStunnedState();
             DisabledState = new GuardDisabledState();
 
@@ -88,6 +90,10 @@ namespace _Scripts.Enemies.Guard.State
             else if (IsReturningState())
             {
                 enumState = GuardState.Returning;
+            }
+            else if (IsInvestigatingState())
+            {
+                enumState = GuardState.Investigating;
             }
             else if (IsStunnedState())
             {
@@ -253,7 +259,7 @@ namespace _Scripts.Enemies.Guard.State
         
         public bool IsInvestigatingState()
         {
-            return false;
+            return CurrentState is GuardInvestigatingState;
         }
         
         // Sniper Specific

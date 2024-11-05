@@ -105,7 +105,7 @@ namespace _Scripts
             }
             
             //choosing the location
-            int location = Random.Range(0, potentialSins.Count-1);
+            int location = Random.Range(0, potentialSins.Count);
             
             //remove the old potential sin
             GameObject potentialSin = potentialSins[location];

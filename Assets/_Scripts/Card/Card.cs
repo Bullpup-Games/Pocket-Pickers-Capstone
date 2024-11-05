@@ -223,32 +223,34 @@ namespace _Scripts.Card
                 return;
             }
 
+            // Update the last false trigger position
+            CardManager.Instance.lastFalseTriggerPosition = transform.position;
+            Debug.Log("False Trigger Activated");
+            
+            // Switch states of all enemies within the false trigger radius
             var colliders = Physics2D.OverlapCircleAll(transform.position, falseTriggerRadius, LayerMask.GetMask("Enemy"));
-
             foreach (var col in colliders)
             {
                 // Attempt to cast to GuardStateManager type
                 var guardStateManager = col.GetComponent<IEnemyStateManager<GuardStateManager>>();
                 if (guardStateManager != null)
                 {
-                    guardStateManager.TransitionToState(col.GetComponent<GuardStateManager>().StunnedState);
+                    guardStateManager.TransitionToState(col.GetComponent<GuardStateManager>().InvestigatingState);
                     CardManager.Instance.ActivateFalseTriggerCooldown();
-                    DestroyCard();
-                    return;
                 }
 
                 // Attempt to cast to SniperStateManager type
                 var sniperStateManager = col.GetComponent<IEnemyStateManager<SniperStateManager>>();
                 if (sniperStateManager != null)
                 {
-                    sniperStateManager.TransitionToState(col.GetComponent<SniperStateManager>().StunnedState);
+                    sniperStateManager.TransitionToState(col.GetComponent<SniperStateManager>().InvestigatingState);
                     CardManager.Instance.ActivateFalseTriggerCooldown();
-                    DestroyCard();
-                    return;
                 }
                 
                 // Attempt to cast to BatStateManager type
             }
+            DestroyCard();
+            return;
         }
 
         private void OnCollisionEnter2D(Collision2D col)

@@ -18,6 +18,7 @@ namespace _Scripts.Card
  
     public class CardManager : MonoBehaviour
     {
+        public CardEffectHandler effectHandler;
         public InputHandler inputHandler;
         // public PlayerMovementController playerMovementController;
         public HandleCardStanceArrow cardStanceArrow;
@@ -43,7 +44,7 @@ namespace _Scripts.Card
         
         public float falseTriggerCooldown = 10f;
         public bool falseTriggerOnCooldown;
- 
+        public Vector2 lastFalseTriggerPosition; // Keeps track of the position of the card when false trigger is activated for enemies to investigate
 
         public event Action <Vector2> Teleport ;
         public event Action cardCreated;
@@ -191,6 +192,7 @@ namespace _Scripts.Card
         {
             if (Card.Instance != null)
             {
+                effectHandler.TeleportEffect(Card.Instance.lastSafePosition);
                 Teleport.Invoke(Card.Instance.lastSafePosition);
             }
         }

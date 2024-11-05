@@ -49,9 +49,10 @@ MonoBehaviour:
   activeSins: []
   potentialSins: []
   remainingSin: 0
-  winThreshold: 15
+  winThreshold: 20
   sinPrefab: {fileID: 2089339463267486336, guid: 4dcbe66e77eed47a2b6c58786eca3b0f, type: 3}
   potentialSinPrefab: {fileID: 3971927911920242665, guid: 047ab0db384a3419dbd633e98b719112, type: 3}
+  quicktimeEventPanel: {fileID: 0}
 --- !u!114 &7507623754815840685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78,11 +79,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4bc3cc5f8377432faf5be00a4cd2b31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  effectHandler: {fileID: 0}
   inputHandler: {fileID: 0}
-  playerMovementController: {fileID: 0}
-  cardStanceArrow: {fileID: 0}
+  cardStanceArrow: {fileID: 7507623754815840685}
   player: {fileID: 0}
-  cardPrefab: {fileID: 0}
+  cardPrefab: {fileID: 7098434270888417122, guid: 46613c7080d9b4c8b928088ce4f4af34, type: 3}
   horizontalOffset: 0.6
   verticalOffset: 1.2
   cooldown: 0.5

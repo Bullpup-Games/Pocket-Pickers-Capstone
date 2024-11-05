@@ -10,7 +10,7 @@ namespace _Scripts.Enemies.Guard
         public bool isFacingRight = true;
         public float movementSpeed = 4f;
         public bool IsFacingRight() => isFacingRight;
-        
+        public Collider2D ledgeCheck;
 
         [Header("Patrol Settings")]
         public float leftPatrolDistance = 3f;
