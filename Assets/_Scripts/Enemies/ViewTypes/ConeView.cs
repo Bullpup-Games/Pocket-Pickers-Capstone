@@ -3,10 +3,21 @@ using _Scripts.Enemies.Guard;
 using _Scripts.Enemies.Guard.State;
 using UnityEngine;
 
+
 namespace _Scripts.Enemies.ViewTypes
 {
     public class ConeView : MonoBehaviour, IViewType
     {
+        
+       /*
+       The plan:
+       x Seperate the default view range from the actual view range
+       x in awake, set the actual view range to the default view range
+       x in GameManager, add an event action that will go whenever the total sin changes
+       In enemy stats, add a function that listens for the event, and calls this function to change range
+       In here, change the actual range to be dependent on the amount of sin the player holds
+       */
+        
         [Header("Detection Settings")]
         [Tooltip("If enabled cuts the detection time down to a quarter")]
         [SerializeField] private bool quickDetection;
@@ -21,10 +32,13 @@ namespace _Scripts.Enemies.ViewTypes
         public float minDistanceModifier = 0.25f;
         
         [Header("Cone View Settings")] 
-        public float normalViewAngle = 45f;
-        public float alertedViewAngle = 60f;
-        public float normalViewDistance = 5f;
-        public float alertedViewDistance = 10f;
+        public float defaultViewAngle = 45f;
+        public float normalViewAngle;
+        public float alertedViewAngle; //should be 60 by default, should be 15 more than default or 4/3 of normal
+        
+        public float defaultViewDistance = 5f;
+        public float normalViewDistance;
+        public float alertedViewDistance; //should be 10 by default, either double or add 5 to normal
         public LayerMask targetLayer;
         public LayerMask environmentLayer;
         public Vector2 offset; // (0.4, 1.0) for current enemy model
@@ -59,6 +73,8 @@ namespace _Scripts.Enemies.ViewTypes
         private void OnEnable()
         {
             _settings.OnViewModifierChanged += UpdateView;
+            normalViewAngle = defaultViewAngle;
+            normalViewDistance = defaultViewDistance;
         }
 
         private void OnDisable()

@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
 using _Scripts.Player;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 namespace _Scripts
 {
@@ -26,6 +29,9 @@ namespace _Scripts
         public GameObject potentialSinPrefab;
 
         public GameObject quicktimeEventPanel;
+            
+        public event Action sinChanged; 
+            
         #region Singleton
 
         public static GameManager Instance
@@ -93,6 +99,12 @@ namespace _Scripts
 
             //Everything is done, remove the sin object
             Destroy(sin);
+
+            if (sinChanged != null )
+            {
+                sinChanged.Invoke();
+            }
+           
         }
 
         public void releaseSin(int weight)
