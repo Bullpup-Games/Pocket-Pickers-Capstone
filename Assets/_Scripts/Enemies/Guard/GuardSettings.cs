@@ -80,6 +80,9 @@ namespace _Scripts.Enemies.Guard
         private Rigidbody2D _rb;
         private IViewType[] _viewTypes;
 
+
+        private bool isSubscribedToEvents;
+
         private void OnEnable()
         {
             setListeners();
@@ -101,12 +104,21 @@ namespace _Scripts.Enemies.Guard
         private void setListeners()
         {
             GameManager.Instance.sinChanged += changeFov;
+            isSubscribedToEvents = true;
         }
 
         public void removeListeners()
         {
+            //make sure we don't try and unsubscribe twice
+            //this can happen because we unsubscribe to the listeners when we die, and when the
+            //scene is unloaded
+            if (!isSubscribedToEvents)
+            {
+                return;
+            }
             
             GameManager.Instance.sinChanged -= changeFov;
+            isSubscribedToEvents = false;
         }
 
         private void Update()
