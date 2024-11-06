@@ -98,7 +98,7 @@ namespace _Scripts.Enemies.Guard
 
         private void OnDestroy()
         {
-            removeListeners();
+            //removeListeners();
         }
 
         private void setListeners()
@@ -171,8 +171,9 @@ namespace _Scripts.Enemies.Guard
             Gizmos.DrawSphere(end, 0.1f);
         }
 
-        private void changeFov()
+        public void changeFov()
         {
+            gameObject.GetComponent<ConeView>().ChangeView();
             Debug.Log("Caught sin changed action");
         }
     }

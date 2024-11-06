@@ -390,5 +390,12 @@ namespace _Scripts.Enemies.ViewTypes
             _lineRenderer.startColor = Color.red;
             _lineRenderer.endColor = Color.red;
         }
+
+        public void ChangeView()
+        {
+            //TODO impliment this
+            Debug.Log("Haven't implemented yet");
+            
+        }
     }
 }

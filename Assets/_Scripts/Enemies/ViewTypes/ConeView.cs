@@ -1,6 +1,7 @@
 using System;
 using _Scripts.Enemies.Guard;
 using _Scripts.Enemies.Guard.State;
+using _Scripts.Player;
 using UnityEngine;
 
 
@@ -122,6 +123,34 @@ namespace _Scripts.Enemies.ViewTypes
             OnNoTargetDetected();
         }
 
+        public void ChangeView()
+        {
+            int sinModifier = PlayerVariables.Instance.sinHeld;
+            
+            
+            //change the angle of detection
+            //we don't want the angle to be any more than 180 degrees. 180 - 45 (default angle) is 135
+            if (sinModifier >= 135)
+            {
+                sinModifier = 135;
+            }
+            normalViewAngle = defaultViewAngle + sinModifier;
+            alertedViewAngle = (normalViewAngle * 4) / 3;
+            
+            //we don't want the anle to be any more than 180 degrees
+            if (alertedViewAngle > 180)
+            {
+                alertedViewAngle = 180;
+            }
+            
+            //change the distance of detection
+            
+            //we want to have the distance be between 5 and 10 for non aggro, and between 10 and 15 for aggro
+            //dividing by 27 will transpose our range from being between 0 -> 135, to be between 0 -> 5
+            //adding 5 will change it to be between 5 -> 10
+            normalViewDistance = (sinModifier / 27) + 5;
+            alertedViewDistance = normalViewDistance + 5;
+        }
         private void OnTargetDetected(float modifier)
         {
             _playerDetectedThisFrame = true;

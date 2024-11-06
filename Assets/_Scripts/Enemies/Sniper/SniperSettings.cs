@@ -110,5 +110,11 @@ namespace _Scripts.Enemies.Sniper
             // Optionally, draw a sphere at the end point to make it more visible
             Gizmos.DrawSphere(end, 0.1f);
         }
+
+        public void changeFov()
+        {
+            //TODO change fov for the sniper
+            Debug.Log("Haven't made this yet");
+        }
     }
 }
