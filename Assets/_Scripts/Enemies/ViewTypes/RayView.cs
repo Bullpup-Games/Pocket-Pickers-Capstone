@@ -1,6 +1,7 @@
 using System;
 using _Scripts.Card;
 using _Scripts.Enemies.Sniper.State;
+using _Scripts.Player;
 using UnityEngine;
 
 namespace _Scripts.Enemies.ViewTypes
@@ -18,7 +19,8 @@ namespace _Scripts.Enemies.ViewTypes
 
         [Header("Ray View Settings")]
         public float sweepAngle = 90f; // Total sweep angle
-        public float sweepSpeed = 15f; // Degrees per second
+        public float defaultSweepSpeed = 10f;// Degrees per second
+        public float sweepSpeed;//with modifiers
         public float maxRayDistance = 100f; // We want the ray to basically be infinite but to define the line renderer & gizmos a max is needed, just keep it set high
         public Vector2 offset; // Ray origin offset
         public LayerMask targetLayer;
@@ -389,6 +391,7 @@ namespace _Scripts.Enemies.ViewTypes
             _lineRenderer.material = new Material(Shader.Find("Sprites/Default")); // TODO: Maybe change to a custom material?
             _lineRenderer.startColor = Color.red;
             _lineRenderer.endColor = Color.red;
+            sweepSpeed = defaultSweepSpeed;
         }
 
         public void ChangeView()
@@ -396,6 +399,17 @@ namespace _Scripts.Enemies.ViewTypes
             //TODO impliment this
             Debug.Log("Haven't implemented yet");
             
+            //the default sweep speed is 10. We want its maximum to be 30. We need the modifier to go between 0 and 20
+            int sinModifier = PlayerVariables.Instance.sinHeld;
+
+            if (sinModifier >= 135)
+            {
+                sinModifier = 135;
+            }
+            //transposes the range of 0-135 to the range of 0-20
+            float speedModifier = (float)sinModifier / 6.75f;
+
+            sweepSpeed = defaultSweepSpeed + speedModifier;
         }
     }
 }

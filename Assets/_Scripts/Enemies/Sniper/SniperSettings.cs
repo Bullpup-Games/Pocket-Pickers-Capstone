@@ -47,6 +47,13 @@ namespace _Scripts.Enemies.Sniper
         private Rigidbody2D _rb;
         private IViewType[] _viewTypes;
 
+        private bool isSubscribedToEvents;
+
+        private void OnEnable()
+        {
+            setListeners();
+        }
+
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
@@ -61,7 +68,23 @@ namespace _Scripts.Enemies.Sniper
                 view.SetView();
             }
         }
-        
+
+        public void setListeners()
+        {
+            isSubscribedToEvents = true;
+            GameManager.Instance.sinChanged += changeFov;
+        }
+
+        public void removeListeners()
+        {
+            if (!isSubscribedToEvents)
+            {
+                return;
+            }
+            
+            GameManager.Instance.sinChanged -= changeFov;
+            isSubscribedToEvents = false;
+        }
         private void OnValidate()
         {
             if ((isFacingRight && transform.localScale.x < 0) || (!isFacingRight && transform.localScale.x > 0))
@@ -113,8 +136,7 @@ namespace _Scripts.Enemies.Sniper
 
         public void changeFov()
         {
-            //TODO change fov for the sniper
-            Debug.Log("Haven't made this yet");
+            gameObject.GetComponent<RayView>().ChangeView();
         }
     }
 }
