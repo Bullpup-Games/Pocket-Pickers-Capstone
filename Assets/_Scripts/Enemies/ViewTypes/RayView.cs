@@ -396,9 +396,6 @@ namespace _Scripts.Enemies.ViewTypes
 
         public void ChangeView()
         {
-            //TODO impliment this
-            Debug.Log("Haven't implemented yet");
-            
             //the default sweep speed is 10. We want its maximum to be 30. We need the modifier to go between 0 and 20
             int sinModifier = PlayerVariables.Instance.sinHeld;
 

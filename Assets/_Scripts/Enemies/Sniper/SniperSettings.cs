@@ -1,5 +1,6 @@
 using System;
 using _Scripts.Enemies.ViewTypes;
+using _Scripts.Player;
 using UnityEngine;
 
 namespace _Scripts.Enemies.Sniper
@@ -11,8 +12,9 @@ namespace _Scripts.Enemies.Sniper
 
         public bool IsFacingRight() => isFacingRight;
 
-        [Header("Charge Settings")]
-        public float chargeTime = 1.5f; // Charge time in seconds
+        [Header("Charge Settings")] 
+        public float maxChargeTime = 2.5f;
+        public float chargeTime; // Charge time in seconds
         public float reloadTime = 2f;
 
         [Header("False Trigger Investigation Settings")]
@@ -52,6 +54,7 @@ namespace _Scripts.Enemies.Sniper
         private void OnEnable()
         {
             setListeners();
+            chargeTime = maxChargeTime;
         }
 
         private void Awake()
@@ -137,6 +140,17 @@ namespace _Scripts.Enemies.Sniper
         public void changeFov()
         {
             gameObject.GetComponent<RayView>().ChangeView();
+            //todo change charge time to go from between 2.5f - 0.5f
+            //difference is 2.0
+            //we need to turn the range of 0-135 to 0-1.5
+
+            int sinModifier = PlayerVariables.Instance.sinHeld;
+            if (sinModifier >= 135) sinModifier = 135;
+
+            //turns range of 0-135 to be 0-2.0f
+            float chargeModifier = (float)sinModifier / 67.5f;
+            
+            chargeTime = maxChargeTime - chargeModifier;
         }
     }
 }
