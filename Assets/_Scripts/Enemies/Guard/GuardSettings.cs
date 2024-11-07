@@ -25,6 +25,8 @@ namespace _Scripts.Enemies.Guard
         [Header("Aggro Settings")]
         public float aggroMovementSpeed = 10f;
         public float checkLastKnownLocationTimeout = 5f;
+        [Tooltip("The maximun amount of time the guard will spend trying to reach the player's position after being alerted by a skreecher")]
+        public float timeoutOfSkreecherAlert = 5f;
         
         [Header("Quicktime Event Settings")]
         public float qteTimeLimit = 4f;

@@ -3,6 +3,7 @@ namespace _Scripts.Enemies
     public interface IEnemyStateManagerBase
     {
         void KillEnemy();
+        void AlertFromSkreecher();
         // Shared States between different enemy types
         bool IsPatrollingState();
         bool IsDetectingState();

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using _Scripts.Enemies.Guard;
 using _Scripts.Enemies.Guard.State;
 using UnityEngine;
@@ -131,6 +132,14 @@ namespace _Scripts.Enemies.ViewTypes
             // Inverse Lerp to get modifier between 2 and 0.5
             var modifier = Mathf.Lerp(maxDistanceModifier, minDistanceModifier, t);
             return modifier;
+        }
+        
+        // Returns a list of all enemies within a view's total sight (does not check for obstacles)
+        // FUNCTION NOT IMPLEMENTED FOR CONEVIEW - JUST NEEDED AS PART OF IVIEWTYPE INTERFACE
+        public List<Collider2D> GetAllEnemiesWithinView()
+        {
+            var enemies = new List<Collider2D>();
+            return enemies;
         }
 
         public void UpdateView(float modifier)

@@ -35,6 +35,8 @@ namespace _Scripts.Enemies.Guard.State
         [Header("Sin Values")]
         public int sinPenalty;
 
+        public bool alertedFromSkreecher;
+
         private void Awake()
         {
             Settings = GetComponent<GuardSettings>();
@@ -181,7 +183,15 @@ namespace _Scripts.Enemies.Guard.State
                 }
             }
             return false;
-        } 
+        }
+        
+        public void AlertFromSkreecher()
+        {
+            if (CurrentState == DisabledState) return;
+            Debug.Log("State Manager: AlertFromSkreecher()");
+            alertedFromSkreecher = true;
+            TransitionToState(AggroState);
+        }
         
         private void OnDrawGizmos()
         {

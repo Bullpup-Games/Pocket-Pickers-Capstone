@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using _Scripts.Card;
 using _Scripts.Enemies.Sniper.State;
 using UnityEngine;
@@ -330,6 +331,14 @@ namespace _Scripts.Enemies.ViewTypes
              * it would be for the charge time instead of the detection speed, which could easily get out of hand and be hard to balance.
              */ 
             return 1f;
+        }
+        
+        // Returns a list of all enemies within a view's total sight (does not check for obstacles)
+        // FUNCTION NOT IMPLEMENTED FOR RAYVIEW - JUST NEEDED AS PART OF IVIEWTYPE INTERFACE
+        public List<Collider2D> GetAllEnemiesWithinView()
+        {
+            var enemies = new List<Collider2D>();
+            return enemies;
         }
 
         public void UpdateView(float modifier)

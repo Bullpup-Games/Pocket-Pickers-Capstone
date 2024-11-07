@@ -27,6 +27,8 @@ namespace _Scripts.Enemies.Sniper.State
         
         [Header("Sin Values")]
         public int sinPenalty;
+
+        public bool alertedFromSkreecher;
         private void Awake()
         {
             Debug.Log("SniperStateManager Awake");
@@ -98,6 +100,13 @@ namespace _Scripts.Enemies.Sniper.State
         {
             PlayerVariables.Instance.CommitSin(sinPenalty);
             TransitionToState(this.DisabledState);
+        }
+        
+        public void AlertFromSkreecher()
+        {
+            if (CurrentState == DisabledState) return;
+            alertedFromSkreecher = true;
+            TransitionToState(ChargingState);
         }
         
         public bool IsPlayerDetected()

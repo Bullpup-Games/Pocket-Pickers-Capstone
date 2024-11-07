@@ -4,6 +4,7 @@ using _Scripts.Card;
 using _Scripts.Player;
 using _Scripts.Player.State;
 using UnityEngine;
+using UnityEngine.Rendering.VirtualTexturing;
 using UnityEngine.SceneManagement;
 
 namespace _Scripts.Enemies.Guard.State
@@ -18,6 +19,7 @@ namespace _Scripts.Enemies.Guard.State
         private float _lastKnownLocationStartTime;
         private Coroutine _flipCoroutine;
         private Coroutine _qteCoroutine;
+        private Coroutine _timeAlertedBySkreecher;
         private bool _hasExecuted;
         private float _flipDelayDuration = 0.25f;
         private float _playerWidth;
@@ -27,10 +29,23 @@ namespace _Scripts.Enemies.Guard.State
         {
             _enemy = enemy;
             _movingToLastKnownPosition = false;
+
+            if (_enemy.alertedFromSkreecher)
+            {
+                _lastKnownPosition = PlayerVariables.Instance.transform.position;
+                _timeAlertedBySkreecher = _enemy.StartCoroutine(TimeoutSkreecherAlert());
+            }
         }
 
         public void UpdateState()
         {
+            // Alerted by Skreecher movement handled separate from normal movement
+            if (_enemy.alertedFromSkreecher)
+            {
+                HandleAlertedBySkreecherMovement();
+                return;
+            }
+            
             RunningIntoWallCheck();
             
             if (!_enemy.IsPlayerDetected())
@@ -88,7 +103,7 @@ namespace _Scripts.Enemies.Guard.State
         public void ExitState()
         {
             // Cleanup coroutines on exit
-            if (_qteCoroutine != null)
+            if (_qteCoroutine is not null)
             {
                 if (PlayerStateManager.Instance.IsStunnedState())
                     PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
@@ -98,10 +113,17 @@ namespace _Scripts.Enemies.Guard.State
                 _qteCoroutine = null;
             }
 
-            if (_flipCoroutine != null)
+            if (_flipCoroutine is not null)
             {
                 _enemy.StopCoroutine(_flipCoroutine);
                 _flipCoroutine = null;
+            }
+
+            if (_timeAlertedBySkreecher is not null)
+            {
+                _enemy.StopCoroutine(_timeAlertedBySkreecher);
+                _timeAlertedBySkreecher = null;
+                _enemy.alertedFromSkreecher = false;
             }
 
             _hasExecuted = true;
@@ -277,6 +299,65 @@ namespace _Scripts.Enemies.Guard.State
             _movingToLastKnownPosition = false;
             _enemy.TransitionToState(_enemy.SearchingState);
         }
+
+        private float _yPosLastFrame;
+        private void HandleAlertedBySkreecherMovement()
+        {
+            if (_enemy.IsPlayerDetected())
+            {
+                _enemy.alertedFromSkreecher = false;
+            }
+            
+            var targetPos = _lastKnownPosition;
+            
+            // Check if the enemy is running into a wall, if it is then turn around.
+            var direction = _enemy.Settings.isFacingRight ? Vector2.right : Vector2.left;
+            var colliderBounds = _enemy.Collider2D.bounds;
+            var origin = colliderBounds.center;
+            origin.y = colliderBounds.min.y + colliderBounds.size.y * 0.75f;
+            var hit = Physics2D.Raycast(origin, direction, 0.5f, _enemy.environmentLayer);
+            Debug.DrawRay(origin, direction * 0.5f, Color.magenta);
+
+            if (hit.collider is not null)
+            {
+                _enemy.StopMoving();
+                _enemy.Settings.FlipLocalScale();
+                direction = _enemy.Settings.isFacingRight ? Vector2.right : Vector2.left;
+                _enemy.Move(direction, _enemy.Settings.aggroMovementSpeed); 
+            }
+
+            if (Mathf.Abs(_yPosLastFrame) -  Mathf.Abs(_enemy.transform.position.y) >= 0.0025f && !_enemy.Settings.IsGrounded())
+            {
+                _enemy.StopMoving();
+                return;
+            }
+            
+            // If the enemy is above the player keep moving until a wall or ledge is hit
+            if (targetPos.y < _enemy.transform.position.y)
+            {
+                direction = _enemy.Settings.isFacingRight ? Vector2.right : Vector2.left; 
+                _enemy.Move(direction, _enemy.Settings.aggroMovementSpeed);
+            }
+            else
+            {
+                var playerPos = PlayerVariables.Instance.transform.position;
+                var enemyPos = _enemy.transform.position;
+                var enemyFacingRight = _enemy.Settings.isFacingRight;
+                if (playerPos.x > enemyPos.x && !enemyFacingRight && playerPos.y >= enemyPos.y)
+                {
+                    _enemy.Settings.FlipLocalScale();
+                }
+                else if (playerPos.x < enemyPos.x && enemyFacingRight && playerPos.y >= enemyPos.y)
+                {
+                    _enemy.Settings.FlipLocalScale();
+                }
+                
+                direction = _enemy.Settings.isFacingRight ? Vector2.right : Vector2.left; 
+                _enemy.Move(direction, _enemy.Settings.aggroMovementSpeed); 
+            }
+
+            _yPosLastFrame = _enemy.transform.position.y;
+        }
         
         private bool HandleFlip(float directionToPlayerX)
         {
@@ -389,6 +470,13 @@ namespace _Scripts.Enemies.Guard.State
             }
         }
 
+        private IEnumerator TimeoutSkreecherAlert()
+        {
+            yield return new WaitForSeconds(_enemy.Settings.timeoutOfSkreecherAlert);
+            _enemy.alertedFromSkreecher = false;
+            if (!_enemy.IsPlayerDetected())
+                _enemy.TransitionToState(_enemy.SearchingState);
+        }
 
         private IEnumerator FlipAfterDelay(float delay)
         {

@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using _Scripts.Enemies.Guard;
 using _Scripts.Enemies.Guard.State;
+using _Scripts.Player;
 using UnityEngine;
 
 namespace _Scripts.Enemies.ViewTypes
@@ -22,6 +25,7 @@ namespace _Scripts.Enemies.ViewTypes
         public float alertedViewRadius = 10f;  // Detection radius when alerted
         public LayerMask targetLayer;          // Layer of the player
         public LayerMask environmentLayer;     // Layers considered as obstacles
+        public LayerMask enemyLayer;
         public Vector2 offset;                 // Offset from the enemy's position
 
         public Color color = Color.blue;
@@ -68,7 +72,9 @@ namespace _Scripts.Enemies.ViewTypes
         public void SetView()
         {
             if (_stateManager.IsDisabledState() || _stateManager.IsStunnedState()) return;
+            
             UpdateHorizontalOffset();
+            
             var position = (Vector2)transform.position + offset;
 
             // Check for player colliders within the view radius
@@ -76,14 +82,14 @@ namespace _Scripts.Enemies.ViewTypes
 
             foreach (var target in targetsInViewRadius)
             {
-                var targetPos = target.transform.position;
-                var directionToTarget = ((Vector2)targetPos - position).normalized;
+                var targetPos = (Vector2)target.transform.position;
+                var directionToTarget = (targetPos - (Vector2)transform.position).normalized;
                 var distanceToTarget = Vector2.Distance(position, targetPos);
 
                 // Check for obstacles between the enemy and the target
-                var hit = Physics2D.Raycast(position, directionToTarget, _viewRadius, environmentLayer);
+                var hit = Physics2D.Raycast(position, directionToTarget, distanceToTarget, environmentLayer);
 
-                if (hit.collider == null)
+                if (hit.collider is null)
                 {
                     // Target is detected
                     var modifier = CalculateModifier(distanceToTarget);
@@ -125,6 +131,16 @@ namespace _Scripts.Enemies.ViewTypes
             // Adjust the view radii based on the modifier
             normalViewRadius = _baseNormalViewRadius * modifier;
             alertedViewRadius = _baseAlertedViewRadius * modifier;
+        }
+        
+        // Returns a list of all enemies within a view's total sight (does not check for obstacles)
+        public List<Collider2D> GetAllEnemiesWithinView()
+        {
+            var pos = (Vector2)transform.position + offset;
+            // Check for player colliders within the view radius
+            var enemiesInViewRadius = Physics2D.OverlapCircleAll(pos, _viewRadius, enemyLayer);
+
+            return enemiesInViewRadius.ToList();
         }
 
         private void OnDrawGizmos()
