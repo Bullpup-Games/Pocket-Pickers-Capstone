@@ -1,12 +1,21 @@
+using System;
 using System.Collections.Generic;
 using _Scripts.Player;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 namespace _Scripts
 {
     
-    
+    /*
+     * The plan:
+     * 1. Add an event that is called whenever the player picks up a sin
+     * 2. Have all of the enemies listen for the event
+     * 3. When the enemies hear the event, they will look at the player's sin held (not the sin accrued)
+     * 4. The enemies will adjust their fov and distance based on how much sin the player is holding
+     */
     public class GameManager : MonoBehaviour
     {
         public List<GameObject> activeSins;
@@ -20,6 +29,9 @@ namespace _Scripts
         public GameObject potentialSinPrefab;
 
         public GameObject quicktimeEventPanel;
+            
+        public event Action sinChanged; 
+            
         #region Singleton
 
         public static GameManager Instance
@@ -87,6 +99,12 @@ namespace _Scripts
 
             //Everything is done, remove the sin object
             Destroy(sin);
+
+            if (sinChanged != null )
+            {
+                sinChanged.Invoke();
+            }
+           
         }
 
         public void releaseSin(int weight)
