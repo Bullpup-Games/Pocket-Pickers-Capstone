@@ -183,7 +183,7 @@ namespace _Scripts.Card
                     CollideWithWall(hit, ref newPosition);
                     
                     //todo activate the card bounce effect
-                    effectHandler.bounceEffect(gameObject.transform.position);
+                   
                     return;
                 }
 
@@ -308,10 +308,11 @@ namespace _Scripts.Card
             // Safety check if we entered with max bounces
             if (bounces >= totalBounces)
             {
+                effectHandler.DestroyEffect(gameObject.transform.position);
                 DestroyCard();
                 return;
             }
-
+            effectHandler.bounceEffect(gameObject.transform.position);
             // Adjust position slightly along the new direction to prevent immediate re-collision
             newPosition += _direction * MinMoveDistance;
 

@@ -8,6 +8,7 @@ public class CardEffectHandler : MonoBehaviour
     public GameObject pinkPoof;
     //bluePoof
     public GameObject cardBounce;
+    public GameObject cardDestroy;
     
     
     #region Singleton
@@ -47,5 +48,10 @@ public class CardEffectHandler : MonoBehaviour
     public void bounceEffect(Vector2 position) 
     {
         Instantiate(cardBounce, position, Quaternion.identity);
+    }
+
+    public void DestroyEffect(Vector2 position)
+    {
+        Instantiate(cardDestroy, position, Quaternion.identity);
     }
 }
