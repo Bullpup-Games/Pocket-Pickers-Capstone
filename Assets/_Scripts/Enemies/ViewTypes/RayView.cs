@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using _Scripts.Card;
 using _Scripts.Enemies.Sniper.State;
 using _Scripts.Player;
@@ -7,15 +6,15 @@ using UnityEngine;
 
 namespace _Scripts.Enemies.ViewTypes
 {
-    [RequireComponent(typeof(IEnemyStateManager<SniperStateManager>))]
+    [RequireComponent(typeof(SniperStateManager))]
     public class RayView : MonoBehaviour, IViewType
     {
         [Tooltip(
-             "Upper bound for the modifier given to the detection timer when the player is at the far edge of the view")]
+            "Upper bound for the modifier given to the detection timer when the player is at the far edge of the view")]
         public float maxSweepModifier = 3f;
 
         [Tooltip(
-             "Lower bound for the modifier given to the detection timer when the player is close to the origin of the view")]
+            "Lower bound for the modifier given to the detection timer when the player is close to the origin of the view")]
         public float minSweepModifier = 1f;
 
         [Header("Ray View Settings")]
@@ -28,7 +27,7 @@ namespace _Scripts.Enemies.ViewTypes
         public LayerMask environmentLayer;
 
         private IEnemySettings _settings;
-        private IEnemyStateManager<SniperStateManager> _stateManager;
+        private SniperStateManager _stateManager;
         private bool _playerDetectedThisFrame = false;
         private bool _playerDetectedLastFrame = false;
         
@@ -71,6 +70,12 @@ namespace _Scripts.Enemies.ViewTypes
                 return;
             }
 
+            if (_stateManager.alertedFromSkreecher)
+            {
+                TrackPlayer();
+                return;
+            }
+            
             if (_stateManager.IsInvestigatingState())
             {
                 LookAtFalseTrigger();
@@ -78,7 +83,7 @@ namespace _Scripts.Enemies.ViewTypes
 
                 // If the player crosses the ray while the sniper is investigating it will switch to tracking the player
                 if (_playerDetectedThisFrame)
-                    _stateManager.TransitionToState(GetComponent<SniperStateManager>().ChargingState);
+                    _stateManager.TransitionToState(_stateManager.ChargingState);
                 else
                     return;
             }
@@ -204,6 +209,12 @@ namespace _Scripts.Enemies.ViewTypes
 
         private void TrackPlayer()
         {
+            if (_stateManager.alertedFromSkreecher)
+            {
+                _playerTransform = PlayerVariables.Instance.transform;
+                _stateManager.alertedFromSkreecher = false;
+            }
+            
             if (_playerTransform is null)
             {
                 // Lost player reference, switch states will handle the transition
@@ -380,7 +391,7 @@ namespace _Scripts.Enemies.ViewTypes
         private void InitializeSettings()
         {
             _settings = GetComponent<IEnemySettings>();
-            _stateManager = GetComponent<IEnemyStateManager<SniperStateManager>>();
+            _stateManager = GetComponent<SniperStateManager>();
             _lineRenderer = GetComponent<LineRenderer>();
             if (_settings == null)
             {

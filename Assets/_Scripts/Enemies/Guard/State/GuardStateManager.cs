@@ -188,7 +188,6 @@ namespace _Scripts.Enemies.Guard.State
         public void AlertFromSkreecher()
         {
             if (CurrentState == DisabledState) return;
-            Debug.Log("State Manager: AlertFromSkreecher()");
             alertedFromSkreecher = true;
             TransitionToState(AggroState);
         }
