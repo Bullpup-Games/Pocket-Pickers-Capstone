@@ -24,7 +24,6 @@ namespace _Scripts.Enemies.Skreecher
                 view.SetView();
             }
         }
-        
         // The skreecher never changes direction, it is always facing forward
         public bool IsFacingRight() => true;
         
@@ -35,5 +34,7 @@ namespace _Scripts.Enemies.Skreecher
         public void HandleGravity() {}
 
         public void FlipLocalScale() {}
+
+        public void changeFov() {/* TODO: Implement this */}
     }
 }
