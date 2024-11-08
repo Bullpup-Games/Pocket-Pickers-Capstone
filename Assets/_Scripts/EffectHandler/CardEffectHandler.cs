@@ -6,6 +6,27 @@ public class CardEffectHandler : MonoBehaviour
 {
 
     public GameObject pinkPoof;
+    //bluePoof
+    public GameObject cardBounce;
+    
+    
+    #region Singleton
+
+    public static CardEffectHandler Instance
+    {
+        get
+        {
+            if (_instance == null)
+                _instance = FindObjectOfType(typeof(CardEffectHandler)) as CardEffectHandler;
+
+            return _instance;
+        }
+        set => _instance = value;
+    }
+
+    private static CardEffectHandler _instance;
+
+    #endregion
     // Start is called before the first frame update
     void Start()
     {
@@ -21,5 +42,10 @@ public class CardEffectHandler : MonoBehaviour
     public void TeleportEffect(Vector2 position)
     {
         Instantiate(pinkPoof, position, Quaternion.identity);
+    }
+    
+    public void bounceEffect(Vector2 position) 
+    {
+        Instantiate(cardBounce, position, Quaternion.identity);
     }
 }

@@ -159,6 +159,7 @@ MonoBehaviour:
   speed: 20
   totalBounces: 3
   bounces: 0
+  cardBounceEffect: {fileID: 7045521719431886938, guid: 552a98b4e08beb045b93041e262ac6cf, type: 3}
   lastSafePosition: {x: 0, y: 0}
 --- !u!50 &7851773646926739524
 Rigidbody2D:

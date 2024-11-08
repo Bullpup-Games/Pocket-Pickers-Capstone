@@ -19,6 +19,8 @@ namespace _Scripts.Card
         public float speed = 20f; // Speed of the card
         public int totalBounces;  // Total allowed bounces
         public int bounces;       // Current number of bounces
+        
+       public CardEffectHandler effectHandler;
 
         private Vector2 _direction;   // Current movement direction
         private Vector2 _velocity;    // Current velocity
@@ -51,6 +53,7 @@ namespace _Scripts.Card
         private void OnEnable()
         {
             SetListeners();
+            effectHandler = CardEffectHandler.Instance;
         }
 
         private void OnDestroy()
@@ -178,6 +181,9 @@ namespace _Scripts.Card
                 if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Environment"))
                 {
                     CollideWithWall(hit, ref newPosition);
+                    
+                    //todo activate the card bounce effect
+                    effectHandler.bounceEffect(gameObject.transform.position);
                     return;
                 }
 
