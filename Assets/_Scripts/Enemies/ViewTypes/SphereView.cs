@@ -132,16 +132,6 @@ namespace _Scripts.Enemies.ViewTypes
             normalViewRadius = _baseNormalViewRadius * modifier;
             alertedViewRadius = _baseAlertedViewRadius * modifier;
         }
-        
-        // Returns a list of all enemies within a view's total sight (does not check for obstacles)
-        public List<Collider2D> GetAllEnemiesWithinView()
-        {
-            var pos = (Vector2)transform.position + offset;
-            // Check for player colliders within the view radius
-            var enemiesInViewRadius = Physics2D.OverlapCircleAll(pos, _viewRadius, enemyLayer);
-
-            return enemiesInViewRadius.ToList();
-        }
 
         private void OnDrawGizmos()
         {

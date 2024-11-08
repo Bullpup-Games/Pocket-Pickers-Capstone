@@ -134,14 +134,6 @@ namespace _Scripts.Enemies.ViewTypes
             return modifier;
         }
         
-        // Returns a list of all enemies within a view's total sight (does not check for obstacles)
-        // FUNCTION NOT IMPLEMENTED FOR CONEVIEW - JUST NEEDED AS PART OF IVIEWTYPE INTERFACE
-        public List<Collider2D> GetAllEnemiesWithinView()
-        {
-            var enemies = new List<Collider2D>();
-            return enemies;
-        }
-
         public void UpdateView(float modifier)
         {
              _viewAngle *= modifier;

@@ -2,12 +2,13 @@ using System.Collections.Generic;
 using _Scripts.Enemies.ViewTypes;
 using _Scripts.Player;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Scripts.Enemies.Skreecher.State
 {
     public class SkreecherStateManager : MonoBehaviour, IEnemyStateManager<SkreecherStateManager>
     {
-           public IEnemyState<SkreecherStateManager> PatrollingState { get; private set; }
+        public IEnemyState<SkreecherStateManager> PatrollingState { get; private set; }
         public IEnemyState<SkreecherStateManager> DetectingState { get; private set; }
         public IEnemyState<SkreecherStateManager> AggroState { get; private set; }
         public IEnemyState<SkreecherStateManager> InvestigatingState { get; private set; }
@@ -21,6 +22,7 @@ namespace _Scripts.Enemies.Skreecher.State
         [HideInInspector] public Rigidbody2D Rigidbody2D;
         [HideInInspector] public Collider2D Collider2D;
         [HideInInspector] public IViewType[] ViewTypes;
+        [SerializeField] private CameraController mainCamera;
 
         [Header("Gizmo Settings")]
         [SerializeField] private Color patrolPathColor = Color.green;
@@ -142,11 +144,15 @@ namespace _Scripts.Enemies.Skreecher.State
         public List<Collider2D> FindAllEnemiesInRange()
         {
             var enemies = new List<Collider2D>();
-            foreach (var view in ViewTypes)
-            {
-                enemies.AddRange(view.GetAllEnemiesWithinView());
-            }
-
+            var camBounds = mainCamera.OrthographicBounds();
+            
+            var hits = Physics2D.OverlapBoxAll(
+                (Vector2)camBounds.center,
+                (Vector2)camBounds.size,
+                0f,
+                LayerMask.GetMask("Enemy"));
+            
+            enemies.AddRange(hits);
             return enemies;
         }
         

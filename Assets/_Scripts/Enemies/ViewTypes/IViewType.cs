@@ -35,8 +35,5 @@ namespace _Scripts.Enemies.ViewTypes
         bool IsPlayerDetectedThisFrame();
 
         bool QuickDetection();
-        
-        // Returns a list of all enemies within a view's sight
-        List<Collider2D> GetAllEnemiesWithinView();
     }
 }
