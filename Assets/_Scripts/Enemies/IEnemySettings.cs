@@ -12,5 +12,6 @@ namespace _Scripts.Enemies
 
         void FlipLocalScale();
 
+        void changeFov();
     }
 }

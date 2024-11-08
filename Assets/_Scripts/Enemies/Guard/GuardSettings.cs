@@ -2,6 +2,7 @@ using System;
 using _Scripts.Enemies.ViewTypes;
 using UnityEngine;
 
+
 namespace _Scripts.Enemies.Guard
 {
     public class GuardSettings : MonoBehaviour, IEnemySettings
@@ -79,11 +80,45 @@ namespace _Scripts.Enemies.Guard
         private Rigidbody2D _rb;
         private IViewType[] _viewTypes;
 
+
+        private bool isSubscribedToEvents;
+
+        private void OnEnable()
+        {
+            setListeners();
+        }
+
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
             _viewTypes = GetComponents<IViewType>();
             patrolOrigin = transform.position.x;
+            //setListeners();
+        }
+
+        private void OnDestroy()
+        {
+            //removeListeners();
+        }
+
+        private void setListeners()
+        {
+            GameManager.Instance.sinChanged += changeFov;
+            isSubscribedToEvents = true;
+        }
+
+        public void removeListeners()
+        {
+            //make sure we don't try and unsubscribe twice
+            //this can happen because we unsubscribe to the listeners when we die, and when the
+            //scene is unloaded
+            if (!isSubscribedToEvents)
+            {
+                return;
+            }
+            
+            GameManager.Instance.sinChanged -= changeFov;
+            isSubscribedToEvents = false;
         }
 
         private void Update()
@@ -134,6 +169,12 @@ namespace _Scripts.Enemies.Guard
 
             // Optionally, draw a sphere at the end point to make it more visible
             Gizmos.DrawSphere(end, 0.1f);
+        }
+
+        public void changeFov()
+        {
+            gameObject.GetComponent<ConeView>().ChangeView();
+            Debug.Log("Caught sin changed action");
         }
     }
 }

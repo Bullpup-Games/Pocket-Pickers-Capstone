@@ -170,5 +170,11 @@ namespace _Scripts.Enemies.ViewTypes
             _baseNormalViewRadius = normalViewRadius;
             _baseAlertedViewRadius = alertedViewRadius;
         }
+
+        public void ChangeView()
+        {
+            //TODO impliment this
+            Debug.Log("Haven't implimented this yet");
+        }
     }
 }
