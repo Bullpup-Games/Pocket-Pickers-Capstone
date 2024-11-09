@@ -10,6 +10,13 @@ namespace _Scripts.Enemies.Sniper.State
         public void EnterState(SniperStateManager enemy)
         {
             _enemy = enemy;
+            _enemy.RayView.ignoreSweepAngle = false;
+            _enemy.investigatingFalseTrigger = false;
+            
+            if ((_enemy.originallyFacingRight && !_enemy.Settings.isFacingRight) ||
+                (!_enemy.originallyFacingRight && _enemy.Settings.isFacingRight))
+                _enemy.Settings.FlipLocalScale();
+            
             _reloadCoroutine = _enemy.StartCoroutine(Reload());
         }
 

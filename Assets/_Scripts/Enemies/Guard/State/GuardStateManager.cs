@@ -35,6 +35,9 @@ namespace _Scripts.Enemies.Guard.State
         [Header("Sin Values")]
         public int sinPenalty;
 
+        public bool alertedFromAggroSkreecher;
+        public bool alertedFromInvestigatingSkreecher;
+
         private void Awake()
         {
             Settings = GetComponent<GuardSettings>();
@@ -139,10 +142,18 @@ namespace _Scripts.Enemies.Guard.State
             CurrentState = newState;
             CurrentState.EnterState(this);
         }
+        private float _yPosLastFrame;
 
         public void Move(Vector2 direction, float speed)
         {
-            Rigidbody2D.velocity = new Vector2(direction.x * speed, Rigidbody2D.velocity.y);
+            if (Mathf.Abs(_yPosLastFrame) - Mathf.Abs(transform.position.y) >= 0.0035f &&
+                !Settings.IsGrounded())
+                StopMoving();
+            else
+                Rigidbody2D.velocity = new Vector2(direction.x * speed, Rigidbody2D.velocity.y);
+
+            _yPosLastFrame = transform.position.y;
+
             // Rigidbody2D.velocity = Vector2.Lerp(transform.position, new Vector2(direction.x * speed, Rigidbody2D.velocity.y), Time.deltaTime);
         }
 
@@ -181,7 +192,22 @@ namespace _Scripts.Enemies.Guard.State
                 }
             }
             return false;
-        } 
+        }
+        
+        public void AlertFromAggroSkreecher()
+        {
+            if (CurrentState == DisabledState) return;
+            alertedFromAggroSkreecher = true;
+            TransitionToState(AggroState);
+        }
+
+        public void AlertFromInvestigatingSkreecher()
+        {
+            if (CurrentState == DisabledState) return;
+            alertedFromInvestigatingSkreecher = true;
+            TransitionToState(InvestigatingState);
+ 
+        }
         
         private void OnDrawGizmos()
         {
@@ -216,9 +242,16 @@ namespace _Scripts.Enemies.Guard.State
         
         public void KillEnemy()
         {
-
+            if (CurrentState == DisabledState) return;
             PlayerVariables.Instance.CommitSin(sinPenalty);
             TransitionToState(this.DisabledState);
+        }
+        
+        public void KillEnemyFromSniper()
+        {
+            if (CurrentState == DisabledState) return;
+            Debug.Log("Guard Killed By Sniper.");
+            TransitionToState(DisabledState); 
         }
 
         #region State Getters
