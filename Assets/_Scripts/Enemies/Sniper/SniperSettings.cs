@@ -16,6 +16,7 @@ namespace _Scripts.Enemies.Sniper
         public float maxChargeTime = 2.5f;
         public float chargeTime; // Charge time in seconds
         public float reloadTime = 2f;
+        public float trackingSpeed = 15f;
 
         [Header("False Trigger Investigation Settings")]
         public float investigationTime = 3f; // Time in seconds the sniper will spend looking at the false trigger

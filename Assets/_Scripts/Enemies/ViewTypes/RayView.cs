@@ -252,10 +252,10 @@ namespace _Scripts.Enemies.ViewTypes
             var angleToPlayer = Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg;
 
             var facingDirectionAngle = _settings.IsFacingRight() ? 0f : 180f;
-            var angleDifference = Mathf.DeltaAngle(facingDirectionAngle, angleToPlayer);
+            var targetAngleDifference = Mathf.DeltaAngle(facingDirectionAngle, angleToPlayer);
             
             // Player is outside of the sweep angle, resume sweeping
-            if (Mathf.Abs(angleDifference) > sweepAngle / 2 && !ignoreSweepAngle)
+            if (Mathf.Abs(targetAngleDifference) > sweepAngle / 2 && !ignoreSweepAngle)
             {
                 _isSweeping = true;
                 _isTrackingPlayer = false;
@@ -263,7 +263,8 @@ namespace _Scripts.Enemies.ViewTypes
                 return;
             }
 
-            _currentAngle = angleDifference;
+            // Smooth Lerp when tracking the player instead of snap-locking
+            _currentAngle = Mathf.LerpAngle(_currentAngle, targetAngleDifference, _stateManager.Settings.trackingSpeed * Time.deltaTime);
         }
 
         private void TrackLastKnownPosition()
