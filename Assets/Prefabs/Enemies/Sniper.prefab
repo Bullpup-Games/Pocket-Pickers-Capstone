@@ -52,8 +52,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFacingRight: 1
+  maxChargeTime: 2.5
   chargeTime: 1.5
   reloadTime: 2
+  investigationTime: 3
   maxFallSpeed: 20
   gravity: 10
   groundCheckDistance: 0.5
@@ -77,6 +79,9 @@ MonoBehaviour:
   Settings: {fileID: 0}
   Rigidbody2D: {fileID: 0}
   Collider2D: {fileID: 0}
+  RayView: {fileID: 0}
+  originallyFacingRight: 0
+  investigatingFalseTrigger: 0
   environmentLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -87,6 +92,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   sinPenalty: 0
+  alertedFromSkreecher: 0
 --- !u!114 &6725459177519244817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,15 +108,20 @@ MonoBehaviour:
   maxSweepModifier: 3
   minSweepModifier: 1
   sweepAngle: 45
+  defaultSweepSpeed: 10
   sweepSpeed: 30
   maxRayDistance: 100
   offset: {x: -0, y: 0.95}
-  targetLayer:
+  playerLayer:
     serializedVersion: 2
     m_Bits: 8
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 256
   environmentLayer:
     serializedVersion: 2
     m_Bits: 64
+  ignoreSweepAngle: 0
 --- !u!61 &806076977170948131
 BoxCollider2D:
   m_ObjectHideFlags: 0

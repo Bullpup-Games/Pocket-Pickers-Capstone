@@ -163,6 +163,13 @@ namespace _Scripts.Enemies.Skreecher.State
             TransitionToState(DisabledState);
         }
         
+        public void KillEnemyFromSniper()
+        {
+            if (CurrentState == DisabledState) return;
+            Debug.Log("Skreecher Killed By Sniper.");
+            TransitionToState(DisabledState); 
+        }
+        
         public void AlertFromSkreecher() {/* Skreechers can't alert other skreechers */}
 
         #region State Getters

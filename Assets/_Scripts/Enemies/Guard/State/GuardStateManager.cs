@@ -229,6 +229,13 @@ namespace _Scripts.Enemies.Guard.State
             PlayerVariables.Instance.CommitSin(sinPenalty);
             TransitionToState(this.DisabledState);
         }
+        
+        public void KillEnemyFromSniper()
+        {
+            if (CurrentState == DisabledState) return;
+            Debug.Log("Guard Killed By Sniper.");
+            TransitionToState(DisabledState); 
+        }
 
         #region State Getters
         public bool IsPatrollingState()

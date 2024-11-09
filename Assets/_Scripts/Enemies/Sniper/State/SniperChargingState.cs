@@ -43,12 +43,19 @@ namespace _Scripts.Enemies.Sniper.State
             {
                 // TODO: Eventually this will need to call a full cleanup of the level. For now just restart the scene
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                return;
             }
-            else
+
+            // Kill enemies that are in the sniper's RayView
+            if (_enemy.RayView.EnemiesDetected().Count != 0)
             {
-                Debug.Log("Switching to reload");
-                _enemy.TransitionToState(_enemy.ReloadingState); 
+                Debug.Log("Enemies in sniper's path: " + _enemy.RayView.EnemiesDetected().Count);
+                foreach (var enemy in _enemy.RayView.EnemiesDetected())
+                    enemy.GetComponent<IEnemyStateManagerBase>().KillEnemyFromSniper();
             }
+            
+            Debug.Log("Switching to reload");
+            _enemy.TransitionToState(_enemy.ReloadingState); 
         }
     }
 }

@@ -11,7 +11,6 @@ namespace _Scripts.Enemies.Sniper.State
         public IEnemyState<SniperStateManager> PatrollingState { get; private set; }
         public IEnemyState<SniperStateManager> ChargingState { get; private set; }
         public IEnemyState<SniperStateManager> ReloadingState { get; private set; }
-        public IEnemyState<SniperStateManager> InvestigatingState { get; private set; }
         public IEnemyState<SniperStateManager> DisabledState { get; private set; }
         public IEnemyState<SniperStateManager> CurrentState { get; private set; }
         public IEnemyState<SniperStateManager> PreviousState { get; private set; }
@@ -22,6 +21,7 @@ namespace _Scripts.Enemies.Sniper.State
         [HideInInspector] public Collider2D Collider2D;
         [HideInInspector] public RayView RayView;
         public bool originallyFacingRight;
+        public bool investigatingFalseTrigger;
 
         [HideInInspector] public LayerMask environmentLayer;
         [HideInInspector] public LayerMask enemyLayer;
@@ -46,7 +46,6 @@ namespace _Scripts.Enemies.Sniper.State
             PatrollingState = new SniperPatrollingState();
             ChargingState = new SniperChargingState();
             ReloadingState = new SniperReloadingState();
-            InvestigatingState = new SniperInvestigatingState();
             DisabledState = new SniperDisabledState();
 
             // Set the initial state
@@ -72,10 +71,6 @@ namespace _Scripts.Enemies.Sniper.State
             else if (IsReloadingState())
             {
                 enumState = SniperState.Reloading;
-            }
-            else if (IsInvestigatingState())
-            {
-                enumState = SniperState.Investigating;
             }
             else if (IsDisabledState())
             {
@@ -104,7 +99,14 @@ namespace _Scripts.Enemies.Sniper.State
         {
             if (CurrentState == DisabledState) return;
             PlayerVariables.Instance.CommitSin(sinPenalty);
-            TransitionToState(this.DisabledState);
+            TransitionToState(DisabledState);
+        }
+
+        public void KillEnemyFromSniper()
+        {
+            if (CurrentState == DisabledState) return;
+            Debug.Log("Sniper Killed By Sniper.");
+            TransitionToState(DisabledState); 
         }
         
         public void AlertFromSkreecher()
@@ -151,7 +153,7 @@ namespace _Scripts.Enemies.Sniper.State
         }
         public bool IsInvestigatingState()
         {
-            return CurrentState == InvestigatingState;
+            return false;
         }
         public bool IsDisabledState()
         {

@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using _Scripts.Card;
 using _Scripts.Enemies.Sniper.State;
 using _Scripts.Player;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Scripts.Enemies.ViewTypes
 {
@@ -23,13 +25,15 @@ namespace _Scripts.Enemies.ViewTypes
         public float sweepSpeed;//with modifiers
         public float maxRayDistance = 100f; // We want the ray to basically be infinite but to define the line renderer & gizmos a max is needed, just keep it set high
         public Vector2 offset; // Ray origin offset
-        public LayerMask targetLayer;
+        public LayerMask playerLayer;
+        public LayerMask enemyLayer;
         public LayerMask environmentLayer;
 
         private IEnemySettings _settings;
         private SniperStateManager _stateManager;
         private bool _playerDetectedThisFrame = false;
         private bool _playerDetectedLastFrame = false;
+        private List<Collider2D> _enemiesDetected;
         
         private float _currentAngle;
         private Vector2 _lastKnownPlayerPosition;
@@ -61,7 +65,9 @@ namespace _Scripts.Enemies.ViewTypes
         {
             InitializeSettings();
             // Start at the lower bound of the sweep
-            _currentAngle = -sweepAngle / 2; 
+            _currentAngle = -sweepAngle / 2;
+
+            _enemiesDetected = new List<Collider2D>();
         }
 
         private void Update()
@@ -88,16 +94,16 @@ namespace _Scripts.Enemies.ViewTypes
                 return;
             }
             
-            if (_stateManager.IsInvestigatingState())
+            if (_stateManager.investigatingFalseTrigger)
             {
                 LookAtFalseTrigger();
                 CastRay();
 
                 // If the player crosses the ray while the sniper is investigating it will switch to tracking the player
-                if (_playerDetectedThisFrame)
-                    _stateManager.TransitionToState(_stateManager.ChargingState);
-                else
-                    return;
+                // if (_playerDetectedThisFrame)
+                //     _stateManager.TransitionToState(_stateManager.ChargingState);
+                // else
+                //     return;
             }
             
             // The ray is disabled but the enemy is back in a normal state (patrolling, charging, etc)
@@ -299,35 +305,59 @@ namespace _Scripts.Enemies.ViewTypes
             var facingDirection = _settings.IsFacingRight() ? 0f : 180f;
             var angle = facingDirection + _currentAngle;
             var direction = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
+            
+            // Clear enemies detected list from last frame,
+            // Enemies detected keeps track of which enemies are currently in the sniper's LOS
+            _enemiesDetected.Clear();
 
-            var hit = Physics2D.Raycast(position, direction, maxRayDistance, targetLayer | environmentLayer);
+            // Cast the current ray position looking for player, enemies & environment hits
+            var hits = Physics2D.RaycastAll(position, direction, maxRayDistance, playerLayer | enemyLayer | environmentLayer);
 
-            if (hit.collider != null)
+            var playerDetected = false;
+            var hitPoint = position + direction * maxRayDistance;
+
+            foreach (var hit in hits)
             {
-                // If we hit something, draw the line to that point
-                _lineRenderer.SetPosition(0, position);
-                _lineRenderer.SetPosition(1, hit.point);
+                var hitLayer = hit.collider.gameObject.layer;
 
-                if (((1 << hit.collider.gameObject.layer) & targetLayer) != 0)
+                // Hit the environment, stop processing further hits
+                if (((1 << hitLayer) & environmentLayer) != 0)
                 {
-                    // Hit the player
+                    hitPoint = hit.point;
+                    break;
+                }
+                
+                // Hit the player, update flags and keep processing further hits? TODO: Decide if stopping the ray here is better or not
+                if (((1 << hitLayer) & playerLayer) != 0)
+                {
                     var distanceToPlayer = Vector2.Distance(position, hit.point);
                     var modifier = CalculateModifier(distanceToPlayer);
                     OnTargetDetected(modifier, hit.collider.transform);
+                    playerDetected = true;
+                    hitPoint = hit.point;
                 }
-                else
+                // Hit an enemy, add to list and keep processing further hits
+                else if (((1 << hitLayer) & enemyLayer) != 0)
                 {
-                    // Did not hit the player
-                    OnNoTargetDetected();
+                    // Don't want the sniper to shoot himself in the face...
+                    if (hit.collider.gameObject != gameObject)
+                        _enemiesDetected.Add(hit.collider);
                 }
             }
-            else
-            {
-                // No collision detected
-                _lineRenderer.SetPosition(0, position);
-                _lineRenderer.SetPosition(1, position + direction * maxRayDistance);
+
+            if (!playerDetected)
                 OnNoTargetDetected();
-            }
+
+            // Update the line renderer to the furthest hit point
+            _lineRenderer.SetPosition(0, position);
+            _lineRenderer.SetPosition(1, hitPoint);
+
+            if (hits.Length != 0) return;
+            
+            // If there were no hits at all update line renderer to 'max' distance
+            _lineRenderer.SetPosition(0, position);
+            _lineRenderer.SetPosition(1, position + direction * maxRayDistance);
+            OnNoTargetDetected();
         }
 
         private void OnTargetDetected(float modifier, Transform playerTransform)
@@ -344,6 +374,8 @@ namespace _Scripts.Enemies.ViewTypes
             _playerDetectedThisFrame = false;
             NoPlayerDetected?.Invoke();
         }
+
+        public List<Collider2D> EnemiesDetected() => _enemiesDetected;
 
         public bool IsPlayerDetectedThisFrame() => _playerDetectedThisFrame;
 
