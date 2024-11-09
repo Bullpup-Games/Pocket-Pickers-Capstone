@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using _Scripts.Enemies.ViewTypes;
 using _Scripts.Player;
 using UnityEngine;
@@ -19,7 +20,8 @@ namespace _Scripts.Enemies.Sniper.State
         [HideInInspector] public SniperSettings Settings;
         [HideInInspector] public Rigidbody2D Rigidbody2D;
         [HideInInspector] public Collider2D Collider2D;
-        [HideInInspector] public IViewType[] ViewTypes;
+        [HideInInspector] public RayView RayView;
+        public bool originallyFacingRight;
 
         [HideInInspector] public LayerMask environmentLayer;
         [HideInInspector] public LayerMask enemyLayer;
@@ -35,11 +37,11 @@ namespace _Scripts.Enemies.Sniper.State
             Settings = GetComponent<SniperSettings>();
             Rigidbody2D = GetComponent<Rigidbody2D>();
             Collider2D = GetComponent<Collider2D>();
-            ViewTypes = GetComponents<IViewType>();
+            RayView = GetComponent<RayView>();
             
-            environmentLayer = LayerMask.GetMask("Environment");
-            playerLayer = LayerMask.GetMask("Enemy");
-            playerLayer = LayerMask.GetMask("Player");
+            environmentLayer = LayerMask.NameToLayer("Environment");
+            playerLayer = LayerMask.NameToLayer("Enemy");
+            playerLayer = LayerMask.NameToLayer("Player");
 
             PatrollingState = new SniperPatrollingState();
             ChargingState = new SniperChargingState();
@@ -51,7 +53,9 @@ namespace _Scripts.Enemies.Sniper.State
             CurrentState = PatrollingState;
             CurrentState.EnterState(this);
         }
-        
+
+        private void Start() => originallyFacingRight = Settings.isFacingRight;
+
         private void Update()
         {
             // Update the current state via its UpdateState function
@@ -98,6 +102,7 @@ namespace _Scripts.Enemies.Sniper.State
         
         public void KillEnemy()
         {
+            if (CurrentState == DisabledState) return;
             PlayerVariables.Instance.CommitSin(sinPenalty);
             TransitionToState(this.DisabledState);
         }
@@ -109,33 +114,27 @@ namespace _Scripts.Enemies.Sniper.State
             TransitionToState(ChargingState);
         }
         
-        public bool IsPlayerDetected()
+        public bool IsPlayerDetected() => RayView.IsPlayerDetectedThisFrame();
+        public bool IsPlayerDetectedWithQuickDetect() => RayView.IsPlayerDetectedThisFrame() && RayView.QuickDetection();
+        
+        private void OnCollisionEnter2D(Collision2D col)
         {
-            foreach (var viewType in ViewTypes)
+            CurrentState.OnCollisionEnter2D(col);
+
+            if (CurrentState == DisabledState || CurrentState == ReloadingState) return;
+
+            if (col.gameObject.layer != playerLayer) return;
+
+            Debug.Log("Player Col");
+            if ((PlayerVariables.Instance.transform.position.x > transform.position.x && !Settings.isFacingRight) ||
+                (PlayerVariables.Instance.transform.position.x < transform.position.x && Settings.isFacingRight))
             {
-                if (viewType.IsPlayerDetectedThisFrame())
-                {
-                    return true;
-                }
+                Settings.FlipLocalScale();
             }
-            return false;
+
+            RayView.ignoreSweepAngle = true;
         }
-        
-        public bool IsPlayerDetectedWithQuickDetect()
-        {
-            foreach (var viewType in ViewTypes)
-            {
-                if (viewType.IsPlayerDetectedThisFrame())
-                {
-                    if (viewType.QuickDetection())
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        } 
-        
+
         #region State Getters
 
         public bool IsPatrollingState()

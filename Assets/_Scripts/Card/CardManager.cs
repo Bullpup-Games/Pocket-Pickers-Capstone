@@ -193,7 +193,7 @@ namespace _Scripts.Card
             if (Card.Instance != null)
             {
                 effectHandler.TeleportEffect(Card.Instance.lastSafePosition);
-                Teleport.Invoke(Card.Instance.lastSafePosition);
+                Teleport?.Invoke(Card.Instance.lastSafePosition);
             }
         }
 

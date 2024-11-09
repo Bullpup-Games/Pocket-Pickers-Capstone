@@ -48,6 +48,8 @@ namespace _Scripts.Enemies.ViewTypes
         private bool _isDisabled = false;
         private bool _lookingAtFalseTrigger = false;
 
+        public bool ignoreSweepAngle; // Used to disable checks for the sweep angle, allowing the sniper to lock on where ever 
+
         public event Action<bool, float> PlayerDetected;
         public event Action NoPlayerDetected;
         
@@ -73,6 +75,16 @@ namespace _Scripts.Enemies.ViewTypes
             if (_stateManager.alertedFromSkreecher)
             {
                 TrackPlayer();
+                return;
+            }
+
+            if (ignoreSweepAngle)
+            {
+                if ((PlayerVariables.Instance.transform.position.x > transform.position.x && !_stateManager.Settings.isFacingRight) ||
+                    (PlayerVariables.Instance.transform.position.x < transform.position.x && _stateManager.Settings.isFacingRight))
+                    _stateManager.Settings.FlipLocalScale();
+                TrackPlayer();
+                CastRay();
                 return;
             }
             
@@ -229,7 +241,7 @@ namespace _Scripts.Enemies.ViewTypes
             var angleDifference = Mathf.DeltaAngle(facingDirectionAngle, angleToPlayer);
             
             // Player is outside of the sweep angle, resume sweeping
-            if (Mathf.Abs(angleDifference) > sweepAngle / 2)
+            if (Mathf.Abs(angleDifference) > sweepAngle / 2 && !ignoreSweepAngle)
             {
                 _isSweeping = true;
                 _isTrackingPlayer = false;

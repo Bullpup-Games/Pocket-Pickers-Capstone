@@ -225,7 +225,7 @@ namespace _Scripts.Enemies.Guard.State
         
         public void KillEnemy()
         {
-
+            if (CurrentState == DisabledState) return;
             PlayerVariables.Instance.CommitSin(sinPenalty);
             TransitionToState(this.DisabledState);
         }

@@ -14,8 +14,6 @@ namespace _Scripts.Enemies.Guard.State
         {
             _enemy = enemy;
             _enemy.StopMoving();
-            _enemy.Rigidbody2D.isKinematic = true;
-            _enemy.Collider2D.enabled = false;
             _stunCoroutine = _enemy.StartCoroutine(StunDuration());
         }
 

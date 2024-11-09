@@ -158,7 +158,7 @@ namespace _Scripts.Enemies.Skreecher.State
         
         public void KillEnemy()
         {
-
+            if (CurrentState == DisabledState) return;
             PlayerVariables.Instance.CommitSin(sinPenalty);
             TransitionToState(DisabledState);
         }

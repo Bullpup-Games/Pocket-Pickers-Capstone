@@ -1,6 +1,7 @@
 using System;
 using _Scripts.Enemies;
 using _Scripts.Enemies.Guard.State;
+using _Scripts.Enemies.Skreecher.State;
 using _Scripts.Enemies.Sniper;
 using _Scripts.Enemies.Sniper.State;
 using _Scripts.Player;
@@ -247,7 +248,14 @@ namespace _Scripts.Card
                     CardManager.Instance.ActivateFalseTriggerCooldown();
                 }
                 
-                // Attempt to cast to BatStateManager type
+                // Attempt to cast to SkreecherStateManager type
+                var skreecherStateManager = col.GetComponent<IEnemyStateManager<SkreecherStateManager>>();
+                if (skreecherStateManager != null)
+                {
+                    skreecherStateManager.TransitionToState(col.GetComponent<SkreecherStateManager>().InvestigatingState);
+                    CardManager.Instance.ActivateFalseTriggerCooldown();
+                }
+                
             }
             DestroyCard();
             return;
@@ -343,7 +351,16 @@ namespace _Scripts.Card
                 return;
             }
 
-            // Attempt to cast to BatStateManager type
+            // Attempt to cast to SkreecherStateManager type
+            var skreecherStateManager = hit.collider.GetComponent<IEnemyStateManager<SkreecherStateManager>>();
+            if (skreecherStateManager != null)
+            {
+                Debug.Log("Skreecher State Manager Found");
+                skreecherStateManager.KillEnemy();
+                Debug.Log("Skreecher Killed");
+                DestroyCard();
+                return;
+            }
         }
 
         private void CollideWithPermeable(Collision2D col)
