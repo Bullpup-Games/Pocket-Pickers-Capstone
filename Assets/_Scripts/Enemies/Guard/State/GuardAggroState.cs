@@ -298,8 +298,6 @@ namespace _Scripts.Enemies.Guard.State
             _enemy.TransitionToState(_enemy.SearchingState);
         }
 
-        private float _yPosLastFrame;
-
         private void HandleAlertedBySkreecherMovement()
         {
             if (_enemy.IsPlayerDetected())
@@ -325,13 +323,6 @@ namespace _Scripts.Enemies.Guard.State
                 _enemy.Move(direction, _enemy.Settings.aggroMovementSpeed);
             }
 
-            if (Mathf.Abs(_yPosLastFrame) - Mathf.Abs(_enemy.transform.position.y) >= 0.0025f &&
-                !_enemy.Settings.IsGrounded())
-            {
-                _enemy.StopMoving();
-                return;
-            }
-
             // If the enemy is above the player keep moving until a wall or ledge is hit
             if (targetPos.y < _enemy.transform.position.y)
             {
@@ -355,8 +346,6 @@ namespace _Scripts.Enemies.Guard.State
                 direction = _enemy.Settings.isFacingRight ? Vector2.right : Vector2.left;
                 _enemy.Move(direction, _enemy.Settings.aggroMovementSpeed);
             }
-
-            _yPosLastFrame = _enemy.transform.position.y;
         }
 
         private bool HandleFlip(float directionToPlayerX)
