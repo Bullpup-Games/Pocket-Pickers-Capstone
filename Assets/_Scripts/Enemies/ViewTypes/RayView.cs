@@ -78,10 +78,17 @@ namespace _Scripts.Enemies.ViewTypes
                 return;
             }
 
-            if (_stateManager.alertedFromSkreecher)
+            if (_stateManager.alertedFromAggroSkreecher)
             {
                 TrackPlayer();
                 return;
+            }
+
+            if (_stateManager.alertedFromInvestigatingSkreecher)
+            {
+                _stateManager.investigatingFalseTrigger = true;
+                _stateManager.TransitionToState(_stateManager.ChargingState);
+                _stateManager.alertedFromInvestigatingSkreecher = false;
             }
 
             if (ignoreSweepAngle)
@@ -104,6 +111,7 @@ namespace _Scripts.Enemies.ViewTypes
                 //     _stateManager.TransitionToState(_stateManager.ChargingState);
                 // else
                 //     return;
+                return;
             }
             
             // The ray is disabled but the enemy is back in a normal state (patrolling, charging, etc)
@@ -227,10 +235,10 @@ namespace _Scripts.Enemies.ViewTypes
 
         private void TrackPlayer()
         {
-            if (_stateManager.alertedFromSkreecher)
+            if (_stateManager.alertedFromAggroSkreecher)
             {
                 _playerTransform = PlayerVariables.Instance.transform;
-                _stateManager.alertedFromSkreecher = false;
+                _stateManager.alertedFromAggroSkreecher = false;
             }
             
             if (_playerTransform is null)

@@ -30,7 +30,8 @@ namespace _Scripts.Enemies.Sniper.State
         [Header("Sin Values")]
         public int sinPenalty;
 
-        public bool alertedFromSkreecher;
+        public bool alertedFromAggroSkreecher;
+        public bool alertedFromInvestigatingSkreecher;
         private void Awake()
         {
             Debug.Log("SniperStateManager Awake");
@@ -109,10 +110,17 @@ namespace _Scripts.Enemies.Sniper.State
             TransitionToState(DisabledState); 
         }
         
-        public void AlertFromSkreecher()
+        public void AlertFromAggroSkreecher()
         {
             if (CurrentState == DisabledState) return;
-            alertedFromSkreecher = true;
+            alertedFromAggroSkreecher = true;
+            TransitionToState(ChargingState);
+        }
+        
+        public void AlertFromInvestigatingSkreecher()
+        {
+            if (CurrentState == DisabledState) return;
+            alertedFromInvestigatingSkreecher = true;
             TransitionToState(ChargingState);
         }
         

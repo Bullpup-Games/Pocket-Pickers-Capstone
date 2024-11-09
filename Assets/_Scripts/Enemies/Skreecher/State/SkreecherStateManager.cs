@@ -1,4 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
+using _Scripts.Enemies.Guard.State;
+using _Scripts.Enemies.Sniper.State;
 using _Scripts.Enemies.ViewTypes;
 using _Scripts.Player;
 using UnityEngine;
@@ -34,7 +37,7 @@ namespace _Scripts.Enemies.Skreecher.State
         
         [Header("Sin Values")]
         public int sinPenalty;
-
+        
         private void Awake()
         {
             Settings = GetComponent<SkreecherSettings>();
@@ -141,7 +144,7 @@ namespace _Scripts.Enemies.Skreecher.State
             return false;
         }
 
-        public List<Collider2D> FindAllEnemiesInRange()
+        private List<Collider2D> FindAllEnemiesInRange()
         {
             var enemies = new List<Collider2D>();
             var camBounds = mainCamera.OrthographicBounds();
@@ -154,6 +157,49 @@ namespace _Scripts.Enemies.Skreecher.State
             
             enemies.AddRange(hits);
             return enemies;
+        }
+
+        public void AlertAllEnemiesInRange()
+        {
+            var enemiesInScreechRange = FindAllEnemiesInRange();
+            Debug.Log("# of Enemies in Range:" + enemiesInScreechRange.Count);
+
+            if (CurrentState == AggroState)
+            {
+                foreach (var col in enemiesInScreechRange)
+                {
+                    var guardStateManager = col.GetComponent<IEnemyStateManager<GuardStateManager>>();
+                    if (guardStateManager is not null)
+                    {
+                        Debug.Log("GUARD STATE MANAGER FOUND");
+                        guardStateManager.AlertFromAggroSkreecher();
+                    }
+                    var sniperStateManager = col.GetComponent<IEnemyStateManager<SniperStateManager>>();
+                    if (sniperStateManager is not null)
+                    {
+                        sniperStateManager.AlertFromAggroSkreecher();
+                    }
+                } 
+            }
+
+            if (CurrentState == InvestigatingState)
+            {
+                foreach (var col in enemiesInScreechRange)
+                {
+                    var guardStateManager = col.GetComponent<IEnemyStateManager<GuardStateManager>>();
+                    if (guardStateManager is not null)
+                    {
+                        Debug.Log("GUARD STATE MANAGER FOUND");
+                        guardStateManager.AlertFromInvestigatingSkreecher();
+                    }
+                    var sniperStateManager = col.GetComponent<IEnemyStateManager<SniperStateManager>>();
+                    if (sniperStateManager is not null)
+                    {
+                        sniperStateManager.AlertFromInvestigatingSkreecher();
+                    }
+                }  
+            }
+            
         }
         
         public void KillEnemy()
@@ -170,7 +216,15 @@ namespace _Scripts.Enemies.Skreecher.State
             TransitionToState(DisabledState); 
         }
         
-        public void AlertFromSkreecher() {/* Skreechers can't alert other skreechers */}
+        public IEnumerator PerformScreech()
+        {
+            // TODO: Play animation & sound
+            yield return new WaitForSeconds(Settings.screechTime);
+            TransitionToState(DetectingState);
+        }
+        
+        public void AlertFromAggroSkreecher() {/* Skreechers can't alert other skreechers */}
+        public void AlertFromInvestigatingSkreecher() {/* Skreechers can't alert other skreechers */}
 
         #region State Getters
         public bool IsPatrollingState()

@@ -15,7 +15,7 @@ namespace _Scripts.Enemies.Guard.State
         private float _lastFlipTime = -Mathf.Infinity;
         private float _flipCooldown = 1f;
         private bool _movingToLastKnownPosition;
-        private Vector2 _lastKnownPosition;        
+        private Vector2 _lastKnownPosition;
         private float _lastKnownLocationStartTime;
         private Coroutine _flipCoroutine;
         private Coroutine _qteCoroutine;
@@ -24,13 +24,13 @@ namespace _Scripts.Enemies.Guard.State
         private float _flipDelayDuration = 0.25f;
         private float _playerWidth;
         private bool _handlingTopCollision;
- 
+
         public void EnterState(GuardStateManager enemy)
         {
             _enemy = enemy;
             _movingToLastKnownPosition = false;
 
-            if (_enemy.alertedFromSkreecher)
+            if (_enemy.alertedFromAggroSkreecher)
             {
                 _lastKnownPosition = PlayerVariables.Instance.transform.position;
                 _timeAlertedBySkreecher = _enemy.StartCoroutine(TimeoutSkreecherAlert());
@@ -40,14 +40,14 @@ namespace _Scripts.Enemies.Guard.State
         public void UpdateState()
         {
             // Alerted by Skreecher movement handled separate from normal movement
-            if (_enemy.alertedFromSkreecher)
+            if (_enemy.alertedFromAggroSkreecher)
             {
                 HandleAlertedBySkreecherMovement();
                 return;
             }
-            
+
             RunningIntoWallCheck();
-            
+
             if (!_enemy.IsPlayerDetected())
             {
                 // Player is no longer detected but enemy is already moving to last known location
@@ -70,10 +70,10 @@ namespace _Scripts.Enemies.Guard.State
                 _lastKnownLocationStartTime = Time.time; // Initialize timer
                 MoveToLastKnownPosition();
                 // Debug.Log("No detection");
-                
+
                 return;
             }
-            
+
             // Player has been sighted this frame, move to their position
 
             var playerPosition = PlayerVariables.Instance.transform.position;
@@ -86,17 +86,19 @@ namespace _Scripts.Enemies.Guard.State
             // Move towards the player
             var moveDirectionX = Mathf.Sign(directionToPlayer.x);
             var direction = new Vector2(moveDirectionX, 0).normalized;
-            
+
             // Ensure proper sprite orientation
-            if (PlayerVariables.Instance.transform.position.x > _enemy.transform.position.x && !_enemy.Settings.isFacingRight)
+            if (PlayerVariables.Instance.transform.position.x > _enemy.transform.position.x &&
+                !_enemy.Settings.isFacingRight)
             {
                 _enemy.Settings.FlipLocalScale();
             }
-            else if (PlayerVariables.Instance.transform.position.x < _enemy.transform.position.x && _enemy.Settings.isFacingRight)
+            else if (PlayerVariables.Instance.transform.position.x < _enemy.transform.position.x &&
+                     _enemy.Settings.isFacingRight)
             {
                 _enemy.Settings.FlipLocalScale();
             }
-            
+
             _enemy.Move(direction, _enemy.Settings.aggroMovementSpeed);
         }
 
@@ -107,8 +109,8 @@ namespace _Scripts.Enemies.Guard.State
             {
                 if (PlayerStateManager.Instance.IsStunnedState())
                     PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
-                
-                GameManager.Instance.quicktimeEventPanel.SetActive(false); 
+
+                GameManager.Instance.quicktimeEventPanel.SetActive(false);
                 _enemy.StopCoroutine(_qteCoroutine);
                 _qteCoroutine = null;
             }
@@ -123,7 +125,7 @@ namespace _Scripts.Enemies.Guard.State
             {
                 _enemy.StopCoroutine(_timeAlertedBySkreecher);
                 _timeAlertedBySkreecher = null;
-                _enemy.alertedFromSkreecher = false;
+                _enemy.alertedFromAggroSkreecher = false;
             }
 
             _hasExecuted = true;
@@ -131,7 +133,7 @@ namespace _Scripts.Enemies.Guard.State
 
         public void OnCollisionEnter2D(Collision2D col)
         {
-           AggroCollision(col);
+            AggroCollision(col);
         }
 
         public void OnCollisionStay2D(Collision2D col)
@@ -142,7 +144,6 @@ namespace _Scripts.Enemies.Guard.State
         private void AggroCollision(Collision2D col)
         {
             if (((1 << col.gameObject.layer) & _enemy.playerLayer) == 0) return;
-            Debug.Log("Enemy Collision from Aggro");
 
             // Check if collision occurred from above
             var isCollisionFromAbove = false;
@@ -150,7 +151,7 @@ namespace _Scripts.Enemies.Guard.State
             foreach (ContactPoint2D contact in col.contacts)
             {
                 // Debug.Log("Normal:" + contact.normal.y);
-                
+
                 if (Math.Abs(contact.normal.y - (-1)) < 0.1f)
                 {
                     // Debug.Log("Top collision");
@@ -170,12 +171,12 @@ namespace _Scripts.Enemies.Guard.State
                 StartQteWithPlayer();
             }
         }
-        
+
         private void HandleCollisionFromAbove(Collision2D col)
         {
             // Don't want to try to move the player if the coroutine is already active
             if (_qteCoroutine != null) return;
-            
+
             _playerWidth = col.collider.bounds.size.x;
 
             var isLeftBlocked = IsSideBlocked(Vector2.left);
@@ -205,7 +206,7 @@ namespace _Scripts.Enemies.Guard.State
                 PushPlayerToSide(col.gameObject, pushDirection);
             }
         }
-        
+
         private bool IsSideBlocked(Vector2 direction)
         {
             var checkDistance = _playerWidth;
@@ -215,7 +216,7 @@ namespace _Scripts.Enemies.Guard.State
             var hit = Physics2D.Raycast(origin, direction, checkDistance, obstuctionLayers);
             return hit.collider != null;
         }
-        
+
         private void PushPlayerToSide(GameObject player, Vector2 direction)
         {
             var pushDistance = _playerWidth; // Push distance equal to player's width
@@ -223,14 +224,14 @@ namespace _Scripts.Enemies.Guard.State
 
             // Move the player
             player.transform.position = new Vector2(newPosition.x, player.transform.position.y);
-            
+
             AdjustFacingDirections(direction);
 
             // Proceed with QTE
             _handlingTopCollision = false;
             StartQteWithPlayer();
         }
-        
+
         // If the player and the enemy are not facing each other flip one or both of them around
         private void AdjustFacingDirections(Vector2 playerDirection)
         {
@@ -248,10 +249,9 @@ namespace _Scripts.Enemies.Guard.State
                 PlayerVariables.Instance.FlipLocalScale();
             }
         }
-        
+
         private void MoveToLastKnownPosition()
         {
-            Debug.Log("Moving to last known pos");
             // Flip the enemy towards the target position if necessary
             var directionToTarget = _lastKnownPosition - (Vector2)_enemy.transform.position;
             var needsToFlip = HandleFlip(directionToTarget.x);
@@ -261,7 +261,7 @@ namespace _Scripts.Enemies.Guard.State
             var direction = new Vector2(moveDirectionX, 0).normalized;
             // if (needsToFlip && _flipCoroutine != null) direction = !_enemy.Settings.isFacingRight ? Vector2.right : Vector2.left;
             // else direction = _enemy.Settings.isFacingRight ? Vector2.right : Vector2.left;
-           
+
             if (_flipCoroutine == null)
             {
                 _enemy.Move(direction, _enemy.Settings.aggroMovementSpeed);
@@ -270,11 +270,10 @@ namespace _Scripts.Enemies.Guard.State
             {
                 _enemy.StopMoving();
             }
-            
+
             // Check if the enemy has reached the last known x position
             if (Mathf.Abs(_enemy.transform.position.x - _lastKnownPosition.x) <= 1.0f)
             {
-                Debug.Log("Entering Searching via MoveToLastKnowPos");
                 _enemy.StopMoving();
                 _movingToLastKnownPosition = false;
                 if (_qteCoroutine != null) return;
@@ -291,25 +290,25 @@ namespace _Scripts.Enemies.Guard.State
             origin.y = colliderBounds.min.y + colliderBounds.size.y * 0.75f;
             var hit = Physics2D.Raycast(origin, direction, 0.5f, _enemy.environmentLayer);
             Debug.DrawRay(origin, direction * 0.5f, Color.magenta);
-            
+
             if (hit.collider == null) return;
-            
-            Debug.Log("Hit Wall");
+
             _enemy.StopMoving();
             _movingToLastKnownPosition = false;
             _enemy.TransitionToState(_enemy.SearchingState);
         }
 
         private float _yPosLastFrame;
+
         private void HandleAlertedBySkreecherMovement()
         {
             if (_enemy.IsPlayerDetected())
             {
-                _enemy.alertedFromSkreecher = false;
+                _enemy.alertedFromAggroSkreecher = false;
             }
-            
+
             var targetPos = _lastKnownPosition;
-            
+
             // Check if the enemy is running into a wall, if it is then turn around.
             var direction = _enemy.Settings.isFacingRight ? Vector2.right : Vector2.left;
             var colliderBounds = _enemy.Collider2D.bounds;
@@ -323,19 +322,20 @@ namespace _Scripts.Enemies.Guard.State
                 _enemy.StopMoving();
                 _enemy.Settings.FlipLocalScale();
                 direction = _enemy.Settings.isFacingRight ? Vector2.right : Vector2.left;
-                _enemy.Move(direction, _enemy.Settings.aggroMovementSpeed); 
+                _enemy.Move(direction, _enemy.Settings.aggroMovementSpeed);
             }
 
-            if (Mathf.Abs(_yPosLastFrame) -  Mathf.Abs(_enemy.transform.position.y) >= 0.0025f && !_enemy.Settings.IsGrounded())
+            if (Mathf.Abs(_yPosLastFrame) - Mathf.Abs(_enemy.transform.position.y) >= 0.0025f &&
+                !_enemy.Settings.IsGrounded())
             {
                 _enemy.StopMoving();
                 return;
             }
-            
+
             // If the enemy is above the player keep moving until a wall or ledge is hit
             if (targetPos.y < _enemy.transform.position.y)
             {
-                direction = _enemy.Settings.isFacingRight ? Vector2.right : Vector2.left; 
+                direction = _enemy.Settings.isFacingRight ? Vector2.right : Vector2.left;
                 _enemy.Move(direction, _enemy.Settings.aggroMovementSpeed);
             }
             else
@@ -351,14 +351,14 @@ namespace _Scripts.Enemies.Guard.State
                 {
                     _enemy.Settings.FlipLocalScale();
                 }
-                
-                direction = _enemy.Settings.isFacingRight ? Vector2.right : Vector2.left; 
-                _enemy.Move(direction, _enemy.Settings.aggroMovementSpeed); 
+
+                direction = _enemy.Settings.isFacingRight ? Vector2.right : Vector2.left;
+                _enemy.Move(direction, _enemy.Settings.aggroMovementSpeed);
             }
 
             _yPosLastFrame = _enemy.transform.position.y;
         }
-        
+
         private bool HandleFlip(float directionToPlayerX)
         {
             var timeSinceLastFlip = Time.time - _lastFlipTime;
@@ -366,7 +366,7 @@ namespace _Scripts.Enemies.Guard.State
                 return false;
 
             var shouldFlip = (_enemy.Settings.isFacingRight && directionToPlayerX < -0.1f) ||
-                              (!_enemy.Settings.isFacingRight && directionToPlayerX > 0.1f);
+                             (!_enemy.Settings.isFacingRight && directionToPlayerX > 0.1f);
 
             if (shouldFlip && _flipCoroutine == null)
             {
@@ -376,36 +376,35 @@ namespace _Scripts.Enemies.Guard.State
 
             return false;
         }
-        
+
         private void StartQteWithPlayer()
         {
             // If the player is already in the QTE with this guard it shouldn't start again
             if (_qteCoroutine != null) return;
             // If the player is already in the QTE with a different guard this one shouldn't be able to start another
             if (PlayerStateManager.Instance.IsStunnedState()) return;
-            
+
             PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.StunnedState);
             _qteCoroutine = _enemy.StartCoroutine(StartQuicktimeEvent());
         }
-        
+
         // Modified grapple coroutine from Don't Move
         private IEnumerator StartQuicktimeEvent()
         {
-            Debug.Log("QTE Started");
             _hasExecuted = false;
             var counter = 0;
             var timeElapsed = 0f;
 
             GameManager.Instance.quicktimeEventPanel.SetActive(true);
-            
+
             // Make sure the card throw arrow isn't active
             HandleCardStanceArrow.Instance.DestroyDirectionalArrow();
-            
+
             // Local method to handle the false trigger input
             void OnFalseTriggerHandler() => counter++;
 
             InputHandler.Instance.OnFalseTrigger += OnFalseTriggerHandler;
-            
+
             // TODO: Player Grapple animations for player and enemy
             // TODO: Show Grapple UI / Shader effect
 
@@ -420,16 +419,16 @@ namespace _Scripts.Enemies.Guard.State
                         _hasExecuted = true;
                         yield break;
                     }
-                    
+
                     // Break out of the QTE if the guard and player get seperated (most likely from one of them falling)
                     if (Mathf.Abs(_enemy.transform.position.x - PlayerVariables.Instance.transform.position.x) > 2f ||
                         Mathf.Abs(_enemy.transform.position.y - PlayerVariables.Instance.transform.position.y) > 2f)
                     {
-                        Debug.Log("Breaking out of QTE bc of distance");
                         PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
                         _hasExecuted = true;
-                        yield break; 
+                        yield break;
                     }
+
                     // Stop any movement from the guard or player
                     _enemy.StopMoving();
 
@@ -446,7 +445,6 @@ namespace _Scripts.Enemies.Guard.State
                 // Quick time event succeeded
                 if (counter >= _enemy.Settings.counterGoal)
                 {
-                    Debug.Log("QTE Passed");
                     PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
                     _enemy.Settings.counterGoal += 2;
                     if (_enemy.Settings.qteTimeLimit > 2f)
@@ -456,7 +454,6 @@ namespace _Scripts.Enemies.Guard.State
                 // Quick time event failed
                 else
                 {
-                    Debug.Log("QTE Failed");
                     // TODO: Make this change game state to 'Captured' or something like that
                     SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 }
@@ -473,7 +470,7 @@ namespace _Scripts.Enemies.Guard.State
         private IEnumerator TimeoutSkreecherAlert()
         {
             yield return new WaitForSeconds(_enemy.Settings.timeoutOfSkreecherAlert);
-            _enemy.alertedFromSkreecher = false;
+            _enemy.alertedFromAggroSkreecher = false;
             if (!_enemy.IsPlayerDetected())
                 _enemy.TransitionToState(_enemy.SearchingState);
         }
