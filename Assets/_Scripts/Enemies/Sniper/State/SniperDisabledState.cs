@@ -1,10 +1,17 @@
+using _Scripts.Player;
 using UnityEngine;
 
 namespace _Scripts.Enemies.Sniper.State
 {
     public class SniperDisabledState : IEnemyState<SniperStateManager>
     {
-        public void EnterState(SniperStateManager enemy) {}
+        private SniperStateManager _enemy;
+        public void EnterState(SniperStateManager enemy)
+        {
+            _enemy = enemy;
+            Physics2D.IgnoreCollision(PlayerVariables.Instance.Collider2D, _enemy.Collider2D);
+            _enemy.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 90f)); // TODO: Change eventually
+        }
 
         public void UpdateState() {}
 

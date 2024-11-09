@@ -12,7 +12,6 @@ namespace _Scripts.Enemies.Guard.State
             _enemy = enemy;
             _enemy.StopMoving();
             _enemy.Rigidbody2D.isKinematic = true;
-            _enemy.Collider2D.enabled = false;
             Physics2D.IgnoreCollision(PlayerVariables.Instance.Collider2D, _enemy.Collider2D);
             _enemy.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 90f)); // TODO: Change eventually
             _enemy.Settings.removeListeners();

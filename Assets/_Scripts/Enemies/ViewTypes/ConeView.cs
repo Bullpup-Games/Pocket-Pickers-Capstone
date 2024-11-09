@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using _Scripts.Enemies.Guard;
 using _Scripts.Enemies.Guard.State;
 using _Scripts.Player;
@@ -177,7 +178,7 @@ namespace _Scripts.Enemies.ViewTypes
             var modifier = Mathf.Lerp(maxDistanceModifier, minDistanceModifier, t);
             return modifier;
         }
-
+        
         public void UpdateView(float modifier)
         {
              _viewAngle *= modifier;

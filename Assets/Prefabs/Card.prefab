@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64d7c5a543f804da9b22919519bca687, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  falseTriggerRadius: 4
+  falseTriggerRadius: 5
   gizmoColor: {r: 0, g: 1, b: 1, a: 1}
   speed: 20
   totalBounces: 3

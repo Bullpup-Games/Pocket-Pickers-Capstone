@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using _Scripts.Enemies.ViewTypes;
 using _Scripts.Player;
 using UnityEngine;
@@ -10,7 +11,6 @@ namespace _Scripts.Enemies.Sniper.State
         public IEnemyState<SniperStateManager> PatrollingState { get; private set; }
         public IEnemyState<SniperStateManager> ChargingState { get; private set; }
         public IEnemyState<SniperStateManager> ReloadingState { get; private set; }
-        public IEnemyState<SniperStateManager> InvestigatingState { get; private set; }
         public IEnemyState<SniperStateManager> DisabledState { get; private set; }
         public IEnemyState<SniperStateManager> CurrentState { get; private set; }
         public IEnemyState<SniperStateManager> PreviousState { get; private set; }
@@ -19,7 +19,9 @@ namespace _Scripts.Enemies.Sniper.State
         [HideInInspector] public SniperSettings Settings;
         [HideInInspector] public Rigidbody2D Rigidbody2D;
         [HideInInspector] public Collider2D Collider2D;
-        [HideInInspector] public IViewType[] ViewTypes;
+        [HideInInspector] public RayView RayView;
+        public bool originallyFacingRight;
+        public bool investigatingFalseTrigger;
 
         [HideInInspector] public LayerMask environmentLayer;
         [HideInInspector] public LayerMask enemyLayer;
@@ -27,29 +29,33 @@ namespace _Scripts.Enemies.Sniper.State
         
         [Header("Sin Values")]
         public int sinPenalty;
+
+        public bool alertedFromAggroSkreecher;
+        public bool alertedFromInvestigatingSkreecher;
         private void Awake()
         {
             Debug.Log("SniperStateManager Awake");
             Settings = GetComponent<SniperSettings>();
             Rigidbody2D = GetComponent<Rigidbody2D>();
             Collider2D = GetComponent<Collider2D>();
-            ViewTypes = GetComponents<IViewType>();
+            RayView = GetComponent<RayView>();
             
-            environmentLayer = LayerMask.GetMask("Environment");
-            playerLayer = LayerMask.GetMask("Enemy");
-            playerLayer = LayerMask.GetMask("Player");
+            environmentLayer = LayerMask.NameToLayer("Environment");
+            playerLayer = LayerMask.NameToLayer("Enemy");
+            playerLayer = LayerMask.NameToLayer("Player");
 
             PatrollingState = new SniperPatrollingState();
             ChargingState = new SniperChargingState();
             ReloadingState = new SniperReloadingState();
-            InvestigatingState = new SniperInvestigatingState();
             DisabledState = new SniperDisabledState();
 
             // Set the initial state
             CurrentState = PatrollingState;
             CurrentState.EnterState(this);
         }
-        
+
+        private void Start() => originallyFacingRight = Settings.isFacingRight;
+
         private void Update()
         {
             // Update the current state via its UpdateState function
@@ -66,10 +72,6 @@ namespace _Scripts.Enemies.Sniper.State
             else if (IsReloadingState())
             {
                 enumState = SniperState.Reloading;
-            }
-            else if (IsInvestigatingState())
-            {
-                enumState = SniperState.Investigating;
             }
             else if (IsDisabledState())
             {
@@ -96,37 +98,53 @@ namespace _Scripts.Enemies.Sniper.State
         
         public void KillEnemy()
         {
+            if (CurrentState == DisabledState) return;
             PlayerVariables.Instance.CommitSin(sinPenalty);
-            TransitionToState(this.DisabledState);
+            TransitionToState(DisabledState);
+        }
+
+        public void KillEnemyFromSniper()
+        {
+            if (CurrentState == DisabledState) return;
+            Debug.Log("Sniper Killed By Sniper.");
+            TransitionToState(DisabledState); 
         }
         
-        public bool IsPlayerDetected()
+        public void AlertFromAggroSkreecher()
         {
-            foreach (var viewType in ViewTypes)
-            {
-                if (viewType.IsPlayerDetectedThisFrame())
-                {
-                    return true;
-                }
-            }
-            return false;
+            if (CurrentState == DisabledState) return;
+            alertedFromAggroSkreecher = true;
+            TransitionToState(ChargingState);
         }
         
-        public bool IsPlayerDetectedWithQuickDetect()
+        public void AlertFromInvestigatingSkreecher()
         {
-            foreach (var viewType in ViewTypes)
-            {
-                if (viewType.IsPlayerDetectedThisFrame())
-                {
-                    if (viewType.QuickDetection())
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        } 
+            if (CurrentState == DisabledState) return;
+            alertedFromInvestigatingSkreecher = true;
+            TransitionToState(ChargingState);
+        }
         
+        public bool IsPlayerDetected() => RayView.IsPlayerDetectedThisFrame();
+        public bool IsPlayerDetectedWithQuickDetect() => RayView.IsPlayerDetectedThisFrame() && RayView.QuickDetection();
+        
+        private void OnCollisionEnter2D(Collision2D col)
+        {
+            CurrentState.OnCollisionEnter2D(col);
+
+            if (CurrentState == DisabledState || CurrentState == ReloadingState) return;
+
+            if (col.gameObject.layer != playerLayer) return;
+
+            Debug.Log("Player Col");
+            if ((PlayerVariables.Instance.transform.position.x > transform.position.x && !Settings.isFacingRight) ||
+                (PlayerVariables.Instance.transform.position.x < transform.position.x && Settings.isFacingRight))
+            {
+                Settings.FlipLocalScale();
+            }
+
+            RayView.ignoreSweepAngle = true;
+        }
+
         #region State Getters
 
         public bool IsPatrollingState()
@@ -143,7 +161,7 @@ namespace _Scripts.Enemies.Sniper.State
         }
         public bool IsInvestigatingState()
         {
-            return CurrentState == InvestigatingState;
+            return false;
         }
         public bool IsDisabledState()
         {
