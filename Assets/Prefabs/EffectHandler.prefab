@@ -45,3 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pinkPoof: {fileID: 3394722582590248788, guid: 20cd2347c5ad90a4492c56d1fb34f5fa, type: 3}
+  bluePoof: {fileID: 6529447681161011906, guid: 3640af02265fac343bf7ed03422e46ae, type: 3}
+  cardBounce: {fileID: 7045521719431886938, guid: 552a98b4e08beb045b93041e262ac6cf, type: 3}
+  cardDestroy: {fileID: 8407500821800578958, guid: c3dba669a29e44947a1a34c9c821b99d, type: 3}

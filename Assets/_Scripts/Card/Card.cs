@@ -234,6 +234,10 @@ namespace _Scripts.Card
             CardManager.Instance.lastFalseTriggerPosition = transform.position;
             Debug.Log("False Trigger Activated");
             
+            //activate the animation
+            CardEffectHandler.Instance.FalseTriggerEffect(gameObject.transform.position);
+            
+            
             // Switch states of all enemies within the false trigger radius
             var colliders = Physics2D.OverlapCircleAll(transform.position, falseTriggerRadius, LayerMask.GetMask("Enemy"));
             foreach (var col in colliders)

@@ -6,7 +6,8 @@ public class CardEffectHandler : MonoBehaviour
 {
 
     public GameObject pinkPoof;
-    //bluePoof
+    public GameObject bluePoof;
+    
     public GameObject cardBounce;
     public GameObject cardDestroy;
     
@@ -43,6 +44,11 @@ public class CardEffectHandler : MonoBehaviour
     public void TeleportEffect(Vector2 position)
     {
         Instantiate(pinkPoof, position, Quaternion.identity);
+    }
+
+    public void FalseTriggerEffect(Vector2 position)
+    {
+        Instantiate(bluePoof, position, Quaternion.identity);
     }
     
     public void bounceEffect(Vector2 position) 

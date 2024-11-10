@@ -1809,17 +1809,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 047ab0db384a3419dbd633e98b719112, type: 3}
---- !u!114 &717996280 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7507623754815840685, guid: c6f9bd836282842348fab8839a2de283, type: 3}
-  m_PrefabInstance: {fileID: 1412532990}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5db8d21d3fdb7462d86727a1dba86f6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &737747171
 GameObject:
   m_ObjectHideFlags: 0
@@ -33262,10 +33251,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1906975200}
     - target: {fileID: 2204501328560629039, guid: c6f9bd836282842348fab8839a2de283, type: 3}
-      propertyPath: cardPrefab
-      value: 
-      objectReference: {fileID: 7098434270888417122, guid: 46613c7080d9b4c8b928088ce4f4af34, type: 3}
-    - target: {fileID: 2204501328560629039, guid: c6f9bd836282842348fab8839a2de283, type: 3}
       propertyPath: inputHandler
       value: 
       objectReference: {fileID: 2111037776}
@@ -33273,14 +33258,6 @@ PrefabInstance:
       propertyPath: effectHandler
       value: 
       objectReference: {fileID: 29138542}
-    - target: {fileID: 2204501328560629039, guid: c6f9bd836282842348fab8839a2de283, type: 3}
-      propertyPath: cardStanceArrow
-      value: 
-      objectReference: {fileID: 717996280}
-    - target: {fileID: 4787900142952941893, guid: c6f9bd836282842348fab8839a2de283, type: 3}
-      propertyPath: winThreshold
-      value: 20
-      objectReference: {fileID: 0}
     - target: {fileID: 4787900142952941893, guid: c6f9bd836282842348fab8839a2de283, type: 3}
       propertyPath: quicktimeEventPanel
       value: 
@@ -38781,6 +38758,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4744662754737605925, guid: f34e9c6523b7ece4482721e6060d0e6d, type: 3}
+      propertyPath: bluePoof
+      value: 
+      objectReference: {fileID: 6529447681161011906, guid: 3640af02265fac343bf7ed03422e46ae, type: 3}
     - target: {fileID: 4744662754737605925, guid: f34e9c6523b7ece4482721e6060d0e6d, type: 3}
       propertyPath: cardBounce
       value: 

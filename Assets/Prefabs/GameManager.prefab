@@ -91,3 +91,4 @@ MonoBehaviour:
   cardLifeTime: 10
   falseTriggerCooldown: 10
   falseTriggerOnCooldown: 0
+  lastFalseTriggerPosition: {x: 0, y: 0}
