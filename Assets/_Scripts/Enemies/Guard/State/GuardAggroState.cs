@@ -30,6 +30,9 @@ namespace _Scripts.Enemies.Guard.State
             _enemy = enemy;
             _movingToLastKnownPosition = false;
 
+            //set the animation
+            _enemy.GetComponent<EnemyAnimator>().chase();
+            
             if (_enemy.alertedFromAggroSkreecher)
             {
                 _lastKnownPosition = PlayerVariables.Instance.transform.position;
@@ -129,6 +132,8 @@ namespace _Scripts.Enemies.Guard.State
             }
 
             _hasExecuted = true;
+
+            _enemy.gameObject.GetComponent<EnemyAnimator>().stopChase();
         }
 
         public void OnCollisionEnter2D(Collision2D col)

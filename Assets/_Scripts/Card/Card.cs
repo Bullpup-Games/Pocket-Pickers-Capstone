@@ -67,7 +67,7 @@ namespace _Scripts.Card
             if (InputHandler.Instance != null)
             {
                 InputHandler.Instance.OnFalseTrigger += ActivateFalseTrigger;
-                InputHandler.Instance.OnCancelActiveCard += DestroyCard;
+                InputHandler.Instance.OnCancelActiveCard += CancelCardThrow;
             }
 
             if (CardManager.Instance != null)
@@ -81,7 +81,7 @@ namespace _Scripts.Card
             if (InputHandler.Instance != null)
             {
                 InputHandler.Instance.OnFalseTrigger -= ActivateFalseTrigger;
-                InputHandler.Instance.OnCancelActiveCard -= DestroyCard;
+                InputHandler.Instance.OnCancelActiveCard -= CancelCardThrow;
             }
 
             if (CardManager.Instance != null)
@@ -382,6 +382,7 @@ namespace _Scripts.Card
         {
             if (other.gameObject.CompareTag("EscapeRout"))
             {
+                CardEffectHandler.Instance.DestroyEffect(gameObject.transform.position);
                 DestroyCard();
             }
         }
@@ -400,6 +401,12 @@ namespace _Scripts.Card
                 CardManager.Instance.OnCardDestroyed();
             }
             Destroy(gameObject);
+        }
+
+        public void CancelCardThrow()
+        {
+            CardEffectHandler.Instance.DestroyEffect(gameObject.transform.position);
+            DestroyCard();
         }
 
         private void OnDrawGizmos()

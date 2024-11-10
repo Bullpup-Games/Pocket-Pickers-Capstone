@@ -221,6 +221,7 @@ namespace _Scripts.Card
      */
         public void OnCardDestroyed()
         {
+           
             _instantiatedCard = null;
             Destroy(_instantiatedCard);
         }

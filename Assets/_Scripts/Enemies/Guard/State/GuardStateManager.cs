@@ -85,6 +85,7 @@ namespace _Scripts.Enemies.Guard.State
             else if (IsAggroState())
             {
                 enumState = GuardState.Aggro;
+                //gameObject.GetComponent<Animator>().SetBool("Aggressive",true);
             }
             else if (IsSearchingState())
             {
