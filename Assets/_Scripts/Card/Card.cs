@@ -20,6 +20,8 @@ namespace _Scripts.Card
         public float speed = 20f; // Speed of the card
         public int totalBounces;  // Total allowed bounces
         public int bounces;       // Current number of bounces
+        
+       public CardEffectHandler effectHandler;
 
         private Vector2 _direction;   // Current movement direction
         private Vector2 _velocity;    // Current velocity
@@ -52,6 +54,7 @@ namespace _Scripts.Card
         private void OnEnable()
         {
             SetListeners();
+            effectHandler = CardEffectHandler.Instance;
         }
 
         private void OnDestroy()
@@ -64,7 +67,7 @@ namespace _Scripts.Card
             if (InputHandler.Instance != null)
             {
                 InputHandler.Instance.OnFalseTrigger += ActivateFalseTrigger;
-                InputHandler.Instance.OnCancelActiveCard += DestroyCard;
+                InputHandler.Instance.OnCancelActiveCard += CancelCardThrow;
             }
 
             if (CardManager.Instance != null)
@@ -78,7 +81,7 @@ namespace _Scripts.Card
             if (InputHandler.Instance != null)
             {
                 InputHandler.Instance.OnFalseTrigger -= ActivateFalseTrigger;
-                InputHandler.Instance.OnCancelActiveCard -= DestroyCard;
+                InputHandler.Instance.OnCancelActiveCard -= CancelCardThrow;
             }
 
             if (CardManager.Instance != null)
@@ -179,6 +182,9 @@ namespace _Scripts.Card
                 if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Environment"))
                 {
                     CollideWithWall(hit, ref newPosition);
+                    
+                    //todo activate the card bounce effect
+                   
                     return;
                 }
 
@@ -227,6 +233,10 @@ namespace _Scripts.Card
             // Update the last false trigger position
             CardManager.Instance.lastFalseTriggerPosition = transform.position;
             Debug.Log("False Trigger Activated");
+            
+            //activate the animation
+            CardEffectHandler.Instance.FalseTriggerEffect(gameObject.transform.position);
+            
             
             // Switch states of all enemies within the false trigger radius
             var colliders = Physics2D.OverlapCircleAll(transform.position, falseTriggerRadius, LayerMask.GetMask("Enemy"));
@@ -311,10 +321,11 @@ namespace _Scripts.Card
             // Safety check if we entered with max bounces
             if (bounces >= totalBounces)
             {
+                effectHandler.DestroyEffect(gameObject.transform.position);
                 DestroyCard();
                 return;
             }
-
+            effectHandler.bounceEffect(gameObject.transform.position);
             // Adjust position slightly along the new direction to prevent immediate re-collision
             newPosition += _direction * MinMoveDistance;
 
@@ -375,6 +386,7 @@ namespace _Scripts.Card
         {
             if (other.gameObject.CompareTag("EscapeRout"))
             {
+                CardEffectHandler.Instance.DestroyEffect(gameObject.transform.position);
                 DestroyCard();
             }
         }
@@ -393,6 +405,12 @@ namespace _Scripts.Card
                 CardManager.Instance.OnCardDestroyed();
             }
             Destroy(gameObject);
+        }
+
+        public void CancelCardThrow()
+        {
+            CardEffectHandler.Instance.DestroyEffect(gameObject.transform.position);
+            DestroyCard();
         }
 
         private void OnDrawGizmos()
