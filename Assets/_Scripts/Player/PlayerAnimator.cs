@@ -144,6 +144,26 @@ namespace _Scripts.Player
         private void tuck(Vector2 tuck){
             _animator.SetTrigger("teleported");
         }
+
+        public void wallSlide()
+        {
+            _animator.SetBool("wallSlide", true);
+        }
+
+        public void endSlide()
+        {
+            _animator.SetBool("wallSlide", false);
+        }
+
+        public void ledgeHang()
+        {
+            _animator.SetBool("ledgeHang", true);
+        }
+
+        public void endHang()
+        {
+            _animator.SetBool("ledgeHang", false);
+        }
     }
 }
     
