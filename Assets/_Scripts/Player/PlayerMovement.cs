@@ -80,7 +80,7 @@ namespace _Scripts.Player
             _time += Time.deltaTime;
 
             CheckWallStatus();
-            
+            CheckLedgeStatus(); 
             
 
             // Allow full player control again after reaching the apex of a wall jump
@@ -430,6 +430,50 @@ namespace _Scripts.Player
             _jumpToConsume = false;
         }
 
+        #endregion
+        
+        #region Ledge Hanging
+        private bool _onLedge;
+        public event Action<bool> Ledged; 
+        public void CheckLedgeStatus()
+        {
+            var rayOrigin = (Vector2)PlayerVariables.Instance.Collider2D.bounds.center + Vector2.up * PlayerVariables.Instance.Collider2D.bounds.extents.y;
+
+            var direction = PlayerVariables.Instance.isFacingRight ? Vector2.right : Vector2.left;
+
+            var hit = Physics2D.Raycast(rayOrigin, direction, 0.5f, PlayerMovement.Instance.wallLayer);
+
+            // If a hit was detected the player is NOT on a ledge
+            if (hit.collider != null)
+            {
+                Ledged?.Invoke(false);
+                
+                return;
+            }
+            
+            if (!PlayerMovement.Instance.IsGrounded() && IsWalled() &&
+                ((PlayerVariables.Instance.isFacingRight && PlayerMovement.Instance.FrameInput.x > 0) ||
+                 (!PlayerVariables.Instance.isFacingRight && PlayerMovement.Instance.FrameInput.x < 0)))
+            {
+                Ledged?.Invoke(true);
+            }
+            
+            // if (_slideToLedgePosCoroutine != null) return;
+            //
+            // PlayerMovement.Instance.HaltVerticalMomentum(); 
+            // _slideToLedgePosCoroutine = PlayerStateManager.Instance.StartCoroutine(LerpToLedgeHang());
+        }
+
+        public bool IsLedged()
+        {
+            var rayOrigin = (Vector2)PlayerVariables.Instance.Collider2D.bounds.center + Vector2.up * PlayerVariables.Instance.Collider2D.bounds.extents.y;
+            var direction = PlayerVariables.Instance.isFacingRight ? Vector2.right : Vector2.left;
+            var hit = Physics2D.Raycast(rayOrigin, direction, 0.5f, PlayerMovement.Instance.wallLayer);
+            
+            if (IsWalled() && hit.collider is null)
+                return true;
+            return false;
+        }
         #endregion
 
 #if UNITY_EDITOR
