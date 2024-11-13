@@ -37,7 +37,7 @@ namespace _Scripts.Player.State
             PlayerMovement.Instance.HandleWallJump();
             CheckWallAndGroundConditions();
             CheckInputIsPresent();
-            // LedgeCheck();
+           
         }
 
         public void FixedUpdateState()

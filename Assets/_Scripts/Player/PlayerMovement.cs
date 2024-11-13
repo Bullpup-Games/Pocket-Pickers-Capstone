@@ -455,6 +455,7 @@ namespace _Scripts.Player
                 ((PlayerVariables.Instance.isFacingRight && PlayerMovement.Instance.FrameInput.x > 0) ||
                  (!PlayerVariables.Instance.isFacingRight && PlayerMovement.Instance.FrameInput.x < 0)))
             {
+                //TODO this cannot be called if you just got off a ledge
                 Ledged?.Invoke(true);
             }
             

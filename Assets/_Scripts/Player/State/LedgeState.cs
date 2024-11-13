@@ -1,4 +1,5 @@
 using System.Collections;
+using _Scripts.Card;
 using UnityEngine;
 
 namespace _Scripts.Player.State
@@ -10,8 +11,13 @@ namespace _Scripts.Player.State
         {
             PlayerMovement.Instance.HaltHorizontalMomentum();
             
-            PlayerMovement.Instance.HaltVerticalMomentum(); 
+            PlayerMovement.Instance.HaltVerticalMomentum();
+
+            CardManager.Instance.Teleport += teleported;
+            
             _slideToLedgePosCoroutine = PlayerStateManager.Instance.StartCoroutine(LerpToLedgeHangPosition());
+            
+            PlayerAnimator.Instance.ledgeHang();
         }
 
         public void UpdateState()
@@ -22,6 +28,12 @@ namespace _Scripts.Player.State
             // Release ledge hold with downward joystick input
             if (PlayerMovement.Instance.FrameInput.y < 0)
                 PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
+            
+            CheckInputIsPresent();
+            if (!PlayerMovement.Instance.IsWalled())
+            {
+                PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
+            }
         }
 
         public void FixedUpdateState()
@@ -31,9 +43,27 @@ namespace _Scripts.Player.State
         }
         public void ExitState()
         {
+            Debug.Log("Trying to exit ledge state");
             if (_slideToLedgePosCoroutine is null) return;
             PlayerStateManager.Instance.StopCoroutine(_slideToLedgePosCoroutine);
             _slideToLedgePosCoroutine = null;
+            
+            PlayerStateManager.Instance.setLastLedgeHangTime(Time.time);
+            
+            PlayerAnimator.Instance.endHang();
+        }
+        
+        
+        private void CheckInputIsPresent()
+        {
+            if (PlayerVariables.Instance.isFacingRight && PlayerMovement.Instance.FrameInput.x > 0) return;
+            if (!PlayerVariables.Instance.isFacingRight && PlayerMovement.Instance.FrameInput.x < 0) return;
+            PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
+        }
+
+        public void teleported(Vector2 catchEvent)
+        {
+            PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
         }
         
         private IEnumerator LerpToLedgeHangPosition()

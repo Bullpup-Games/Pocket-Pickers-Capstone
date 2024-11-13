@@ -150,7 +150,7 @@ namespace _Scripts.Player.State
 
             if (lastWallHangTime + PlayerVariables.Instance.Stats.WallHangCooldown > Time.time)
             {
-                // Debug.Log("Wall hang cooldown");
+                Debug.Log("Wall hang cooldown");
                 return;
             }
 
@@ -172,14 +172,23 @@ namespace _Scripts.Player.State
         
         #region Ledge Hang
 
+        //TODO set this up to make a minimum time between ending one ledge hang and starting another
+        public float lastLedgeHangTime;
         private void HandleLedgeStateTransition(bool isLedged)
         {
             if (CurrentState == LedgeState) return;
 
             if (!PlayerMovement.Instance.IsLedged() || !isLedged) return;
             
+            if (lastLedgeHangTime + PlayerVariables.Instance.Stats.LedgeHangCooldown > Time.time)
+            {
+                Debug.Log("Ledge hang cooldown");
+                return;
+            }
+            
             // is touching a wall, is not grounded, and is moving the left stick in the direction of the wall they hit...
             if (!PlayerMovement.Instance.IsGrounded() &&
+                PlayerMovement.Instance.IsWalled() &&
                 ((PlayerVariables.Instance.isFacingRight && PlayerMovement.Instance.FrameInput.x > 0) ||
                  (!PlayerVariables.Instance.isFacingRight && PlayerMovement.Instance.FrameInput.x < 0)))
             {
@@ -187,7 +196,11 @@ namespace _Scripts.Player.State
                 TransitionToState(LedgeState);
             }
         }
-        
+
+        public void setLastLedgeHangTime(float time)
+        {
+            lastLedgeHangTime = time;
+        }
         #endregion
 
         public bool IsStunnedState()
