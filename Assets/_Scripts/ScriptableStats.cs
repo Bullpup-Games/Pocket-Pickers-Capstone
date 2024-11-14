@@ -70,6 +70,9 @@ namespace _Scripts
         [Tooltip("The amount of time in seconds required in between seperate wall hangs")]
         public float WallHangCooldown = 0.525f;
         
+        [Tooltip ("The amount of time in seconds required in between seperate ledge hangs")]
+        public float LedgeHangCooldown = 0.525f;
+        
         [Tooltip("Unique coyote time for leaving wall hangs")]
         public float WallCoyoteTime = .25f;
         

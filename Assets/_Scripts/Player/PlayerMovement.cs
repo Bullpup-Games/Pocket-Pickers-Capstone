@@ -80,7 +80,7 @@ namespace _Scripts.Player
             _time += Time.deltaTime;
 
             CheckWallStatus();
-            
+            CheckLedgeStatus(); 
             
 
             // Allow full player control again after reaching the apex of a wall jump
@@ -111,7 +111,6 @@ namespace _Scripts.Player
                     Move = InputHandler.Instance.MovementInput
                 }; 
             }
-
             
             // Track the facing direction based on the last non-zero horizontal input
             if (_frameInput.Move.x != 0)
@@ -415,7 +414,7 @@ namespace _Scripts.Player
             
             var wallSlideSpeed = PlayerVariables.Instance.Stats.WallSlideSpeed;
             _frameVelocity.y = Mathf.MoveTowards(_frameVelocity.y, -PlayerVariables.Instance.Stats.WallSlideSpeed, Time.fixedDeltaTime);
-            _frameVelocity.x = 0f;
+            // _frameVelocity.x = 0f;
         }
         
         
@@ -430,6 +429,66 @@ namespace _Scripts.Player
             _jumpToConsume = false;
         }
 
+        /*
+        * Since Movement gets halted during transitions to wall state and ledge state sometimes the animations have
+        * a small gap between the player and wall. Pushing the player towards a wall while in wall or ledge state
+        * Makes sure that the sprites are always touching
+        */
+        public void PushPlayerTowardsWall()
+        {
+            float direction;
+            if (PlayerStateManager.Instance.IsLedgeState() || PlayerStateManager.Instance.IsWallState())
+                direction = PlayerVariables.Instance.isFacingRight ? 1f : -1f;
+            else return;
+            
+            _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, direction * PlayerVariables.Instance.Stats.MaxSpeed, PlayerVariables.Instance.Stats.Acceleration * Time.fixedDeltaTime); 
+        }
+
+        #endregion
+        
+        #region Ledge Hanging
+        private bool _onLedge;
+        public event Action<bool> Ledged; 
+        public void CheckLedgeStatus()
+        {
+            if (PlayerStateManager.Instance.IsLedgeState())
+                return;
+
+            var hit = PerformLedgeCheckCast();
+
+            // If a hit was detected the player is NOT on a ledge
+            if (hit.collider != null)
+            {
+                Ledged?.Invoke(false);
+                
+                return;
+            }
+            
+            if (!PlayerMovement.Instance.IsGrounded() && IsWalled() &&
+                ((PlayerVariables.Instance.isFacingRight && PlayerMovement.Instance.FrameInput.x > 0) ||
+                 (!PlayerVariables.Instance.isFacingRight && PlayerMovement.Instance.FrameInput.x < 0)))
+            {
+                //TODO this cannot be called if you just got off a ledge
+                Ledged?.Invoke(true);
+            }
+        }
+
+        public bool IsLedged()
+        {
+            var hit = PerformLedgeCheckCast();
+
+            if (IsWalled() && hit.collider == null)
+                return true;
+            return false;
+        }
+
+        private RaycastHit2D PerformLedgeCheckCast()
+        {
+            var rayOrigin = (Vector2)PlayerVariables.Instance.Collider2D.bounds.center + Vector2.up * (PlayerVariables.Instance.Collider2D.bounds.extents.y - 0.4f);
+            var direction = PlayerVariables.Instance.isFacingRight ? Vector2.right : Vector2.left;
+            var hit = Physics2D.Raycast(rayOrigin, direction, 0.7f, PlayerMovement.Instance.wallLayer);
+            return hit;
+        }
         #endregion
 
 #if UNITY_EDITOR

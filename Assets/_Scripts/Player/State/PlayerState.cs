@@ -9,6 +9,7 @@ namespace _Scripts.Player.State
         FreeMoving,
         Dashing,
         Wall,
+        Ledge,
         Stunned
     }
 }

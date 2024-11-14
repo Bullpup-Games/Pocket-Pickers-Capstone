@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using _Scripts.Card;
 using _Scripts.Player.State;
 using UnityEngine;
@@ -157,11 +158,13 @@ namespace _Scripts.Player
 
         public void ledgeHang()
         {
+            Debug.Log("Start Ledge Hang");
             _animator.SetBool("ledgeHang", true);
         }
 
         public void endHang()
         {
+            Debug.Log("End Ledge Hang");
             _animator.SetBool("ledgeHang", false);
         }
     }

@@ -11,6 +11,7 @@ namespace _Scripts.Player.State
         public IPlayerState FreeMovingState { get; private set; }
         public IPlayerState DashingState { get; private set; }
         public IPlayerState WallState { get; private set; }
+        public IPlayerState LedgeState { get; private set; }
         public IPlayerState StunnedState { get; private set; }
         public IPlayerState CurrentState { get; private set; }
         public IPlayerState PreviousState { get; private set; }
@@ -41,6 +42,7 @@ namespace _Scripts.Player.State
             FreeMovingState = new FreeMovingState();
             DashingState = new DashingState();
             WallState = new WallState();
+            LedgeState = new LedgeState();
             StunnedState = new StunnedState();
         }
 
@@ -60,6 +62,8 @@ namespace _Scripts.Player.State
                 enumState = PlayerState.Dashing;
             if (CurrentState == WallState)
                 enumState = PlayerState.Wall;
+            if (CurrentState == LedgeState)
+                enumState = PlayerState.Ledge;
             
             CurrentState.UpdateState();
         }
@@ -79,7 +83,8 @@ namespace _Scripts.Player.State
             // State blocks for movement being disabled
             if (newState == DashingState && !PlayerVariables.Instance.isDashEnabled) return;
             if (newState == WallState && !PlayerVariables.Instance.isWallClimbEnabled) return;
-            
+
+            Debug.Log("Exiting state");
             if (CurrentState != null)
                 CurrentState.ExitState();
 
@@ -93,12 +98,14 @@ namespace _Scripts.Player.State
             if (InputHandler.Instance == null) return;
             InputHandler.Instance.OnDash += OnDashAction;
             PlayerMovement.Instance.Walled += HandleWallStateTransition;
+            PlayerMovement.Instance.Ledged += HandleLedgeStateTransition;
         }
         private void OnDisable()
         {
             if (InputHandler.Instance == null) return;
             InputHandler.Instance.OnDash -= OnDashAction;
             PlayerMovement.Instance.Walled -= HandleWallStateTransition;
+            PlayerMovement.Instance.Ledged -= HandleLedgeStateTransition;
         }
 
         #region Dash Transition
@@ -128,8 +135,10 @@ namespace _Scripts.Player.State
                 lastWallHangTime = Time.time;
                 return;
             }
+            
+            // PlayerAnimator.Instance.endHang();
 
-            if (!isWalled)
+            if (!isWalled || PlayerMovement.Instance.IsLedged())
             {
                 return;
             }
@@ -141,15 +150,16 @@ namespace _Scripts.Player.State
 
             if (lastWallHangTime + PlayerVariables.Instance.Stats.WallHangCooldown > Time.time)
             {
-                // Debug.Log("Wall hang cooldown");
+                Debug.Log("Wall hang cooldown");
                 return;
             }
 
-            // If the player is touching a wall, is not grounded, is moving downwards, and is moving the left stick in the direction of the wall they hit...
+            // is not grounded, has downward velocity, and is moving the left stick in the direction of the wall they hit...
             if (!PlayerMovement.Instance.IsGrounded() &&
                 ((PlayerVariables.Instance.isFacingRight && PlayerMovement.Instance.FrameInput.x > 0) ||
                  (!PlayerVariables.Instance.isFacingRight && PlayerMovement.Instance.FrameInput.x < 0)))
             {
+                Debug.Log("Transitioning to Wall State");
                 TransitionToState(WallState);
             }
         }
@@ -159,15 +169,59 @@ namespace _Scripts.Player.State
             lastWallHangTime = time;
         }
         #endregion
+        
+        #region Ledge Hang
+
+        //TODO set this up to make a minimum time between ending one ledge hang and starting another
+        public float lastLedgeHangTime;
+        private void HandleLedgeStateTransition(bool isLedged)
+        {
+            if (CurrentState == LedgeState) return;
+
+            if (!PlayerMovement.Instance.IsLedged() || !isLedged) return;
+            
+            if (lastLedgeHangTime + PlayerVariables.Instance.Stats.LedgeHangCooldown > Time.time)
+            {
+                Debug.Log("Ledge hang cooldown");
+                return;
+            }
+            
+            if (PlayerMovement.Instance.JumpHeldFrameInput && PlayerMovement.Instance.CurrentFrameVelocity.y > 0f)
+            {
+                return;
+            }
+            
+            // is touching a wall, is not grounded, and is moving the left stick in the direction of the wall they hit...
+            if (!PlayerMovement.Instance.IsGrounded() &&
+                PlayerMovement.Instance.IsWalled() &&
+                ((PlayerVariables.Instance.isFacingRight && PlayerMovement.Instance.FrameInput.x > 0) ||
+                 (!PlayerVariables.Instance.isFacingRight && PlayerMovement.Instance.FrameInput.x < 0)))
+            {
+                Debug.Log("Transitioning to Ledge State");
+                TransitionToState(LedgeState);
+            }
+        }
+
+        public void setLastLedgeHangTime(float time)
+        {
+            lastLedgeHangTime = time;
+        }
+        #endregion
 
         public bool IsStunnedState()
         {
             return CurrentState is StunnedState;
         }
 
+        
         public bool IsWallState()
         {
             return CurrentState is WallState;
+        }
+
+        public bool IsLedgeState()
+        {
+            return CurrentState is LedgeState;
         }
     }
 }
