@@ -7,11 +7,9 @@ namespace _Scripts.Player.State
     public class WallState : IPlayerState
     {
         private Coroutine _slideToLedgePosCoroutine;
-        private bool _onLedge;
         public void EnterState()
         {
             PlayerMovement.Instance.LerpVerticalMomentum();
-            _onLedge = false;
         }
 
         public void UpdateState()
@@ -26,13 +24,9 @@ namespace _Scripts.Player.State
                 return;
             }
 
-            if (!_onLedge)
-            {
-                PlayerAnimator.Instance.wallSlide();
-                // PlayerAnimator.Instance.endHang();
-                PlayerMovement.Instance.WallSlideMovement();
-            }
-               
+            PlayerAnimator.Instance.wallSlide();
+            PlayerMovement.Instance.WallSlideMovement();
+            PlayerMovement.Instance.PushPlayerTowardsWall();
             
             PlayerMovement.Instance.HandleWallJump();
             CheckWallAndGroundConditions();
@@ -53,12 +47,9 @@ namespace _Scripts.Player.State
                 _slideToLedgePosCoroutine = null;
             }
 
-            _onLedge = false;
-
             // Set the last wall hang time to prevent immediate re-entry into WallState
             PlayerStateManager.Instance.SetLastWallHangTime(Time.time);
             PlayerAnimator.Instance.endSlide();
-            // PlayerAnimator.Instance.endHang();
         }
 
         /*
@@ -77,46 +68,5 @@ namespace _Scripts.Player.State
             if (!PlayerMovement.Instance.IsGrounded() && PlayerMovement.Instance.IsWalled()) return;
             PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
         }
-
-        /*
-         * Checks if the top of the player's collider is touching the wall.
-         * If it is not then the player is on the slide of a ledge and needs to fall until the ray hits the edge of the wall
-         * then hang there
-         */
-        // private void LedgeCheck()
-        // {
-        //     var rayOrigin = (Vector2)PlayerVariables.Instance.Collider2D.bounds.center + Vector2.up * PlayerVariables.Instance.Collider2D.bounds.extents.y;
-        //
-        //     var direction = PlayerVariables.Instance.isFacingRight ? Vector2.right : Vector2.left;
-        //
-        //     var hit = Physics2D.Raycast(rayOrigin, direction, 0.5f, PlayerMovement.Instance.wallLayer);
-        //
-        //     // If a hit was detected the player is NOT on a ledge
-        //     if (hit.collider != null)
-        //     {
-        //         // Release ledge hold with downward joystick input
-        //         if (PlayerMovement.Instance.FrameInput.y < 0)
-        //         {
-        //             // PlayerAnimator.Instance.endHang();
-        //             _onLedge = false;
-        //             
-        //         }
-        //         
-        //         return;
-        //     }
-        //     
-        //     _onLedge = true;
-        //     
-        //     if (_slideToLedgePosCoroutine != null) return;
-        //     
-        //     PlayerMovement.Instance.HaltVerticalMomentum(); 
-        //     _slideToLedgePosCoroutine = PlayerStateManager.Instance.StartCoroutine(LerpToLedgeHang());
-        // }
-
-        /*
-         * After _onLedge is set to true the player needs to be pushed down so that they are at equal height with the
-         * ledge they are hanging on
-         */
-       
     }
 }

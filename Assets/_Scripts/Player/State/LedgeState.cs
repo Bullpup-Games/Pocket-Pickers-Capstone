@@ -22,35 +22,50 @@ namespace _Scripts.Player.State
 
         public void UpdateState()
         {
+            PlayerMovement.Instance.GatherInput();
+            
+            if (PlayerMovement.Instance.JumpDownFrameInput)
+            {
+                PlayerMovement.Instance.HandleWallJump();
+                PlayerAnimator.Instance.endHang();
+                PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
+                return;
+            } 
+            
             if (_slideToLedgePosCoroutine is null)
                 PlayerMovement.Instance.HaltVerticalMomentum();
             
-            // Release ledge hold with downward joystick input
-            if (PlayerMovement.Instance.FrameInput.y < 0)
-                PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
-            
+            PlayerMovement.Instance.HandleWallJump();
+
             CheckInputIsPresent();
-            if (!PlayerMovement.Instance.IsWalled())
+
+            // If somehow the player has slid enough to where the ledge check cast is hitting a wall transition to wall state
+            if (!PlayerMovement.Instance.IsLedged())
             {
-                PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
+                PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.WallState);
             }
+
+            // Check for downward input on the left stick, this should transition the player smoothly to Wall State
+            if (PlayerMovement.Instance.FrameInput.y < -0.5f)
+            {
+                PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.WallState);
+            }
+            
+            PlayerMovement.Instance.PushPlayerTowardsWall();
         }
 
         public void FixedUpdateState()
         {
-            // Apply gravity
             PlayerMovement.Instance.ApplyMovement();
         }
         public void ExitState()
         {
-            Debug.Log("Trying to exit ledge state");
+            PlayerAnimator.Instance.endHang();
+            PlayerStateManager.Instance.setLastLedgeHangTime(Time.time);
+            
             if (_slideToLedgePosCoroutine is null) return;
             PlayerStateManager.Instance.StopCoroutine(_slideToLedgePosCoroutine);
             _slideToLedgePosCoroutine = null;
-            
-            PlayerStateManager.Instance.setLastLedgeHangTime(Time.time);
-            
-            PlayerAnimator.Instance.endHang();
         }
         
         
@@ -72,11 +87,11 @@ namespace _Scripts.Player.State
             while (true)
             {
                 var rayOrigin = (Vector2)PlayerVariables.Instance.Collider2D.bounds.center +
-                                Vector2.up * PlayerVariables.Instance.Collider2D.bounds.extents.y;
+                                Vector2.up * (PlayerVariables.Instance.Collider2D.bounds.extents.y - 0.7f);
 
                 var direction = PlayerVariables.Instance.isFacingRight ? Vector2.right : Vector2.left;
 
-                var hit = Physics2D.Raycast(rayOrigin, direction, 0.5f, PlayerMovement.Instance.wallLayer);
+                var hit = Physics2D.Raycast(rayOrigin, direction, 0.75f, PlayerMovement.Instance.wallLayer);
 
                 if (hit.collider != null)
                 {
@@ -84,24 +99,25 @@ namespace _Scripts.Player.State
                     break;
                 }
 
-                PlayerMovement.Instance.WallSlideMovement();
-
                 // Break the coroutine on downward joystick input
                 if (PlayerMovement.Instance.FrameInput.y < 0)
                 {
                     yield break;
                 }
 
-                if (PlayerMovement.Instance.IsGrounded() || !PlayerMovement.Instance.IsWalled())
+                if (PlayerMovement.Instance.IsGrounded() || !PlayerMovement.Instance.IsWalled() || !PlayerMovement.Instance.IsLedged())
                 {
                     yield break;
                 }
 
+                PlayerMovement.Instance.WallSlideMovement();
+                
                 yield return null;
             }
             
             // After exiting the loop ensure vertical momentum is halted
             PlayerMovement.Instance.HaltVerticalMomentum();
+            _slideToLedgePosCoroutine = null;
         }
     }
 }

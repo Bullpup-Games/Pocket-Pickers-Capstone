@@ -138,7 +138,7 @@ namespace _Scripts.Player.State
             
             // PlayerAnimator.Instance.endHang();
 
-            if (!isWalled)
+            if (!isWalled || PlayerMovement.Instance.IsLedged())
             {
                 return;
             }
@@ -186,6 +186,11 @@ namespace _Scripts.Player.State
                 return;
             }
             
+            if (PlayerMovement.Instance.JumpHeldFrameInput && PlayerMovement.Instance.CurrentFrameVelocity.y > 0f)
+            {
+                return;
+            }
+            
             // is touching a wall, is not grounded, and is moving the left stick in the direction of the wall they hit...
             if (!PlayerMovement.Instance.IsGrounded() &&
                 PlayerMovement.Instance.IsWalled() &&
@@ -212,6 +217,11 @@ namespace _Scripts.Player.State
         public bool IsWallState()
         {
             return CurrentState is WallState;
+        }
+
+        public bool IsLedgeState()
+        {
+            return CurrentState is LedgeState;
         }
     }
 }
