@@ -10,6 +10,7 @@ namespace _Scripts.Player.State
         private bool _onLedge;
         public void EnterState()
         {
+            PlayerAnimator.Instance.wallSlide();
             PlayerMovement.Instance.LerpVerticalMomentum();
             _onLedge = false;
         }
@@ -21,12 +22,17 @@ namespace _Scripts.Player.State
             if (PlayerMovement.Instance.JumpDownFrameInput)
             {
                 PlayerMovement.Instance.HandleWallJump();
+                PlayerAnimator.Instance.endSlide();
                 PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
                 return;
             }
-            
+
             if (!_onLedge)
+            {
+                PlayerAnimator.Instance.endHang();
                 PlayerMovement.Instance.WallSlideMovement();
+            }
+               
             
             PlayerMovement.Instance.HandleWallJump();
             CheckWallAndGroundConditions();
@@ -51,6 +57,8 @@ namespace _Scripts.Player.State
 
             // Set the last wall hang time to prevent immediate re-entry into WallState
             PlayerStateManager.Instance.SetLastWallHangTime(Time.time);
+            PlayerAnimator.Instance.endSlide();
+            PlayerAnimator.Instance.endHang();
         }
 
         /*
@@ -90,11 +98,12 @@ namespace _Scripts.Player.State
                 if (PlayerMovement.Instance.FrameInput.y < 0)
                 {
                     _onLedge = false;
+                    
                 }
                 
                 return;
             }
-            
+            PlayerAnimator.Instance.ledgeHang();
             _onLedge = true;
             
             if (_slideToLedgePosCoroutine != null) return;
