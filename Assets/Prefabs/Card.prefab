@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 8408566146375188472}
   m_Layer: 7
   m_Name: Card
-  m_TagString: Untagged
+  m_TagString: Card
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -159,7 +159,7 @@ MonoBehaviour:
   speed: 20
   totalBounces: 3
   bounces: 0
-  cardBounceEffect: {fileID: 7045521719431886938, guid: 552a98b4e08beb045b93041e262ac6cf, type: 3}
+  effectHandler: {fileID: 0}
   lastSafePosition: {x: 0, y: 0}
 --- !u!50 &7851773646926739524
 Rigidbody2D:
