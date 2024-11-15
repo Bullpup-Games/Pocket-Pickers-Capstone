@@ -40,7 +40,7 @@ namespace _Scripts
             if (col.gameObject.CompareTag("enemy"))
             {
                 var enemy = col.gameObject.GetComponent<IEnemyStateManagerBase>();
-                enemy.KillEnemy();
+                enemy.KillEnemyWithoutGeneratingSin();
             }
         }
     }
