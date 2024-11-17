@@ -9,10 +9,9 @@ namespace _Scripts.Camera
 
         public LayerMask playerLayer;
 
-        private void OnTriggerEnter2D(Collider2D col)
+        private void OnTriggerStay2D(Collider2D col)
         {
             if ((playerLayer.value & (1 << col.gameObject.layer)) == 0) return;
-            Debug.Log("Player Entered Room# " + roomNumber);
             if (CameraController.Instance.GetCurrentRoom() == roomNumber) return;
             
             CameraController.Instance.SwitchRooms(anchorPoint, roomNumber);
