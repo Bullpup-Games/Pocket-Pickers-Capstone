@@ -47,6 +47,8 @@ namespace _Scripts.Enemies.ViewTypes
 
         private float _viewAngle;
         private float _viewDistance;
+        public float GetCurrentViewAngle() => _viewAngle;
+        public float GetCurrentViewDistance() => _viewDistance;
         private IEnemySettings _settings;
         private IEnemyStateManagerBase _stateManager;
         private bool _playerDetectedThisFrame = false;
