@@ -5,10 +5,8 @@ namespace _Scripts.Camera
 {
     public class CameraController : MonoBehaviour
     {
-        // ROOM 1: 0, 0
-        // ROOM 2: 39.5, 0
-
         public float lerpSpeed;
+        public AnimationCurve movementCurve;
         private UnityEngine.Camera _cam;
         
         private int _currentRoom;
@@ -33,6 +31,7 @@ namespace _Scripts.Camera
         private static CameraController _instance;
 
         #endregion
+
         private void Awake()
         {
             _cam = GetComponent<UnityEngine.Camera>();
@@ -47,7 +46,6 @@ namespace _Scripts.Camera
             _currentRoom = roomNumber;
             _currentAnchorPoint = anchorPoint;
             StartCoroutine(SmoothSwitch(anchorPoint));
-
         }
 
         // Returns the current bounds of the camera
@@ -69,7 +67,9 @@ namespace _Scripts.Camera
 
             while (elapsedTime < duration)
             {
-                _cam.transform.position = Vector3.Lerp(startingPos, targetAnchorPoint, (elapsedTime / duration));
+                var t = elapsedTime / duration;
+                var curveValue = movementCurve.Evaluate(t);
+                _cam.transform.position = Vector3.Lerp(startingPos, targetAnchorPoint, curveValue);
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
