@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using _Scripts.Camera;
 using _Scripts.Enemies.Guard.State;
 using _Scripts.Enemies.Sniper.State;
 using _Scripts.Enemies.ViewTypes;
