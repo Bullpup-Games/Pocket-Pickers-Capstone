@@ -148,7 +148,7 @@ namespace _Scripts
             {
                 
                 Debug.Log("You win!");
-                SceneManager.LoadScene("winScreenPlaytest1");
+                //SceneManager.LoadScene("winScreenPlaytest1");
                 return true;
                
             }

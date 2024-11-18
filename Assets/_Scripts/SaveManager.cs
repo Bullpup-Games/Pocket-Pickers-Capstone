@@ -6,6 +6,7 @@ using System.Linq;
 using _Scripts;
 using _Scripts.Player;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 //Used to run persistance functions, setup and cleanup functions, and keep track of saved data
 public class SaveManager : MonoBehaviour
@@ -71,8 +72,15 @@ public class SaveManager : MonoBehaviour
         
         //release all of the sin you hold
         PlayerVariables.Instance.sinHeld = 0;
-        GameManager.Instance.checkForGameComplete(PlayerVariables.Instance.sinAccrued);
-        Cleanup();
+        if (GameManager.Instance.checkForGameComplete(PlayerVariables.Instance.sinAccrued))
+        {
+            SceneManager.LoadScene("winScreenPlaytest1");
+        }
+        else
+        {
+            Cleanup();
+        }
+        
         return;
     }
 
@@ -128,6 +136,9 @@ public class SaveManager : MonoBehaviour
         Debug.Log(SaveString);
         
         File.WriteAllText("Assets/_Scripts/Saves/Save.txt", SaveString);
+        
+        //transition to the main menu scene
+        SceneManager.LoadScene("MainMenuPlayTest1");
         return;
     }
 
