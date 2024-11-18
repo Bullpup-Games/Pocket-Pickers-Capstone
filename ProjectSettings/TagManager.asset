@@ -11,6 +11,7 @@ TagManager:
   - Sin
   - PotentialSin
   - EscapeRout
+  - Card
   layers:
   - Default
   - TransparentFX

@@ -248,7 +248,7 @@ namespace _Scripts.Enemies.Guard.State
             TransitionToState(this.DisabledState);
         }
         
-        public void KillEnemyFromSniper()
+        public void KillEnemyWithoutGeneratingSin()
         {
             if (CurrentState == DisabledState) return;
             Debug.Log("Guard Killed By Sniper.");

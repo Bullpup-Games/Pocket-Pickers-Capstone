@@ -209,7 +209,7 @@ namespace _Scripts.Enemies.Skreecher.State
             TransitionToState(DisabledState);
         }
         
-        public void KillEnemyFromSniper()
+        public void KillEnemyWithoutGeneratingSin()
         {
             if (CurrentState == DisabledState) return;
             Debug.Log("Skreecher Killed By Sniper.");
