@@ -86,11 +86,11 @@ namespace _Scripts
 
             //deal with prefabs and active/potential sin loop
             activeSins.Remove(sin);
-            //TODO instantiate a new potential sin gameobject at the location of sin and add it to potentialSins
-            GameObject newPotentialSin = Instantiate(potentialSinPrefab, sin.transform.position, Quaternion.identity);
-            potentialSins.Add(newPotentialSin);
-            Debug.Log("Number of potential sins: " + potentialSins.Count);
-
+            
+            // GameObject newPotentialSin = Instantiate(potentialSinPrefab, sin.transform.position, Quaternion.identity);
+            // potentialSins.Add(newPotentialSin);
+            // Debug.Log("Number of potential sins: " + potentialSins.Count);
+            InstantiatePotentialSin(sin.transform.position);
 
             //TODO have an event that is called to let all enemies know that a sin was collected
             //deal with win condition, later we will remove this and put it in a different script for finishing a level
@@ -166,6 +166,13 @@ namespace _Scripts
             activeSins.Add(newSin);
 
             remainingSin += weight;
+        }
+
+        public void InstantiatePotentialSin(Vector3 position)
+        {
+            GameObject newPotentialSin = Instantiate(potentialSinPrefab, position, Quaternion.identity);
+            potentialSins.Add(newPotentialSin);
+            Debug.Log("Number of potential sins: " + potentialSins.Count);
         }
     }
 }

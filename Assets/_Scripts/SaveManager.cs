@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using _Scripts;
 using _Scripts.Player;
 using UnityEngine;
@@ -93,6 +95,39 @@ public class SaveManager : MonoBehaviour
          * 7. If we don't have a cutscene, transition to the main menu
          */
         Debug.Log("Escape level, do not complete game");
+        
+        SaveData saveData = new SaveData();
+        
+        //grab all sins
+        List<SinData> sins = new List<SinData>();//the data we'll put in the save object
+        List<GameObject> sinObjects = GameManager.Instance.activeSins;
+        
+        foreach (GameObject sinObject in sinObjects)
+        {
+            sins.Add(SinToData(sinObject));
+        }
+        saveData.Sins = sins;
+        
+        //grab potential sins
+        List<Vector3> potentialSins = new List<Vector3>();
+        List<GameObject> potentialSinObjects = GameManager.Instance.potentialSins;
+
+        foreach (GameObject potentialSinObject in potentialSinObjects)
+        {
+            potentialSins.Add(PotentialSinToVector3(potentialSinObject));
+        }
+        saveData.PotentialSins = potentialSins;
+        
+        //add the player's data
+        saveData.playerData = FetchPlayerData();
+        
+        //TODO eventually we will want to save the one time triggers here as well
+        
+        //save the player's data as a JSON file
+        string SaveString = SaveDataToJson(saveData);
+        Debug.Log(SaveString);
+        
+        File.WriteAllText("Assets/_Scripts/Saves/Save.txt", SaveString);
         return;
     }
 
@@ -128,6 +163,12 @@ public class SaveManager : MonoBehaviour
         GameManager.Instance.InstantiateSin(sinData.Weight,sinData.Position);
     }
 
+    private Vector3 PotentialSinToVector3(GameObject potentialSin)
+    {
+        return potentialSin.transform.position;
+    }
+    
+    //we don't need a Vector3ToPotentialSin because we can just call the function in GameManager
     #endregion
     
     #region settingPlayer
@@ -154,6 +195,53 @@ public class SaveManager : MonoBehaviour
     }
 
     #endregion
+
+    private string SaveDataToJson(SaveData saveData)
+    {
+        String Json = "{";
+        
+        //adding the sins
+        Json+= ("\"Sins\": [");
+
+        
+        //putting a comma between every instance of a sin
+        if (saveData.Sins.Count > 0)
+        {
+            Json += (JsonUtility.ToJson(saveData.Sins[0]));
+        }
+        for (int i = 1; i < saveData.Sins.Count; i++)
+        {
+            Json += (",");
+            Json += (JsonUtility.ToJson(saveData.Sins[i]));
+            
+        }
+        Json+= ("]");
+        
+        //adding the potential sins
+
+        Json += ", \"PotentialSins\": [";
+        if (saveData.PotentialSins.Count > 0)
+        {
+            Json += (JsonUtility.ToJson(saveData.PotentialSins[0]));
+        }
+        
+        for (int i = 1; i < saveData.PotentialSins.Count; i++)
+        {
+            Json += (",");
+            Json += (JsonUtility.ToJson(saveData.PotentialSins[i]));
+        }
+
+        Json += "]";
+        
+        //adding the player stats
+        Json += ", \"PlayerData\": ";
+        
+        Json += (JsonUtility.ToJson(saveData.playerData));
+
+        Json += "}";
+        //Debug.Log(Json);
+        return Json;
+    }
     
     private class SaveData
     {
