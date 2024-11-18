@@ -26,8 +26,8 @@ namespace _Scripts.Enemies.Skreecher.State
         [HideInInspector] public Rigidbody2D Rigidbody2D;
         [HideInInspector] public Collider2D Collider2D;
         [HideInInspector] public IViewType[] ViewTypes;
-        [SerializeField] private CameraController mainCamera;
-
+        [SerializeField] private BoxCollider2D enemyViewRangeCollider;
+        
         [Header("Gizmo Settings")]
         [SerializeField] private Color patrolPathColor = Color.green;
         [SerializeField] private float patrolPointRadius = 0.1f;
@@ -145,18 +145,19 @@ namespace _Scripts.Enemies.Skreecher.State
             return false;
         }
 
+
         private List<Collider2D> FindAllEnemiesInRange()
         {
             var enemies = new List<Collider2D>();
-            var camBounds = mainCamera.OrthographicBounds();
+            var filter = new ContactFilter2D();
             
-            var hits = Physics2D.OverlapBoxAll(
-                (Vector2)camBounds.center,
-                (Vector2)camBounds.size,
-                0f,
-                LayerMask.GetMask("Enemy"));
+            filter.SetLayerMask(LayerMask.GetMask("Enemy"));
+            filter.useLayerMask = true;
+
+            var results = new List<Collider2D>();
+            enemyViewRangeCollider.OverlapCollider(filter, results);
+            enemies.AddRange(results);
             
-            enemies.AddRange(hits);
             return enemies;
         }
 
