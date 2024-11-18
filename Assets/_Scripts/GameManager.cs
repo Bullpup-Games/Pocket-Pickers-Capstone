@@ -11,10 +11,14 @@ namespace _Scripts
     
     /*
      * The plan:
-     * 1. Add an event that is called whenever the player picks up a sin
-     * 2. Have all of the enemies listen for the event
-     * 3. When the enemies hear the event, they will look at the player's sin held (not the sin accrued)
-     * 4. The enemies will adjust their fov and distance based on how much sin the player is holding
+     * Create a new file, not a script.
+     * Give this file cleanup and setup functions
+     * call the cleanup function from the GameManager's Awake() function
+     * Make seperate functions for completing the level and for dying in the level
+     * call these functions when appropriate
+     * Create a JSON file that will be the saved data
+     * Make sure that there is always 1 and only one of these at any given time
+     * 
      */
     public class GameManager : MonoBehaviour
     {
@@ -121,17 +125,17 @@ namespace _Scripts
             
             //remove the old potential sin
             GameObject potentialSin = potentialSins[location];
-            GameObject newSin = GameObject.Instantiate(sinPrefab, potentialSin.transform.position, Quaternion.identity);
-            
+            //GameObject newSin = GameObject.Instantiate(sinPrefab, potentialSin.transform.position, Quaternion.identity);
+            InstantiateSin(weight,potentialSin.transform.position);
             potentialSins.RemoveAt(location);
             Destroy(potentialSin);
             
             //create a new sin
-            newSin.GetComponent<Sin>().weight = weight;
-            activeSins.Add(newSin);
-
-            remainingSin += weight;
-            
+            // newSin.GetComponent<Sin>().weight = weight;
+            // activeSins.Add(newSin);
+            //
+            // remainingSin += weight;
+            //
             Debug.Log("Number of potential sins: " + potentialSins.Count);
             Debug.Log("Remaining sin " + remainingSin);
         }
@@ -150,6 +154,18 @@ namespace _Scripts
             }
 
             return false;
+        }
+
+
+        public void InstantiateSin(int weight, Vector3 pos)
+        {
+            
+            //todo add logic to select the correct sin prefab based on the sin's weight
+            GameObject newSin = Instantiate(sinPrefab, pos, Quaternion.identity);
+            newSin.GetComponent<Sin>().weight = weight;
+            activeSins.Add(newSin);
+
+            remainingSin += weight;
         }
     }
 }

@@ -93,9 +93,7 @@ namespace _Scripts.Player
 
         public void Escape()
         {
-            //release all of the sin you hold
-            sinHeld = 0;
-            GameManager.Instance.checkForGameComplete(sinAccrued);
+            SaveManager.Instance.EscapeLevel();
         }
     }
 }

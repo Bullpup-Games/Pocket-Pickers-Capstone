@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4787900142952941893}
   - component: {fileID: 7507623754815840685}
   - component: {fileID: 2204501328560629039}
+  - component: {fileID: 1881165730668604333}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -89,6 +90,18 @@ MonoBehaviour:
   cooldown: 0.5
   cardSpeed: 20
   cardLifeTime: 10
-  falseTriggerCooldown: 10
+  falseTriggerCooldown: 5
   falseTriggerOnCooldown: 0
   lastFalseTriggerPosition: {x: 0, y: 0}
+--- !u!114 &1881165730668604333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8882917671649753147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f77d89e83d144946ad1e8eb75aaf0de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
