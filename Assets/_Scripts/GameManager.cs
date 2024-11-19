@@ -163,10 +163,8 @@ namespace _Scripts
                     SceneManager.LoadScene("winScreenPlaytest1");
                     return;
                 }
-                
-                
                
-                    SaveManager.Instance.Cleanup();
+                SaveManager.Instance.Cleanup();
                 
                 
                 return;
@@ -187,6 +185,11 @@ namespace _Scripts
             
             int sinToDistribute = PlayerVariables.Instance.sinHeld + PlayerVariables.Instance.sinAccrued + DeathPenalty;
             RedistributeSin(sinToDistribute);
+            
+            PlayerVariables.Instance.sinHeld = 0;
+            PlayerVariables.Instance.sinAccrued = 0;
+            
+            SaveManager.Instance.Cleanup();
             return;
         }
 
@@ -194,6 +197,31 @@ namespace _Scripts
         //used when the player dies. Takes all of their sin, and breaks it down into several sins, and then instantiates them
         private void RedistributeSin(int sinToDistribute)
         {
+
+            List<int> segments = new List<int>();
+
+            //break down sinToDistribute into segments
+            while (sinToDistribute > 20)
+            {
+                int segment = Random.Range(10, 50);
+                
+                //if we have a situation with small enough sinToDistribute left, we will just throw all of it into one last sin
+                if (segment > sinToDistribute || sinToDistribute - segment > 10)
+                {
+                    segments.Add(sinToDistribute);
+                    sinToDistribute = 0;
+                    break;
+                }
+                segments.Add(segment);
+                sinToDistribute -= segment;
+            }
+
+            foreach (int segment in segments)
+            {
+                PotentialSinToSin(segment);
+            }
+            
+            
             return;
         }
         public bool checkForGameComplete(int modifier)
