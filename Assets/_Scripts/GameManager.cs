@@ -26,6 +26,8 @@ namespace _Scripts
         public List<GameObject> potentialSins;
         public int remainingSin;
         public int winThreshold;//what is the maximum amount of sin that can remain and you still win
+
+        public int DeathPenalty; //the penalty in sin for dying
         //public Scene credits;
 
         //prefabs
@@ -83,14 +85,14 @@ namespace _Scripts
 
             //deal with stats in Player
             PlayerVariables.Instance.CollectSin(sinWeight);
-
-            //deal with prefabs and active/potential sin loop
-            activeSins.Remove(sin);
+            
+           
+            SinToPotentialSin(sin);
             
             // GameObject newPotentialSin = Instantiate(potentialSinPrefab, sin.transform.position, Quaternion.identity);
             // potentialSins.Add(newPotentialSin);
             // Debug.Log("Number of potential sins: " + potentialSins.Count);
-            InstantiatePotentialSin(sin.transform.position);
+            // InstantiatePotentialSin(sin.transform.position);
 
             //TODO have an event that is called to let all enemies know that a sin was collected
             //deal with win condition, later we will remove this and put it in a different script for finishing a level
@@ -114,21 +116,22 @@ namespace _Scripts
         public void releaseSin(int weight)
         {
             //making sure that if you have filled every possible potential sin location, we can return safely
-            if (potentialSins.Count == 0)
-            {
-                Debug.Log("It is impossible to hold more sins");
-                return;
-            }
+            // if (potentialSins.Count == 0)
+            // {
+            //     Debug.Log("It is impossible to hold more sins");
+            //     return;
+            // }
             
+            PotentialSinToSin(weight);
             //choosing the location
-            int location = Random.Range(0, potentialSins.Count);
-            
-            //remove the old potential sin
-            GameObject potentialSin = potentialSins[location];
-            //GameObject newSin = GameObject.Instantiate(sinPrefab, potentialSin.transform.position, Quaternion.identity);
-            InstantiateSin(weight,potentialSin.transform.position);
-            potentialSins.RemoveAt(location);
-            Destroy(potentialSin);
+            // int location = Random.Range(0, potentialSins.Count);
+            //
+            // //remove the old potential sin
+            // GameObject potentialSin = potentialSins[location];
+            // //GameObject newSin = GameObject.Instantiate(sinPrefab, potentialSin.transform.position, Quaternion.identity);
+            // InstantiateSin(weight,potentialSin.transform.position);
+            // potentialSins.RemoveAt(location);
+            // Destroy(potentialSin);
             
             //create a new sin
             // newSin.GetComponent<Sin>().weight = weight;
@@ -139,7 +142,60 @@ namespace _Scripts
             Debug.Log("Number of potential sins: " + potentialSins.Count);
             Debug.Log("Remaining sin " + remainingSin);
         }
+        
+        public void EscapeLevel()
+            {
+                /*
+                 * The plan:
+                 * 1. reset player sin held to 0 (release the sin they collected)
+                 * 2. Run check to see if you have won the game. If they have:
+                 *      a: delete their saved data
+                 *      b: set there saved data to be the default JSON
+                 *      c: transition to credits
+                 * 3. Call cleanup, possibly pass in a cutscene to transition to
+                 * 
+                 */
+                
+                //release all of the sin you hold
+                PlayerVariables.Instance.sinHeld = 0;
+                if (checkForGameComplete(PlayerVariables.Instance.sinAccrued))
+                {
+                    SceneManager.LoadScene("winScreenPlaytest1");
+                    return;
+                }
+                
+                
+               
+                    SaveManager.Instance.Cleanup();
+                
+                
+                return;
+            }
 
+        
+        public void Die()
+        {
+            /*
+             * The plan:
+             * 1. Redistribute all sin that has been accumulated in the level
+             *      a: this should be sin held + a sin penalty + sin comitted
+             *      b: Break this down into several reasonably sized portions
+             *      c: instantiate each of these portions into a new sin from the potential sins
+             * 2. Reset the player's sin held and sin commited to 0
+             * 3. Call cleanup, possibly pass in a cutscene to transition to
+             */
+            
+            int sinToDistribute = PlayerVariables.Instance.sinHeld + PlayerVariables.Instance.sinAccrued + DeathPenalty;
+            RedistributeSin(sinToDistribute);
+            return;
+        }
+
+        
+        //used when the player dies. Takes all of their sin, and breaks it down into several sins, and then instantiates them
+        private void RedistributeSin(int sinToDistribute)
+        {
+            return;
+        }
         public bool checkForGameComplete(int modifier)
         {
             calculateRemainingSin();
@@ -156,6 +212,31 @@ namespace _Scripts
             return false;
         }
 
+
+        //turns an existing active sin into a potential sin
+        private void SinToPotentialSin(GameObject sin)
+        {
+            activeSins.Remove(sin);
+            InstantiatePotentialSin(sin.transform.position);
+        }
+
+        //randomly picks a potential sin, and turns it into a sin
+        private void PotentialSinToSin(int weight)
+        {
+            if (potentialSins.Count == 0)
+            {
+                Debug.Log("It is impossible to hold more sins");
+                return;
+            }
+            
+            int location = Random.Range(0, potentialSins.Count);
+            GameObject potentialSin = potentialSins[location];
+            
+            InstantiateSin(weight,potentialSin.transform.position);
+            potentialSins.RemoveAt(location);
+            
+            Destroy(potentialSin);
+        }
 
         public void InstantiateSin(int weight, Vector3 pos)
         {

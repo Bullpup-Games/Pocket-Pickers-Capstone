@@ -91,9 +91,9 @@ namespace _Scripts.Player
             isFacingRight = transform.localScale.x > 0; 
         }
 
-        public void Escape()
-        {
-            SaveManager.Instance.EscapeLevel();
-        }
+        // public void Escape()
+        // {
+        //     GameManager.Instance.EscapeLevel();
+        // }
     }
 }

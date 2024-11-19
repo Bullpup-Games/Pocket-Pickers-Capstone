@@ -43,46 +43,9 @@ public class SaveManager : MonoBehaviour
 
     #endregion
     
-    public void Die()
-    {
-        /*
-         * The plan:
-         * 1. Redistribute all sin that has been accumulated in the level
-         *      a: this should be sin held + a sin penalty + sin comitted
-         *      b: Break this down into several reasonably sized portions
-         *      c: instantiate each of these portions into a new sin from the potential sins
-         * 2. Reset the player's sin held and sin commited to 0
-         * 3. Call cleanup, possibly pass in a cutscene to transition to
-         */
-        return;
-    }
+   
 
-    public void EscapeLevel()
-    {
-        /*
-         * The plan:
-         * 1. reset player sin held to 0 (release the sin they collected)
-         * 2. Run check to see if you have won the game. If they have:
-         *      a: delete their saved data
-         *      b: set there saved data to be the default JSON
-         *      c: transition to credits
-         * 3. Call cleanup, possibly pass in a cutscene to transition to
-         * 
-         */
-        
-        //release all of the sin you hold
-        PlayerVariables.Instance.sinHeld = 0;
-        if (GameManager.Instance.checkForGameComplete(PlayerVariables.Instance.sinAccrued))
-        {
-            SceneManager.LoadScene("winScreenPlaytest1");
-        }
-        else
-        {
-            Cleanup();
-        }
-        
-        return;
-    }
+    
 
     public void Cleanup()
     {
