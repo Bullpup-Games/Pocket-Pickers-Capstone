@@ -103,7 +103,7 @@ namespace _Scripts.Enemies.Sniper.State
             TransitionToState(DisabledState);
         }
 
-        public void KillEnemyFromSniper()
+        public void KillEnemyWithoutGeneratingSin()
         {
             if (CurrentState == DisabledState) return;
             Debug.Log("Sniper Killed By Sniper.");

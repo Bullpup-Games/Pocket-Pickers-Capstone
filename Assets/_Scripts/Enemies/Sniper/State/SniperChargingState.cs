@@ -52,7 +52,7 @@ namespace _Scripts.Enemies.Sniper.State
             {
                 Debug.Log("Enemies in sniper's path: " + _enemy.RayView.EnemiesDetected().Count);
                 foreach (var enemy in _enemy.RayView.EnemiesDetected())
-                    enemy.GetComponent<IEnemyStateManagerBase>().KillEnemyFromSniper();
+                    enemy.GetComponent<IEnemyStateManagerBase>().KillEnemyWithoutGeneratingSin();
             }
             
             Debug.Log("Switching to reload");

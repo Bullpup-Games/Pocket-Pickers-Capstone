@@ -4,8 +4,7 @@ namespace _Scripts.Enemies
     {
         // Used to transition an enemy to disabled state AND generate sin, called when a card collides with an enemy
         void KillEnemy();
-        // Called from the SniperChargingState, used to kill enemies via sniper shots (Does NOT generate sin)
-        void KillEnemyFromSniper();
+        void KillEnemyWithoutGeneratingSin();
         // Called from the SkreecherAggroState, puts nearby enemies into their aggro state with a bool that it came from the skreecher
         // Enemies will track the player's position at the time of the call
         void AlertFromAggroSkreecher();
