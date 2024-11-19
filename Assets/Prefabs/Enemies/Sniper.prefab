@@ -55,6 +55,7 @@ MonoBehaviour:
   maxChargeTime: 2.5
   chargeTime: 1.5
   reloadTime: 2
+  trackingSpeed: 15
   investigationTime: 3
   maxFallSpeed: 20
   gravity: 10
@@ -92,7 +93,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   sinPenalty: 0
-  alertedFromSkreecher: 0
+  alertedFromAggroSkreecher: 0
+  alertedFromInvestigatingSkreecher: 0
 --- !u!114 &6725459177519244817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -107,9 +109,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSweepModifier: 3
   minSweepModifier: 1
-  sweepAngle: 45
+  sweepAngle: 90
   defaultSweepSpeed: 10
-  sweepSpeed: 30
+  sweepSpeed: 10
   maxRayDistance: 100
   offset: {x: -0, y: 0.95}
   playerLayer:
