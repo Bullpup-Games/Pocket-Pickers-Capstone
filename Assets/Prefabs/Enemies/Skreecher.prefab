@@ -56,7 +56,7 @@ MonoBehaviour:
   Settings: {fileID: 0}
   Rigidbody2D: {fileID: 0}
   Collider2D: {fileID: 0}
-  mainCamera: {fileID: 0}
+  enemyViewRangeCollider: {fileID: 5084863464387873678}
   patrolPathColor: {r: 0, g: 1, b: 0, a: 1}
   patrolPointRadius: 0.1
   environmentLayer:
@@ -69,7 +69,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   sinPenalty: 0
-  enemyViewRangeCollider: {fileID: 5084863464387873678}
 --- !u!114 &2873772408991761570
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,6 +84,7 @@ MonoBehaviour:
   baseDetectionTime: 2.5
   waitBeforeTransitionTime: 1.5
   screechTime: 1
+  disabledTimeout: 5
 --- !u!114 &3258220910096611788
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,7 +110,7 @@ MonoBehaviour:
     m_Bits: 64
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   offset: {x: -0, y: 0.8}
   color: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &611405951916405592

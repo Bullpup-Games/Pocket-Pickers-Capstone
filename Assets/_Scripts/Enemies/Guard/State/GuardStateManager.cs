@@ -160,7 +160,7 @@ namespace _Scripts.Enemies.Guard.State
 
         public void Move(Vector2 direction, float speed)
         {
-            if (Mathf.Abs(_yPosLastFrame) - Mathf.Abs(transform.position.y) >= 0.0035f &&
+            if (Mathf.Abs(_yPosLastFrame) - Mathf.Abs(transform.position.y) >= 0.0030f &&
                 !Settings.IsGrounded())
                 StopMoving();
             else

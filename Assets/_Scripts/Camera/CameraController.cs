@@ -35,8 +35,8 @@ namespace _Scripts.Camera
         private void Awake()
         {
             _cam = GetComponent<UnityEngine.Camera>();
-            _currentRoom = 1;
-            _currentAnchorPoint = new Vector3(0f, 0f, -10f);
+            _currentRoom = 0;
+            _currentAnchorPoint = new Vector3(-34.5f, 0f, -10f);
         }
 
         public void SwitchRooms(Vector3 anchorPoint, int roomNumber)
