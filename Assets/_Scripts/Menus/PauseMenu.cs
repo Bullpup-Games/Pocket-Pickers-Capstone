@@ -59,13 +59,13 @@ public class PauseMenu : MonoBehaviour
 
     public void QuitToMainMenu()
     {
-        Application.Quit();
+        // Application.Quit();
         
-        // pauseMenuUI.SetActive(false);
-        // Time.timeScale = 1f;
-        // IsPaused = false;
-        // Cursor.visible = true;
-        // Cursor.lockState = CursorLockMode.None;
-        // SceneManager.LoadScene("MainMenuPlayTest1");
+        pauseMenuUI.SetActive(false);
+        Time.timeScale = 1f;
+        IsPaused = false;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        SceneManager.LoadScene("MainMenuPlayTest2");
     }
 }

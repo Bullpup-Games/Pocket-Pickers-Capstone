@@ -8,8 +8,8 @@ public class Timeout : MonoBehaviour
     // Start is called before the first frame update
     private IEnumerator timeout()
     {
-        yield return new WaitForSeconds(10);
-        SceneManager.LoadScene("PlayTest1 map");
+        yield return new WaitForSeconds(5);
+        SceneManager.LoadScene("Map");
     }
 
     void Start()
