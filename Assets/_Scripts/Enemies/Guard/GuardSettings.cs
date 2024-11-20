@@ -33,6 +33,8 @@ namespace _Scripts.Enemies.Guard
         public float qteTimeLimit = 4f;
         public float timeLostPerEncounter = 0.5f;
         public int counterGoal = 15;
+
+        public float disabledTimeout = 5f; // Amount of time in seconds the guard patroller will spend disabled
         
         #region SinModifiers
         private float _detectionModifier = 1.0f; // Speed modifier for detecting the player

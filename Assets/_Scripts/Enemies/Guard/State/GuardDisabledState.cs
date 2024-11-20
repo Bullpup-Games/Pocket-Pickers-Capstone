@@ -1,3 +1,4 @@
+using System.Collections;
 using _Scripts.Player;
 using UnityEngine;
 
@@ -6,15 +7,17 @@ namespace _Scripts.Enemies.Guard.State
     public class GuardDisabledState : IEnemyState<GuardStateManager>
     {
         private GuardStateManager _enemy;
-
+        private Coroutine _timeout;
         public void EnterState(GuardStateManager enemy)
         {
             _enemy = enemy;
             _enemy.StopMoving();
-            _enemy.Rigidbody2D.isKinematic = true;
-            Physics2D.IgnoreCollision(PlayerVariables.Instance.Collider2D, _enemy.Collider2D);
-            _enemy.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 90f)); // TODO: Change eventually
+            // _enemy.Rigidbody2D.isKinematic = true;
+            Physics2D.IgnoreCollision(PlayerVariables.Instance.Collider2D, _enemy.Collider2D, true);
+            // _enemy.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 90f)); // TODO: Change eventually
             _enemy.Settings.removeListeners();
+
+            _timeout = _enemy.StartCoroutine(Timeout());
         }
 
         public void UpdateState()
@@ -31,7 +34,17 @@ namespace _Scripts.Enemies.Guard.State
             Physics2D.IgnoreCollision(PlayerVariables.Instance.Collider2D, _enemy.Collider2D);
         }
 
-        public void ExitState() {}
+        public void ExitState()
+        {
+            if (_timeout is not null)
+            {
+                _enemy.StopCoroutine(_timeout);
+                _timeout = null;
+            }
+
+            Physics2D.IgnoreCollision(PlayerVariables.Instance.Collider2D, _enemy.Collider2D, false);
+
+        }
 
         public void OnCollisionEnter2D(Collision2D col)
         {
@@ -39,5 +52,11 @@ namespace _Scripts.Enemies.Guard.State
         }
         
         public void OnCollisionStay2D(Collision2D col) {}
+
+        private IEnumerator Timeout()
+        {
+            yield return new WaitForSeconds(_enemy.Settings.disabledTimeout);
+            _enemy.TransitionToState(_enemy.SearchingState);
+        }
     }
 }

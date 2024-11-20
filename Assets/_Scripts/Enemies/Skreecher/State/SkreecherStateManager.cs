@@ -109,7 +109,7 @@ namespace _Scripts.Enemies.Skreecher.State
             if (CurrentState == DisabledState)
             {
                 Debug.Log("Tried to exit from DisabledState");
-                return;
+                // return;
             }
 
             PreviousState = CurrentState;

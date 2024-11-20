@@ -141,7 +141,7 @@ namespace _Scripts.Enemies.Guard.State
             if (CurrentState == DisabledState)
             {
                 Debug.Log("Tried to exit from DisabledState");
-                return;
+                // return;
             }
 
             // Should immediately go to search state after being stunned, unless being disabled.
