@@ -232,7 +232,8 @@ namespace _Scripts.Enemies.Guard.State
             // Debug.Log("View Distance: " + viewDistance);
 
             visionConeLight.intensity = 0.85f;
-            visionConeLight.pointLightOuterAngle = viewAngle / 2f;
+            // visionConeLight.pointLightOuterAngle = viewAngle / 2f;
+            visionConeLight.pointLightOuterAngle = viewAngle;
             visionConeLight.pointLightOuterRadius = viewDistance;
         }
         
