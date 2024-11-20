@@ -47,12 +47,12 @@ MonoBehaviour:
   m_ComponentVersion: 1
   m_LightType: 3
   m_BlendStyleIndex: 0
-  m_FalloffIntensity: 0.5
+  m_FalloffIntensity: 0.8
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 0.85
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: 00000000f74ce827a36230479f76e18b8f5af0a37590e8ca
+  m_ApplyToSortingLayers: 00000000a36230479f76e18b8f5af0a37590e8caf74ce827
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -68,7 +68,7 @@ MonoBehaviour:
   m_LocalBounds:
     m_Center: {x: 0, y: -0.00000011920929, z: 0}
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
-  m_PointLightInnerAngle: 360
+  m_PointLightInnerAngle: 0
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
   m_PointLightOuterRadius: 1
@@ -254,6 +254,7 @@ MonoBehaviour:
   qteTimeLimit: 4
   timeLostPerEncounter: 0.5
   counterGoal: 15
+  disabledTimeout: 5
   totalSearchTime: 16
   searchIntervalTime: 4
   stunLength: 3
