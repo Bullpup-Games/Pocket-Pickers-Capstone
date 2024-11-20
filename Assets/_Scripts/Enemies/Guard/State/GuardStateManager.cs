@@ -228,8 +228,8 @@ namespace _Scripts.Enemies.Guard.State
             var viewAngle = coneView.GetCurrentViewAngle();
             var viewDistance = coneView.GetCurrentViewDistance();
             
-            Debug.Log("View Angle: " + viewAngle);
-            Debug.Log("View Distance: " + viewDistance);
+            // Debug.Log("View Angle: " + viewAngle);
+            // Debug.Log("View Distance: " + viewDistance);
 
             visionConeLight.intensity = 0.85f;
             visionConeLight.pointLightInnerAngle = viewAngle / 2f;
