@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Lava Test.unity
+    guid: b210c92041d574e51aa6fc47a796016e
+  - enabled: 1
     path: Assets/Scenes/PlayTest1/MainMenuPlayTest1.unity
     guid: 20424292dbd1946cbaa9c18319f87871
   - enabled: 1

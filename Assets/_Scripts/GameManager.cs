@@ -63,6 +63,8 @@ namespace _Scripts
             calculateRemainingSin();
             potentialSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("PotentialSin"));
             Debug.Log("The total amount of sin in the game is " + remainingSin);
+            
+            SaveManager.Instance.Setup();
         }
 
         private int calculateRemainingSin()
@@ -157,6 +159,7 @@ namespace _Scripts
                  */
                 
                 //release all of the sin you hold
+                if (PlayerVariables.Instance.sinHeld == 0) {return;}
                 PlayerVariables.Instance.sinHeld = 0;
                 if (checkForGameComplete(PlayerVariables.Instance.sinAccrued))
                 {

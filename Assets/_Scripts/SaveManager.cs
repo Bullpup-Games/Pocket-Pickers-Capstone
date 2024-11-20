@@ -3,10 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Json;
 using _Scripts;
 using _Scripts.Player;
+//using Unity.Plastic.Newtonsoft.Json;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
+//using System.Text.Json;
+//using System.Text.Json.Serialization;
+
+
 
 //Used to run persistance functions, setup and cleanup functions, and keep track of saved data
 public class SaveManager : MonoBehaviour
@@ -14,8 +22,8 @@ public class SaveManager : MonoBehaviour
     
     /*
      * The plan:
-     * 1. We should have a Json file that is stored in this function
-     * 2. Die and EscapeLevel should both run, and then delegate to Cleanup
+     * x 1. We should have a Json file that is stored in this function
+     * x 2. Die and EscapeLevel should both run, and then delegate to Cleanup
      * 3. Cleanup should grab all relevant data, and save it in the JSON file, overwriting what was previously there
      * 4. Setup should read the JSON file and set all data in the scene based on the save file
      * 5. We should also have a seperate JSON file for default save, which will be the first thing that will be loaded in
@@ -24,6 +32,7 @@ public class SaveManager : MonoBehaviour
 
     //public File SaveFile; //JSON file 
     
+    public string saveFilePath;// = Path.Combine(Application.persistentDataPath, "Save.txt"); 
     
     #region Singleton
 
@@ -42,29 +51,20 @@ public class SaveManager : MonoBehaviour
     private static SaveManager _instance;
 
     #endregion
-    
-   
 
-    
+
+    private void Awake()
+    {
+        saveFilePath = Application.persistentDataPath + "/save.txt";
+        if (!Directory.Exists(Application.persistentDataPath))
+        {
+            Directory.CreateDirectory(Application.persistentDataPath);
+        }
+    }
 
     public void Cleanup()
     {
-        /*
-         * The plan:
-         * 1. get access to the JSON save file
-         * 2. Grab hold of the list of active sins, and the list of potential sins, including
-         *      a: active sin weight
-         *      b: active sin positon
-         *      c: potential sin position
-         * 3. Get the Player Controller's stats, including
-         *      a: sin held
-         *      b: sin committed
-         *      c: sin threshold
-         * 4. Parse all of these into JSON format
-         * 5. Overwrite the JSON save file with the new information
-         * 6. If we end up having a cutscene, transition to the cutscene that was passed in
-         * 7. If we don't have a cutscene, transition to the main menu
-         */
+        
         Debug.Log("Escape level, do not complete game");
         
         SaveData saveData = new SaveData();
@@ -98,8 +98,22 @@ public class SaveManager : MonoBehaviour
         string SaveString = SaveDataToJson(saveData);
         Debug.Log(SaveString);
         
-        File.WriteAllText("Assets/_Scripts/Saves/Save.txt", SaveString);
-        
+       //save the data
+        try
+        {
+            Debug.Log(saveFilePath);
+            using (StreamWriter sw = new StreamWriter(saveFilePath, false))
+            {
+                //Debug.Log("Writing " + saveTime + " to save copy file");
+                sw.Write(SaveString);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("Error during saving: " + ex.Message);
+        }
+
+        //TODO transition to a seperate scene passed in by the escape or die function
         //transition to the main menu scene
         SceneManager.LoadScene("MainMenuPlayTest1");
         return;
@@ -119,6 +133,24 @@ public class SaveManager : MonoBehaviour
          * 7. Calculate total amount of sin in level (call function in Game Manager)
          * 8. Set the sin UI meters to the correct levels
          */
+
+        //grab saved data from file
+        string saveDataJson = "";
+        try
+        {
+            using (StreamReader sr = new StreamReader(saveFilePath))
+            {
+                saveDataJson = sr.ReadToEnd();
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("Error during saving: " + ex.Message);
+        }
+        
+        //parse saved data into SaveData object
+        JsonToSaveData(saveDataJson);
+       
         return;
     }
 
@@ -170,6 +202,7 @@ public class SaveManager : MonoBehaviour
 
     #endregion
 
+    #region JsonParsing
     private string SaveDataToJson(SaveData saveData)
     {
         String Json = "{";
@@ -216,26 +249,67 @@ public class SaveManager : MonoBehaviour
         //Debug.Log(Json);
         return Json;
     }
-    
-    private class SaveData
-    {
-        public List<SinData> Sins;
-        public List<Vector3> PotentialSins;
-        public PlayerData playerData;
-    }
 
+    private SaveData JsonToSaveData(string json)
+    {
+        SaveData saveData = new SaveData();
+        
+        JsonUtility.FromJsonOverwrite(json, saveData);
+        Debug.Log("sins contains " + saveData.Sins.Count + " sins");
+        
+        return saveData;
+    }
+    
+    #endregion
+    [Serializable]
     private class SinData
     {
         public int Weight;
         public Vector3 Position;
+
+        public string ToString()
+        {
+            return Weight.ToString() + Position.ToString();
+        }
     }
 
+    [Serializable]
     private class PlayerData
     {
         public int SinHeld;
         public int SinAccrued;
         public int SinThreshold;
+
+        public string ToString()
+        {
+            return SinHeld.ToString() + SinAccrued.ToString() + SinThreshold.ToString();
+        }
     }
+    [Serializable]
+    private class SaveData
+    {
+        public List<SinData> Sins;
+        public List<Vector3> PotentialSins;
+        public PlayerData playerData;
+
+        public string ToString()
+        {
+            string result = "";
+            foreach (SinData sin in Sins)
+            {
+                result += sin.ToString() + "\n";
+            }
+
+            foreach (Vector3 potentialSin in PotentialSins)
+            {
+                result += potentialSin.ToString() + "\n";
+            }
+            result += playerData.ToString();
+            return result;
+        }
+    }
+
+   
 }
 
 

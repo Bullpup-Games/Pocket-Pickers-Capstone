@@ -28,7 +28,8 @@ namespace _Scripts
             if (col.gameObject.CompareTag("Player"))
             {
                 // TODO: Hook up to the cleanup handler when it is made
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                GameManager.Instance.Die();
             } 
             
             if (col.gameObject.CompareTag("Card"))
