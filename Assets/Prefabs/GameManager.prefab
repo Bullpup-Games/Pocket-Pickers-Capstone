@@ -50,8 +50,8 @@ MonoBehaviour:
   activeSins: []
   potentialSins: []
   remainingSin: 0
-  winThreshold: 5
-  DeathPenalty: 0
+  winThreshold: 80
+  DeathPenalty: 20
   smallSinPrefab: {fileID: 2089339463267486336, guid: 4dcbe66e77eed47a2b6c58786eca3b0f, type: 3}
   mediumSinPrefab: {fileID: 2089339463267486336, guid: bfbd6f7438d0bcb4d9ceac1124db8b8d, type: 3}
   largeSinPrefab: {fileID: 2089339463267486336, guid: f45192c944b127742800003a9d4311a6, type: 3}

@@ -134,8 +134,9 @@ namespace _Scripts
             //     Debug.Log("It is impossible to hold more sins");
             //     return;
             // }
+            potentialSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("PotentialSin"));
             
-            PotentialSinToSin(weight);
+             PotentialSinToSin(weight);
             //choosing the location
             // int location = Random.Range(0, potentialSins.Count);
             //
@@ -175,9 +176,12 @@ namespace _Scripts
                 if (checkForGameComplete(PlayerVariables.Instance.sinAccrued))
                 {
                     SceneManager.LoadScene("winScreenPlaytest2");
+                    SaveManager.Instance.deleteSaveFile();
                     return;
                 }
                
+                activeSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("Sin"));
+                potentialSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("PotentialSin"));
                 SaveManager.Instance.Cleanup();
                 
                 
@@ -253,7 +257,9 @@ namespace _Scripts
             {
                 Destroy(potentialSin);
             }
-             
+
+            activeSins.Clear();
+            potentialSins = new List<GameObject>();
         }
         public bool checkForGameComplete(int modifier)
         {
@@ -307,12 +313,21 @@ namespace _Scripts
                 return;
             }
             
+            potentialSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("PotentialSin"));
+            activeSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("Sin"));
+            
+            Debug.Log("When trying to instantiate a potential sin, there are " + potentialSins.Count + " potential sins");
             int location = Random.Range(0, potentialSins.Count);
             GameObject potentialSin = potentialSins[location];
-            
-            InstantiateSin(weight,potentialSin.transform.position);
+            Vector3 sinLocation = potentialSin.transform.position;
+            InstantiateSin(weight ,sinLocation);
             potentialSins.RemoveAt(location);
-            
+
+            if (potentialSin is null)
+            {
+                Debug.Log("Potential sin no longer exists");
+                return;
+            }
             
             Destroy(potentialSin);
         }
@@ -355,6 +370,7 @@ namespace _Scripts
         public void AddSinsInSceneToActiveSins()
         {
             activeSins.AddRange(GameObject.FindGameObjectsWithTag("Sin"));
+            potentialSins.AddRange(GameObject.FindGameObjectsWithTag("PotentialSin"));
         }
     }
 }

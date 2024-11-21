@@ -71,7 +71,7 @@ public class SaveManager : MonoBehaviour
             GameManager.Instance.AddSinsInSceneToActiveSins();
             
             // Delete all of the sins in the scene so we can load them from the active save file instead
-            GameManager.Instance.PurgeSin();
+            // GameManager.Instance.PurgeSin();
             /*var sinsInScene = GameObject.FindGameObjectsWithTag("Sin");
             foreach (var sin in sinsInScene)
             {
@@ -80,9 +80,10 @@ public class SaveManager : MonoBehaviour
             
             // Save the current game state (All default sin locations)
             SaveGameState();
+            GameManager.Instance.PurgeSin();
             
             // Load current game state (Newly written default sin locations)
-            Setup();
+            //Setup(); //not done because it gets called in GameManager
             Debug.Log("New save file setup.");
         }
     }
@@ -93,7 +94,7 @@ public class SaveManager : MonoBehaviour
         
         //grab all sins
         List<SinData> sins = new List<SinData>();//the data we'll put in the save object
-        List<GameObject> sinObjects = GameManager.Instance.activeSins;
+        List<GameObject> sinObjects = new List<GameObject>(GameObject.FindGameObjectsWithTag("Sin"));
         
         foreach (GameObject sinObject in sinObjects)
         {
@@ -103,7 +104,7 @@ public class SaveManager : MonoBehaviour
         
         //grab potential sins
         List<Vector3> potentialSins = new List<Vector3>();
-        List<GameObject> potentialSinObjects = GameManager.Instance.potentialSins;
+        List<GameObject> potentialSinObjects = new List<GameObject>(GameObject.FindGameObjectsWithTag("PotentialSin"));
 
         foreach (GameObject potentialSinObject in potentialSinObjects)
         {
@@ -134,6 +135,11 @@ public class SaveManager : MonoBehaviour
         {
             Debug.LogError("Error during saving: " + ex.Message);
         } 
+    }
+
+    public void deleteSaveFile()
+    {
+        File.Delete(saveFilePath);
     }
 
     public void Cleanup()
