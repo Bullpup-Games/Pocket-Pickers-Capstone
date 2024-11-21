@@ -154,7 +154,8 @@ public class SaveManager : MonoBehaviour
         //set all of the sins
         foreach (SinData sinData in saveData.Sins)
         {
-            GameManager.Instance.InstantiateSin(sinData.Weight, sinData.location);
+            //GameManager.Instance.InstantiateSin(sinData.Weight, sinData.location);
+            DataToSin(sinData);
         }
         //set the potential sins
         foreach (Vector3 potentialSin in saveData.PotentialSins)
@@ -175,7 +176,7 @@ public class SaveManager : MonoBehaviour
     {
         SinData sinData = new SinData();
         sinData.Weight = sin.GetComponent<Sin>().weight;
-        sinData.location = sin.transform.position;
+        sinData.location = sin.GetComponent<Sin>().location;
         return sinData;
     }
 

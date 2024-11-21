@@ -8,7 +8,7 @@ namespace _Scripts
 
         public int weight;
         public Vector3 location;
-        void Start()
+        void Awake()
         {
                 if (location == Vector3.zero) {
                     location = gameObject.transform.position;
@@ -30,7 +30,9 @@ namespace _Scripts
                 Debug.Log("Colision is with " + col.gameObject.name);
                 Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
 
+                Debug.Log("Passing in transform of " +gameObject.transform.position);
                 GameManager.Instance.CollectSin(gameObject);
+                Destroy(gameObject);
             }
         }
     }

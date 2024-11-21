@@ -270,8 +270,25 @@ namespace _Scripts
         //turns an existing active sin into a potential sin
         private void SinToPotentialSin(GameObject sin)
         {
-            activeSins.Remove(sin);
-            Destroy(sin);
+            Debug.Log("Trying to remove active sin");
+            Debug.Log("Number of sins beforehand: " + activeSins.Count);
+            //Debug.Log(activeSins);
+            for (int i = 0; i < activeSins.Count; i++)
+            {
+                Debug.Log("Entered loop");
+                GameObject activeSin = activeSins[i];
+                Debug.Log("Active sin at " + activeSin.transform.position);
+                Debug.Log("sin at " + sin.transform.position);
+                if (Mathf.Abs(activeSin.transform.position.x - sin.transform.position.x) < 0.1f && Mathf.Abs(activeSin.transform.position.y - sin.transform.position.y) < 0.1f) 
+                {
+                    Debug.Log("Trying to remove sin");
+                    activeSins.RemoveAt(i);
+                    return;
+                }
+            }
+            Debug.Log("Number of sins afterwards: " + activeSins.Count);
+            //Debug.Log(activeSins);
+            //Destroy(sin);
             InstantiatePotentialSin(sin.transform.position);
         }
 
@@ -314,10 +331,10 @@ namespace _Scripts
                     sinToInstantiate = grandSinPrefab;
                     break;
             }
-            Instantiate(sinToInstantiate, pos, Quaternion.identity);
-            sinToInstantiate.GetComponent<Sin>().weight = weight;
-            sinToInstantiate.GetComponent<Sin>().location = pos;
-            activeSins.Add(sinToInstantiate);
+            GameObject newSin = Instantiate(sinToInstantiate, pos, Quaternion.identity);
+            newSin.GetComponent<Sin>().weight = weight;
+            newSin.GetComponent<Sin>().location = pos;
+            activeSins.Add(newSin);
 
             remainingSin += weight;
         }
