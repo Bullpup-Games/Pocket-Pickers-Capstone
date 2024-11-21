@@ -5,8 +5,12 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
 
+public class ShadowCaster2DCreator : MonoBehaviour
+{
+	
+}
 
-#if UNITY_EDITOR
+/*#if UNITY_EDITOR
 
 [RequireComponent(typeof(CompositeCollider2D))]
 public class ShadowCaster2DCreator : MonoBehaviour
@@ -86,4 +90,4 @@ public class ShadowCaster2DTileMapEditor : Editor
 
 }
 
-#endif
+#endif*/
