@@ -56,17 +56,39 @@ public class SaveManager : MonoBehaviour
     private void Awake()
     {
         saveFilePath = Application.persistentDataPath + "/save.txt";
-        if (!Directory.Exists(Application.persistentDataPath))
+        /*if (!Directory.Exists(Application.persistentDataPath))
         {
             Directory.CreateDirectory(Application.persistentDataPath);
+        }*/
+
+        if (!File.Exists(saveFilePath))
+        {
+            Debug.Log("Creating new save file.");
+            // Create the empty file to write to
+            File.WriteAllText(saveFilePath, "");
+            
+            // Save all the sins in the scene to the activeSins list so that it can be written to disk
+            GameManager.Instance.AddSinsInSceneToActiveSins();
+            
+            // Delete all of the sins in the scene so we can load them from the active save file instead
+            GameManager.Instance.PurgeSin();
+            /*var sinsInScene = GameObject.FindGameObjectsWithTag("Sin");
+            foreach (var sin in sinsInScene)
+            {
+                sin.GetComponent<Sin>().DestroySin();
+            }*/
+            
+            // Save the current game state (All default sin locations)
+            SaveGameState();
+            
+            // Load current game state (Newly written default sin locations)
+            Setup();
+            Debug.Log("New save file setup.");
         }
     }
 
-    public void Cleanup()
+    private void SaveGameState()
     {
-        
-        Debug.Log("Escape level, do not complete game");
-        
         SaveData saveData = new SaveData();
         
         //grab all sins
@@ -98,7 +120,7 @@ public class SaveManager : MonoBehaviour
         string SaveString = SaveDataToJson(saveData);
         Debug.Log(SaveString);
         
-       //save the data
+        //save the data
         try
         {
             Debug.Log(saveFilePath);
@@ -111,11 +133,19 @@ public class SaveManager : MonoBehaviour
         catch (Exception ex)
         {
             Debug.LogError("Error during saving: " + ex.Message);
-        }
+        } 
+    }
+
+    public void Cleanup()
+    {
+        
+        Debug.Log("Escape level, do not complete game");
+        
+        SaveGameState();
 
         //TODO transition to a seperate scene passed in by the escape or die function
         //transition to the main menu scene
-        SceneManager.LoadScene("MainMenuPlayTest1");
+        SceneManager.LoadScene("MainMenuPlayTest1"); // TODO: Change to PT2
         return;
     }
 

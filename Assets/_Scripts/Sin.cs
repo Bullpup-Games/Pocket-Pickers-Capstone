@@ -32,8 +32,13 @@ namespace _Scripts
 
                 Debug.Log("Passing in transform of " +gameObject.transform.position);
                 GameManager.Instance.CollectSin(gameObject);
-                Destroy(gameObject);
+                DestroySin();
             }
+        }
+
+        public void DestroySin()
+        {
+            Destroy(gameObject); 
         }
     }
 }

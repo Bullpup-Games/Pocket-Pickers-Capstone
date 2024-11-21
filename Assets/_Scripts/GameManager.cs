@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using _Scripts.Player;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -61,7 +62,11 @@ namespace _Scripts
         
         public void Awake()
         {
-            PurgeSin();
+            if (File.Exists(Application.persistentDataPath + "/save.txt"))
+            {
+                PurgeSin();
+            }
+            
             activeSins = new List<GameObject>();
             SaveManager.Instance.Setup();
             //activeSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("Sin"));
@@ -235,7 +240,7 @@ namespace _Scripts
         }
 
         //called at the start of a scene to prevent sins from being saved multiple times
-        private void PurgeSin()
+        public void PurgeSin()
         {
             List<GameObject> sinsToPurge =  new List<GameObject>(GameObject.FindGameObjectsWithTag("Sin"));
             foreach (GameObject sin in sinsToPurge)
@@ -290,6 +295,7 @@ namespace _Scripts
             //Debug.Log(activeSins);
             //Destroy(sin);
             InstantiatePotentialSin(sin.transform.position);
+            sin.GetComponent<Sin>().DestroySin();
         }
 
         //randomly picks a potential sin, and turns it into a sin
@@ -344,6 +350,11 @@ namespace _Scripts
             GameObject newPotentialSin = Instantiate(potentialSinPrefab, position, Quaternion.identity);
             potentialSins.Add(newPotentialSin);
             Debug.Log("Number of potential sins: " + potentialSins.Count);
+        }
+
+        public void AddSinsInSceneToActiveSins()
+        {
+            activeSins.AddRange(GameObject.FindGameObjectsWithTag("Sin"));
         }
     }
 }
