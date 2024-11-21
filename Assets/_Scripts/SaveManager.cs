@@ -149,7 +149,22 @@ public class SaveManager : MonoBehaviour
         }
         
         //parse saved data into SaveData object
-        JsonToSaveData(saveDataJson);
+        SaveData saveData =JsonToSaveData(saveDataJson);
+        
+        //set all of the sins
+        foreach (SinData sinData in saveData.Sins)
+        {
+            GameManager.Instance.InstantiateSin(sinData.Weight, sinData.location);
+        }
+        //set the potential sins
+        foreach (Vector3 potentialSin in saveData.PotentialSins)
+        {
+            GameManager.Instance.InstantiatePotentialSin(potentialSin);
+        }
+
+        //set player variables
+       SetPlayerData(saveData.playerData);
+       
        
         return;
     }
@@ -160,13 +175,13 @@ public class SaveManager : MonoBehaviour
     {
         SinData sinData = new SinData();
         sinData.Weight = sin.GetComponent<Sin>().weight;
-        sinData.Position = sin.transform.position;
+        sinData.location = sin.transform.position;
         return sinData;
     }
 
     private void DataToSin(SinData sinData)
     {
-        GameManager.Instance.InstantiateSin(sinData.Weight,sinData.Position);
+        GameManager.Instance.InstantiateSin(sinData.Weight,sinData.location);
     }
 
     private Vector3 PotentialSinToVector3(GameObject potentialSin)
@@ -205,6 +220,13 @@ public class SaveManager : MonoBehaviour
     #region JsonParsing
     private string SaveDataToJson(SaveData saveData)
     {
+        
+        //Strings
+        String json = JsonUtility.ToJson(saveData);
+        Debug.Log(json);
+        return json;
+        /*
+        return JsonUtility.ToJson(saveData);
         String Json = "{";
         
         //adding the sins
@@ -248,6 +270,7 @@ public class SaveManager : MonoBehaviour
         Json += "}";
         //Debug.Log(Json);
         return Json;
+        */
     }
 
     private SaveData JsonToSaveData(string json)
@@ -265,11 +288,11 @@ public class SaveManager : MonoBehaviour
     private class SinData
     {
         public int Weight;
-        public Vector3 Position;
+        public Vector3 location;
 
         public string ToString()
         {
-            return Weight.ToString() + Position.ToString();
+            return Weight.ToString() + location.ToString();
         }
     }
 

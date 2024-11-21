@@ -7,15 +7,19 @@ namespace _Scripts
         // Start is called before the first frame update
 
         public int weight;
+        public Vector3 location;
         void Start()
         {
-
+                if (location == Vector3.zero) {
+                    location = gameObject.transform.position;
+                }
+                
         }
 
         // Update is called once per frame
         void Update()
         {
-
+            
         }
 
         private void OnCollisionEnter2D(Collision2D col)

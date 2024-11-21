@@ -50,8 +50,12 @@ MonoBehaviour:
   activeSins: []
   potentialSins: []
   remainingSin: 0
-  winThreshold: 20
-  sinPrefab: {fileID: 2089339463267486336, guid: 4dcbe66e77eed47a2b6c58786eca3b0f, type: 3}
+  winThreshold: 5
+  DeathPenalty: 0
+  smallSinPrefab: {fileID: 2089339463267486336, guid: 4dcbe66e77eed47a2b6c58786eca3b0f, type: 3}
+  mediumSinPrefab: {fileID: 2089339463267486336, guid: bfbd6f7438d0bcb4d9ceac1124db8b8d, type: 3}
+  largeSinPrefab: {fileID: 2089339463267486336, guid: f45192c944b127742800003a9d4311a6, type: 3}
+  grandSinPrefab: {fileID: 2089339463267486336, guid: 535ba02606e90ae4fb28971a9fcf05cf, type: 3}
   potentialSinPrefab: {fileID: 3971927911920242665, guid: 047ab0db384a3419dbd633e98b719112, type: 3}
   quicktimeEventPanel: {fileID: 0}
 --- !u!114 &7507623754815840685
@@ -105,3 +109,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f77d89e83d144946ad1e8eb75aaf0de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  saveFilePath: 

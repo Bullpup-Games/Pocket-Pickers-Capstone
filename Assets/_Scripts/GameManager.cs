@@ -31,7 +31,10 @@ namespace _Scripts
         //public Scene credits;
 
         //prefabs
-        public GameObject sinPrefab;
+        public GameObject smallSinPrefab;
+        public GameObject mediumSinPrefab;
+        public GameObject largeSinPrefab;
+        public GameObject grandSinPrefab;
         public GameObject potentialSinPrefab;
 
         public GameObject quicktimeEventPanel;
@@ -58,13 +61,16 @@ namespace _Scripts
         
         public void Awake()
         {
-            activeSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("Sin"));
+            PurgeSin();
+            activeSins = new List<GameObject>();
+            SaveManager.Instance.Setup();
+            //activeSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("Sin"));
             Debug.Log("Number of sins: " +activeSins.Count);
             calculateRemainingSin();
             potentialSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("PotentialSin"));
             Debug.Log("The total amount of sin in the game is " + remainingSin);
             
-            SaveManager.Instance.Setup();
+            
         }
 
         private int calculateRemainingSin()
@@ -106,7 +112,7 @@ namespace _Scripts
 
 
             //Everything is done, remove the sin object
-            Destroy(sin);
+            //Destroy(sin);
 
             if (sinChanged != null )
             {
@@ -227,6 +233,23 @@ namespace _Scripts
             
             return;
         }
+
+        //called at the start of a scene to prevent sins from being saved multiple times
+        private void PurgeSin()
+        {
+            List<GameObject> sinsToPurge =  new List<GameObject>(GameObject.FindGameObjectsWithTag("Sin"));
+            foreach (GameObject sin in sinsToPurge)
+            {
+                Destroy(sin);
+            }
+            
+            List<GameObject> potentialSinsToPurge = new List<GameObject>(GameObject.FindGameObjectsWithTag("PotentialSin"));
+            foreach (GameObject potentialSin in potentialSinsToPurge)
+            {
+                Destroy(potentialSin);
+            }
+             
+        }
         public bool checkForGameComplete(int modifier)
         {
             calculateRemainingSin();
@@ -248,6 +271,7 @@ namespace _Scripts
         private void SinToPotentialSin(GameObject sin)
         {
             activeSins.Remove(sin);
+            Destroy(sin);
             InstantiatePotentialSin(sin.transform.position);
         }
 
@@ -266,6 +290,7 @@ namespace _Scripts
             InstantiateSin(weight,potentialSin.transform.position);
             potentialSins.RemoveAt(location);
             
+            
             Destroy(potentialSin);
         }
 
@@ -273,9 +298,26 @@ namespace _Scripts
         {
             
             //todo add logic to select the correct sin prefab based on the sin's weight
-            GameObject newSin = Instantiate(sinPrefab, pos, Quaternion.identity);
-            newSin.GetComponent<Sin>().weight = weight;
-            activeSins.Add(newSin);
+            GameObject sinToInstantiate;
+            switch (weight)
+            {
+                case <25: 
+                    sinToInstantiate = smallSinPrefab;
+                    break;
+                case < 40:
+                    sinToInstantiate = mediumSinPrefab;
+                    break;
+                case < 60:
+                    sinToInstantiate = largeSinPrefab;
+                    break;
+                default:
+                    sinToInstantiate = grandSinPrefab;
+                    break;
+            }
+            Instantiate(sinToInstantiate, pos, Quaternion.identity);
+            sinToInstantiate.GetComponent<Sin>().weight = weight;
+            sinToInstantiate.GetComponent<Sin>().location = pos;
+            activeSins.Add(sinToInstantiate);
 
             remainingSin += weight;
         }
