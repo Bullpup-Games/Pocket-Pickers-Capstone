@@ -4,16 +4,5 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes:
-  - enabled: 1
-    path: Assets/Scenes/PlayTest2/MainMenuPlayTest2.unity
-    guid: 943314a826b4ecd40841d762f5c1329b
-  - enabled: 1
-    path: Assets/Scenes/PlayTest2/Map.unity
-    guid: 0cca890b8a9ae4d8f8b326f94922c746
-  - enabled: 1
-    path: Assets/Scenes/PlayTest2/winScreenPlaytest2.unity
-    guid: d75b7c4cf3f651343a6e18e3c2efceb1
-  m_configObjects:
-    com.unity.input.settings: {fileID: 11400000, guid: 63042ddf6387e46d6b9bce254a02ee98, type: 2}
-    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 9998da00d88634279999efdd2c1fd1ef, type: 3}
+  m_Scenes: []
+  m_configObjects: {}

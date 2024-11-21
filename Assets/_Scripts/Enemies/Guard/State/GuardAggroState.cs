@@ -449,7 +449,8 @@ namespace _Scripts.Enemies.Guard.State
                 else
                 {
                     // TODO: Make this change game state to 'Captured' or something like that
-                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                    //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                    GameManager.Instance.Die();
                 }
             }
             finally

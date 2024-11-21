@@ -7,15 +7,19 @@ namespace _Scripts
         // Start is called before the first frame update
 
         public int weight;
-        void Start()
+        public Vector3 location;
+        void Awake()
         {
-
+                if (location == Vector3.zero) {
+                    location = gameObject.transform.position;
+                }
+                
         }
 
         // Update is called once per frame
         void Update()
         {
-
+            
         }
 
         private void OnCollisionEnter2D(Collision2D col)
@@ -26,8 +30,15 @@ namespace _Scripts
                 Debug.Log("Colision is with " + col.gameObject.name);
                 Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
 
+                Debug.Log("Passing in transform of " +gameObject.transform.position);
                 GameManager.Instance.CollectSin(gameObject);
+                DestroySin();
             }
+        }
+
+        public void DestroySin()
+        {
+            Destroy(gameObject); 
         }
     }
 }

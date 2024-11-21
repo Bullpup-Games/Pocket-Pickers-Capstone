@@ -91,11 +91,9 @@ namespace _Scripts.Player
             isFacingRight = transform.localScale.x > 0; 
         }
 
-        public void Escape()
-        {
-            //release all of the sin you hold
-            sinHeld = 0;
-            GameManager.Instance.checkForGameComplete(sinAccrued);
-        }
+        // public void Escape()
+        // {
+        //     GameManager.Instance.EscapeLevel();
+        // }
     }
 }
