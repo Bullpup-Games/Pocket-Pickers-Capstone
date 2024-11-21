@@ -145,7 +145,7 @@ public class SaveManager : MonoBehaviour
 
         //TODO transition to a seperate scene passed in by the escape or die function
         //transition to the main menu scene
-        SceneManager.LoadScene("MainMenuPlayTest1"); // TODO: Change to PT2
+        SceneManager.LoadScene("MainMenuPlayTest2"); // TODO: Change to PT2
         return;
     }
 

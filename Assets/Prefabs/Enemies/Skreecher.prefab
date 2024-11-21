@@ -68,7 +68,7 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 0
-  sinPenalty: 0
+  sinPenalty: 25
 --- !u!114 &2873772408991761570
 MonoBehaviour:
   m_ObjectHideFlags: 0

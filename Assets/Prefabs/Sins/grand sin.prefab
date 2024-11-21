@@ -131,6 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 65
+  location: {x: 0, y: 0, z: 0}
 --- !u!50 &702037076750895846
 Rigidbody2D:
   serializedVersion: 4

@@ -64,6 +64,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   groundRayColor: {r: 1, g: 0, b: 0, a: 1}
+  disabledTimeout: 5
 --- !u!114 &8977530088570068403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92,7 +93,7 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 0
-  sinPenalty: 0
+  sinPenalty: 20
   alertedFromAggroSkreecher: 0
   alertedFromInvestigatingSkreecher: 0
 --- !u!114 &6725459177519244817

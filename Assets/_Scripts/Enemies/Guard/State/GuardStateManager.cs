@@ -271,6 +271,7 @@ namespace _Scripts.Enemies.Guard.State
         public void KillEnemy()
         {
             if (CurrentState == DisabledState) return;
+            Debug.Log("KillEnemy called on guard.");
             PlayerVariables.Instance.CommitSin(sinPenalty);
             TransitionToState(this.DisabledState);
         }

@@ -14,6 +14,10 @@ namespace _Scripts.Enemies.Guard.State
             _enemy.StopMoving();
             // _enemy.Rigidbody2D.isKinematic = true;
             Physics2D.IgnoreCollision(PlayerVariables.Instance.Collider2D, _enemy.Collider2D, true);
+            /*if (Card.Card.Instance is not null)
+            {
+                Physics2D.IgnoreCollision(Card.Card.Instance.gameObject.GetComponent<Collider2D>(), _enemy.Collider2D, true);
+            }*/
             // _enemy.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 90f)); // TODO: Change eventually
             _enemy.Settings.removeListeners();
 
@@ -42,6 +46,11 @@ namespace _Scripts.Enemies.Guard.State
                 _timeout = null;
             }
 
+            /*if (Card.Card.Instance is not null)
+            {
+                Physics2D.IgnoreCollision(Card.Card.Instance.gameObject.GetComponent<Collider2D>(), _enemy.Collider2D, false);
+            }*/
+            
             Physics2D.IgnoreCollision(PlayerVariables.Instance.Collider2D, _enemy.Collider2D, false);
 
         }

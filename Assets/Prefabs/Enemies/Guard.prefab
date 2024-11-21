@@ -223,7 +223,7 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 0
-  sinPenalty: 30
+  sinPenalty: 10
   alertedFromAggroSkreecher: 0
   alertedFromInvestigatingSkreecher: 0
   visionConeLight: {fileID: 4116349612714000721}

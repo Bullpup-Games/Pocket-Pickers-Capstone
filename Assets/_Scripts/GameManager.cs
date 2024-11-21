@@ -174,7 +174,7 @@ namespace _Scripts
                 PlayerVariables.Instance.sinHeld = 0;
                 if (checkForGameComplete(PlayerVariables.Instance.sinAccrued))
                 {
-                    SceneManager.LoadScene("winScreenPlaytest1");
+                    SceneManager.LoadScene("winScreenPlaytest2");
                     return;
                 }
                
@@ -324,7 +324,7 @@ namespace _Scripts
             GameObject sinToInstantiate;
             switch (weight)
             {
-                case <25: 
+                case 25: 
                     sinToInstantiate = smallSinPrefab;
                     break;
                 case < 40:
