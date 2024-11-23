@@ -344,7 +344,8 @@ namespace _Scripts.Player
         {
             if (other.CompareTag("EscapeRout"))
             {
-                PlayerVariables.Instance.Escape();
+               // PlayerVariables.Instance.Escape();
+               GameManager.Instance.EscapeLevel();
             }
         }
 

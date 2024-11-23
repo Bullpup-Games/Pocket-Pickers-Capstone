@@ -204,7 +204,9 @@ namespace _Scripts.Card
         private void UpdateSafePosition()
         {
             var playerCollider = PlayerVariables.Instance.Collider2D;
-            var colliderSize = playerCollider.bounds.size;
+            var playerBoundsSize = playerCollider.bounds.size;
+            var percent = 0.85f; // Only use 85% of the player's collider size, feels better getting into tight spots and doesn't clip
+            var colliderSize = new Vector2(playerBoundsSize.x * percent, playerBoundsSize.y * percent);
             var colliderOffset = playerCollider.offset;
             
             // get the current collider position with the player offset to cast from when checking for hits

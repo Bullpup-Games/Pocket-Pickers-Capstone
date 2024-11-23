@@ -11,6 +11,9 @@ namespace _Scripts.Enemies.Skreecher
         public float waitBeforeTransitionTime = 1.5f;
         [Header("Screech Settings")] public float screechTime = 1.0f;
         private IViewType[] _viewTypes;
+        
+        public float disabledTimeout = 5f; // Amount of time in seconds the skreecher will spend disabled
+
 
         private void Awake()
         {

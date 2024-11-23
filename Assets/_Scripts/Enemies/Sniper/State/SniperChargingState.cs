@@ -42,7 +42,8 @@ namespace _Scripts.Enemies.Sniper.State
             if (_enemy.IsPlayerDetected())
             {
                 // TODO: Eventually this will need to call a full cleanup of the level. For now just restart the scene
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                GameManager.Instance.Die();
                 return;
             }
 

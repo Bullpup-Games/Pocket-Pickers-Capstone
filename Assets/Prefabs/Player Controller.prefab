@@ -34,7 +34,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2969068311962969430}
   - {fileID: 4692322747907789912}
@@ -78,8 +78,8 @@ MonoBehaviour:
   isWallClimbEnabled: 1
   sinHeld: 0
   sinAccrued: 0
-  thresholdRangeStart: 0
-  thresholdRangeEnd: 0
+  thresholdRangeStart: 15
+  thresholdRangeEnd: 45
   sinThreshold: 0
 --- !u!114 &7406740131789768211
 MonoBehaviour:
@@ -95,8 +95,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallLayer:
     serializedVersion: 2
-    m_Bits: 0
-  wallCheck: {fileID: 0}
+    m_Bits: 64
+  wallCheck: {fileID: 4692322747907789912}
 --- !u!50 &1544650614272011793
 Rigidbody2D:
   serializedVersion: 4
@@ -319,7 +319,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.55
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.4
+  m_Intensity: 0.33
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 00000000f74ce827a36230479f76e18b8f5af0a37590e8ca
@@ -340,7 +340,7 @@ MonoBehaviour:
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 3.5
+  m_PointLightInnerRadius: 2.5
   m_PointLightOuterRadius: 6
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
@@ -10137,7 +10137,7 @@ Transform:
   m_GameObject: {fileID: 2969068311962969429}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10316,9 +10316,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1194353315
-  m_SortingLayer: 2
-  m_SortingOrder: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -978560804, guid: 3985682bb2752ca4eae1d798d6bd9576, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -10438,7 +10438,7 @@ MonoBehaviour:
   - {x: -0.58065504, y: -0.40212452, z: 0}
   m_ShapePathHash: 2127240049
   m_Mesh: {fileID: 0}
-  m_InstanceId: 179464
+  m_InstanceId: -6646
   m_LocalBounds:
     m_Center: {x: -0.0046779513, y: 0.14356744, z: 0}
     m_Extent: {x: 0.59795636, y: 0.6201865, z: 0}

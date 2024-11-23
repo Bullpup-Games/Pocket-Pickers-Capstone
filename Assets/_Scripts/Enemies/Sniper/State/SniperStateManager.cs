@@ -87,7 +87,7 @@ namespace _Scripts.Enemies.Sniper.State
             if (CurrentState == DisabledState)
             {
                 Debug.Log("Tried to exit from DisabledState");
-                return;
+                // return;
             }
 
             PreviousState = CurrentState;

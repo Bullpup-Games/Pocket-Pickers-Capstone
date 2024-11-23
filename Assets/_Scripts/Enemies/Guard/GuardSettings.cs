@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using _Scripts.Enemies.ViewTypes;
 using UnityEngine;
 
@@ -33,6 +34,8 @@ namespace _Scripts.Enemies.Guard
         public float qteTimeLimit = 4f;
         public float timeLostPerEncounter = 0.5f;
         public int counterGoal = 15;
+
+        public float disabledTimeout = 5f; // Amount of time in seconds the guard patroller will spend disabled
         
         #region SinModifiers
         private float _detectionModifier = 1.0f; // Speed modifier for detecting the player
@@ -149,11 +152,20 @@ namespace _Scripts.Enemies.Guard
 
         public void FlipLocalScale()
         {
+            if (_flipping) return;
+            StartCoroutine(DoFlip());
+        }
+
+        private bool _flipping;
+        private IEnumerator DoFlip()
+        {
+            _flipping = true;
+            yield return new WaitForSeconds(0.35f);
             var localScale = transform.localScale;
             localScale.x *= -1;
             transform.localScale = localScale;
+            _flipping = false;
         }
-
         
         // Gizmos of the patrol distance and ground detection ray visible in the editor
         private void OnDrawGizmos()

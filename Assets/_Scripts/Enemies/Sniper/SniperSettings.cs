@@ -45,6 +45,9 @@ namespace _Scripts.Enemies.Sniper
         public LayerMask groundLayer;
         public Color groundRayColor = Color.red;
         private bool _isGrounded;
+        
+        public float disabledTimeout = 5f; // Amount of time in seconds the sniper patroller will spend disabled
+
         public bool IsGrounded() => _isGrounded;
 
         private Rigidbody2D _rb;

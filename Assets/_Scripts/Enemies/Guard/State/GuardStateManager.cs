@@ -1,6 +1,7 @@
 using _Scripts.Enemies.ViewTypes;
 using _Scripts.Player;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 namespace _Scripts.Enemies.Guard.State
 {
@@ -37,6 +38,9 @@ namespace _Scripts.Enemies.Guard.State
 
         public bool alertedFromAggroSkreecher;
         public bool alertedFromInvestigatingSkreecher;
+        
+        private ConeView coneView; 
+        public Light2D visionConeLight;
 
         private void Awake()
         {
@@ -44,7 +48,8 @@ namespace _Scripts.Enemies.Guard.State
             Rigidbody2D = GetComponent<Rigidbody2D>();
             Collider2D = GetComponent<Collider2D>();
             ViewTypes = GetComponents<IViewType>();
-            
+            coneView = GetComponent<ConeView>(); // Access directly for the lighting effect
+ 
             environmentLayer = LayerMask.GetMask("Environment");
             playerLayer = LayerMask.GetMask("Enemy");
             playerLayer = LayerMask.GetMask("Player");
@@ -107,6 +112,14 @@ namespace _Scripts.Enemies.Guard.State
             {
                 enumState = GuardState.Disabled;
             }
+
+            if (CurrentState == DisabledState || CurrentState == StunnedState)
+            {
+                visionConeLight.intensity = 0f;
+                return;
+            }
+            
+            UpdateVisionConeLight();
         }
 
         private void OnCollisionEnter2D(Collision2D col)
@@ -128,7 +141,7 @@ namespace _Scripts.Enemies.Guard.State
             if (CurrentState == DisabledState)
             {
                 Debug.Log("Tried to exit from DisabledState");
-                return;
+                // return;
             }
 
             // Should immediately go to search state after being stunned, unless being disabled.
@@ -147,7 +160,7 @@ namespace _Scripts.Enemies.Guard.State
 
         public void Move(Vector2 direction, float speed)
         {
-            if (Mathf.Abs(_yPosLastFrame) - Mathf.Abs(transform.position.y) >= 0.0035f &&
+            if (Mathf.Abs(_yPosLastFrame) - Mathf.Abs(transform.position.y) >= 0.0030f &&
                 !Settings.IsGrounded())
                 StopMoving();
             else
@@ -210,6 +223,20 @@ namespace _Scripts.Enemies.Guard.State
  
         }
         
+        private void UpdateVisionConeLight()
+        {
+            var viewAngle = coneView.GetCurrentViewAngle();
+            var viewDistance = coneView.GetCurrentViewDistance();
+            
+            // Debug.Log("View Angle: " + viewAngle);
+            // Debug.Log("View Distance: " + viewDistance);
+
+            visionConeLight.intensity = 0.85f;
+            // visionConeLight.pointLightOuterAngle = viewAngle / 2f;
+            visionConeLight.pointLightOuterAngle = viewAngle;
+            visionConeLight.pointLightOuterRadius = viewDistance;
+        }
+        
         private void OnDrawGizmos()
         {
             if (PatrollingState != null)
@@ -244,6 +271,7 @@ namespace _Scripts.Enemies.Guard.State
         public void KillEnemy()
         {
             if (CurrentState == DisabledState) return;
+            Debug.Log("KillEnemy called on guard.");
             PlayerVariables.Instance.CommitSin(sinPenalty);
             TransitionToState(this.DisabledState);
         }
