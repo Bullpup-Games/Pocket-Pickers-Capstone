@@ -395,9 +395,15 @@ namespace _Scripts.Enemies.Guard.State
             HandleCardStanceArrow.Instance.DestroyDirectionalArrow();
 
             // Local method to handle the false trigger input
-            void OnFalseTriggerHandler() => counter++;
+            // void OnFalseTriggerHandler() => counter++;
 
-            InputHandler.Instance.OnFalseTrigger += OnFalseTriggerHandler;
+            // InputHandler.Instance.OnFalseTrigger += OnFalseTriggerHandler;
+
+            var leftStickWiggleDetector = new StickWiggleDetector();
+            var rightStickWiggleDetector = new StickWiggleDetector();
+            
+            var lastLeftWiggleCount = 0;
+            var lastRightWiggleCount = 0;
 
             // TODO: Player Grapple animations for player and enemy
             // TODO: Show Grapple UI / Shader effect
@@ -425,6 +431,26 @@ namespace _Scripts.Enemies.Guard.State
 
                     // Stop any movement from the guard or player
                     _enemy.StopMoving();
+                    
+                    // Update the stick wiggle detectors with current input
+                    leftStickWiggleDetector.Update(InputHandler.Instance.MovementInput.x, Time.deltaTime);
+                    rightStickWiggleDetector.Update(InputHandler.Instance.LookInput.x, Time.deltaTime);
+
+                    // Check if there are new stick wiggles
+                    var leftStickWiggled = leftStickWiggleDetector.WiggleCount > lastLeftWiggleCount;
+                    var rightStickWiggled = rightStickWiggleDetector.WiggleCount > lastRightWiggleCount;
+
+                    if (leftStickWiggled || rightStickWiggled)
+                    {
+                        // Only count one wiggle even if both sticks wiggled
+                        counter++;
+
+                        // Update last wiggle counts
+                        lastLeftWiggleCount = leftStickWiggleDetector.WiggleCount;
+                        lastRightWiggleCount = rightStickWiggleDetector.WiggleCount;
+
+                        // TODO: provide visual progress feedback to the player
+                    }
 
                     timeElapsed += Time.deltaTime;
                     yield return null;
@@ -456,7 +482,7 @@ namespace _Scripts.Enemies.Guard.State
             finally
             {
                 GameManager.Instance.quicktimeEventPanel.SetActive(false);
-                InputHandler.Instance.OnFalseTrigger -= OnFalseTriggerHandler;
+                // InputHandler.Instance.OnFalseTrigger -= OnFalseTriggerHandler;
                 _hasExecuted = true;
                 _qteCoroutine = null;
             }

@@ -10,6 +10,7 @@ namespace _Scripts
     public class InputHandler : MonoBehaviour
     {
         public Vector2 MovementInput { get; private set; }
+        public Vector2 LookInput { get; private set; }
         public bool JumpPressed { get; private set; }
         public bool JumpHeld { get; private set; }
         
@@ -86,6 +87,23 @@ namespace _Scripts
         
         private void Update()
         {
+            // Read the right stick input directly every frame
+            LookInput = _inputActions.Player.Aim.ReadValue<Vector2>();
+
+            // Invoke CardStanceDirectionalInput event if necessary
+            if (!PlayerStateManager.Instance.IsStunnedState() && !CardManager.Instance.IsCardInScene())
+            {
+                if (LookInput.magnitude > 0.1f)
+                {
+                    Vector2 inputDirection = LookInput.normalized;
+                    CardStanceDirectionalInput?.Invoke(inputDirection);
+                }
+                else
+                {
+                    CardStanceDirectionalInput?.Invoke(Vector2.zero);
+                }
+            }
+            
             // Reset JumpPressed after it has been read
             if (JumpPressed)
             {
@@ -100,6 +118,8 @@ namespace _Scripts
         public event Action OnCardThrow;
 
         private Vector2 _lookInput;
+
+        // public Vector2 LookInput() => _lookInput;
 
         private void OnLookPerformed(InputAction.CallbackContext context)
         {
