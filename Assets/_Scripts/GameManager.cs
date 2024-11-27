@@ -224,7 +224,7 @@ namespace _Scripts
                 int segment = Random.Range(10, 50);
                 
                 //if we have a situation with small enough sinToDistribute left, we will just throw all of it into one last sin
-                if (segment > sinToDistribute || sinToDistribute - segment > 10)
+                if (segment > sinToDistribute || sinToDistribute - segment < 10)
                 {
                     segments.Add(sinToDistribute);
                     sinToDistribute = 0;
@@ -234,8 +234,10 @@ namespace _Scripts
                 sinToDistribute -= segment;
             }
 
+            Debug.Log("Distributing these segments: " + segments);
             foreach (int segment in segments)
             {
+                Debug.Log("Distributing segment of weight " + segment);
                 PotentialSinToSin(segment);
             }
             
