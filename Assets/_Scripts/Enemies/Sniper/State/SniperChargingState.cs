@@ -30,9 +30,22 @@ namespace _Scripts.Enemies.Sniper.State
 
         public void OnCollisionStay2D(Collision2D col) {}
 
-        private IEnumerator ChargeShot() 
+        private IEnumerator ChargeShot()
         {
-            yield return new WaitForSeconds(_enemy.Settings.chargeTime);
+            var chargeTime = _enemy.Settings.chargeTime;
+            
+            var duration = chargeTime * 0.66f;
+            _enemy.RayView.ChangeToColor(new Color(1f, 0.5f, 0f), duration); // RGB for orange
+            yield return new WaitForSeconds(duration);
+
+            duration = chargeTime * 0.33f;
+            _enemy.RayView.ChangeToColor(Color.red, duration);
+            yield return new WaitForSeconds(duration);
+
+            duration = 0.15f;
+            _enemy.RayView.ChangeToColor(Color.white, duration);
+            yield return new WaitForSeconds(duration);
+            
             FireShot();
         }
 
@@ -54,6 +67,8 @@ namespace _Scripts.Enemies.Sniper.State
                 foreach (var enemy in _enemy.RayView.EnemiesDetected())
                     enemy.GetComponent<IEnemyStateManagerBase>().KillEnemyWithoutGeneratingSin();
             }
+            
+            _enemy.RayView.ResetLineRendererColor();
             
             Debug.Log("Switching to reload");
             _enemy.TransitionToState(_enemy.ReloadingState); 
