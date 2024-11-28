@@ -39,6 +39,8 @@ namespace _Scripts
         public GameObject potentialSinPrefab;
 
         public GameObject quicktimeEventPanel;
+        public GameObject quicktimeEventProgressPanel; // QTE progress meter panel to be set active / inactive
+        public GameObject quicktimeEventProgressMeter; // The actual meter that gets adjusted
             
         public event Action sinChanged; 
             

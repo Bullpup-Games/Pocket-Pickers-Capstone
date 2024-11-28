@@ -390,6 +390,16 @@ namespace _Scripts.Enemies.Guard.State
             var timeElapsed = 0f;
 
             GameManager.Instance.quicktimeEventPanel.SetActive(true);
+            GameManager.Instance.quicktimeEventProgressPanel.SetActive(true);
+            
+            // Reset progress meter
+            var progressMeterRect = GameManager.Instance.quicktimeEventProgressMeter.GetComponent<RectTransform>();
+            if (progressMeterRect is not null)
+            {
+                var sizeDelta = progressMeterRect.sizeDelta;
+                sizeDelta.x = 0f;
+                progressMeterRect.sizeDelta = sizeDelta;
+            }
 
             // Make sure the card throw arrow isn't active
             HandleCardStanceArrow.Instance.DestroyDirectionalArrow();
@@ -404,9 +414,6 @@ namespace _Scripts.Enemies.Guard.State
             
             var lastLeftWiggleCount = 0;
             var lastRightWiggleCount = 0;
-
-            // TODO: Player Grapple animations for player and enemy
-            // TODO: Show Grapple UI / Shader effect
 
             try
             {
@@ -433,8 +440,8 @@ namespace _Scripts.Enemies.Guard.State
                     _enemy.StopMoving();
                     
                     // Update the stick wiggle detectors with current input
-                    leftStickWiggleDetector.Update(InputHandler.Instance.MovementInput.x, Time.deltaTime);
-                    rightStickWiggleDetector.Update(InputHandler.Instance.LookInput.x, Time.deltaTime);
+                    leftStickWiggleDetector.Update(InputHandler.Instance.MovementInput.x);
+                    rightStickWiggleDetector.Update(InputHandler.Instance.LookInput.x);
 
                     // Check if there are new stick wiggles
                     var leftStickWiggled = leftStickWiggleDetector.WiggleCount > lastLeftWiggleCount;
@@ -442,14 +449,29 @@ namespace _Scripts.Enemies.Guard.State
 
                     if (leftStickWiggled || rightStickWiggled)
                     {
-                        // Only count one wiggle even if both sticks wiggled
+                        // Only count one wiggle even if both sticks wiggled TODO: Fix this? It doesn't block using both sticks currently
                         counter++;
 
                         // Update last wiggle counts
                         lastLeftWiggleCount = leftStickWiggleDetector.WiggleCount;
                         lastRightWiggleCount = rightStickWiggleDetector.WiggleCount;
 
-                        // TODO: provide visual progress feedback to the player
+                        // Update progress meter
+                        var progressAmount = (float)counter / _enemy.Settings.counterGoal;
+                        var newWidth = progressAmount * 290f; // 290 is the width of a full meter
+
+                        progressMeterRect = GameManager.Instance.quicktimeEventProgressMeter.GetComponent<RectTransform>();
+
+                        if (progressMeterRect != null)
+                        {
+                            var sizeDelta = progressMeterRect.sizeDelta;
+                            sizeDelta.x = newWidth;
+                            progressMeterRect.sizeDelta = sizeDelta;
+                        }
+                        else
+                        {
+                            Debug.LogError("quicktimeEventProgressMeter does not have a RectTransform component.");
+                        }
                     }
 
                     timeElapsed += Time.deltaTime;
@@ -482,6 +504,8 @@ namespace _Scripts.Enemies.Guard.State
             finally
             {
                 GameManager.Instance.quicktimeEventPanel.SetActive(false);
+                GameManager.Instance.quicktimeEventProgressPanel.SetActive(false);
+
                 // InputHandler.Instance.OnFalseTrigger -= OnFalseTriggerHandler;
                 _hasExecuted = true;
                 _qteCoroutine = null;
