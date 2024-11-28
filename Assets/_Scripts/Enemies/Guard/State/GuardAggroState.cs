@@ -6,6 +6,7 @@ using _Scripts.Player.State;
 using UnityEngine;
 using UnityEngine.Rendering.VirtualTexturing;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace _Scripts.Enemies.Guard.State
 {
@@ -383,6 +384,7 @@ namespace _Scripts.Enemies.Guard.State
         }
 
         // Modified grapple coroutine from Don't Move
+        // TODO: Wow this needs to be its own state at this point!
         private IEnumerator StartQuicktimeEvent()
         {
             _hasExecuted = false;
@@ -400,14 +402,29 @@ namespace _Scripts.Enemies.Guard.State
                 sizeDelta.x = 0f;
                 progressMeterRect.sizeDelta = sizeDelta;
             }
+            
+            // Initialize time left meter
+            var timeLeftMeterRect = GameManager.Instance.quicktimeEventTimeLeftMeter.GetComponent<RectTransform>();
+            if (timeLeftMeterRect != null)
+            {
+                var sizeDelta = timeLeftMeterRect.sizeDelta;
+                sizeDelta.x = 290f;
+                timeLeftMeterRect.sizeDelta = sizeDelta;
+            }
+            
+            // Set initial color to green
+            var timeLeftMeterImage = GameManager.Instance.quicktimeEventTimeLeftMeter.GetComponent<Image>();
+            if (timeLeftMeterImage is not null)
+            {
+                timeLeftMeterImage.color = Color.green;
+            }
+            else
+            {
+                Debug.LogError("quicktimeEventTimeLeftMeter does not have an Image component.");
+            }
 
             // Make sure the card throw arrow isn't active
             HandleCardStanceArrow.Instance.DestroyDirectionalArrow();
-
-            // Local method to handle the false trigger input
-            // void OnFalseTriggerHandler() => counter++;
-
-            // InputHandler.Instance.OnFalseTrigger += OnFalseTriggerHandler;
 
             var leftStickWiggleDetector = new StickWiggleDetector();
             var rightStickWiggleDetector = new StickWiggleDetector();
@@ -475,6 +492,52 @@ namespace _Scripts.Enemies.Guard.State
                     }
 
                     timeElapsed += Time.deltaTime;
+                    
+                    var timeLeftPercentage = Mathf.Clamp01((_enemy.Settings.qteTimeLimit - timeElapsed) / _enemy.Settings.qteTimeLimit);
+                    var newTimeLeftWidth = timeLeftPercentage * 290f;
+
+                    if (timeLeftMeterRect is not null)
+                    {
+                        var sizeDelta = timeLeftMeterRect.sizeDelta;
+                        sizeDelta.x = newTimeLeftWidth;
+                        timeLeftMeterRect.sizeDelta = sizeDelta;
+                    }
+
+                    Color currentColor;
+                    switch (timeLeftPercentage)
+                    {
+                        case >= 0.66f:
+                        {
+                            // Green to Yellow
+                            var t = (1f - timeLeftPercentage) / (1f - 0.66f); // t from 0 to 1
+                            currentColor = Color.Lerp(Color.green, Color.yellow, t);
+                            break;
+                        }
+                        case >= 0.33f:
+                        {
+                            // Yellow to Orange
+                            var t = (0.66f - timeLeftPercentage) / (0.66f - 0.33f); // t from 0 to 1
+                            currentColor = Color.Lerp(Color.yellow, new Color(1f, 0.5f, 0f), t);
+                            break;
+                        }
+                        default:
+                        {
+                            // Orange to Red
+                            var t = (0.33f - timeLeftPercentage) / 0.33f; // t from 0 to 1
+                            currentColor = Color.Lerp(new Color(1f, 0.5f, 0f), Color.red, t);
+                            break;
+                        }
+                    }
+
+                    if (timeLeftMeterImage is not null)
+                    {
+                        timeLeftMeterImage.color = currentColor;
+                    }
+                    else
+                    {
+                        Debug.LogError("quicktimeEventTimeLeftMeter does not have an Image component.");
+                    }
+                    
                     yield return null;
                 }
 
@@ -496,8 +559,6 @@ namespace _Scripts.Enemies.Guard.State
                 // Quick time event failed
                 else
                 {
-                    // TODO: Make this change game state to 'Captured' or something like that
-                    //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                     GameManager.Instance.Die();
                 }
             }
@@ -506,7 +567,6 @@ namespace _Scripts.Enemies.Guard.State
                 GameManager.Instance.quicktimeEventPanel.SetActive(false);
                 GameManager.Instance.quicktimeEventProgressPanel.SetActive(false);
 
-                // InputHandler.Instance.OnFalseTrigger -= OnFalseTriggerHandler;
                 _hasExecuted = true;
                 _qteCoroutine = null;
             }
