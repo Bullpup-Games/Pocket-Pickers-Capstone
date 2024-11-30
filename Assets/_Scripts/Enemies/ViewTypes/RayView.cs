@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using _Scripts.Card;
 using _Scripts.Enemies.Sniper.State;
@@ -38,7 +39,7 @@ namespace _Scripts.Enemies.ViewTypes
         private float _currentAngle;
         private Vector2 _lastKnownPlayerPosition;
         private Transform _playerTransform;
-        private LineRenderer _lineRenderer;
+        public LineRenderer lineRenderer;
         
         /*
          * State booleans, default behavior is to sweep vertically.
@@ -198,7 +199,7 @@ namespace _Scripts.Enemies.ViewTypes
             if (!_isDisabled)
             {
                 _isDisabled = true;
-                _lineRenderer.enabled = false;
+                lineRenderer.enabled = false;
                 _isSweeping = false;
                 _isTrackingPlayer = false;
                 _isTrackingLastKnownPosition = false;
@@ -208,7 +209,7 @@ namespace _Scripts.Enemies.ViewTypes
         private void ExitDisabledState()
         {
             _isDisabled = false;
-            _lineRenderer.enabled = true;
+            lineRenderer.enabled = true;
             _isSweeping = true;
         }
 
@@ -358,14 +359,14 @@ namespace _Scripts.Enemies.ViewTypes
                 OnNoTargetDetected();
 
             // Update the line renderer to the furthest hit point
-            _lineRenderer.SetPosition(0, position);
-            _lineRenderer.SetPosition(1, hitPoint);
+            lineRenderer.SetPosition(0, position);
+            lineRenderer.SetPosition(1, hitPoint);
 
             if (hits.Length != 0) return;
             
             // If there were no hits at all update line renderer to 'max' distance
-            _lineRenderer.SetPosition(0, position);
-            _lineRenderer.SetPosition(1, position + direction * maxRayDistance);
+            lineRenderer.SetPosition(0, position);
+            lineRenderer.SetPosition(1, position + direction * maxRayDistance);
             OnNoTargetDetected();
         }
 
@@ -445,19 +446,50 @@ namespace _Scripts.Enemies.ViewTypes
         {
             _settings = GetComponent<IEnemySettings>();
             _stateManager = GetComponent<SniperStateManager>();
-            _lineRenderer = GetComponent<LineRenderer>();
+            lineRenderer = GetComponent<LineRenderer>();
             if (_settings == null)
             {
                 Debug.LogError("EnemySettings component not found on " + gameObject.name);
             }
 
-            _lineRenderer.startWidth = 0.05f;
-            _lineRenderer.endWidth = 0.05f;
-            _lineRenderer.material = new Material(Shader.Find("Sprites/Default")); // TODO: Maybe change to a custom material?
-            _lineRenderer.startColor = Color.red;
-            _lineRenderer.endColor = Color.red;
+            lineRenderer.startWidth = 0.05f;
+            lineRenderer.endWidth = 0.05f;
+            lineRenderer.material = new Material(Shader.Find("Sprites/Default")); // TODO: Maybe change to a custom material?
+            ResetLineRendererColor();
             sweepSpeed = defaultSweepSpeed;
         }
+
+        public void ResetLineRendererColor()
+        {
+            lineRenderer.startColor = Color.yellow;
+            lineRenderer.endColor = Color.yellow;
+        }
+
+       public void ChangeToColor(Color targetColor, float duration)
+       {
+           StartCoroutine(ChangeColorCoroutine(targetColor, duration));
+       }
+
+       private IEnumerator ChangeColorCoroutine(Color newColor, float duration)
+       {
+           var initialStartColor = lineRenderer.startColor;
+           var initialEndColor = lineRenderer.endColor;
+           var time = 0f;
+
+           // Lerp between the old and new color
+           while (time < duration)
+           {
+               time += Time.deltaTime;
+               var t = time / duration;
+               lineRenderer.startColor = Color.Lerp(initialStartColor, newColor, t);
+               lineRenderer.endColor = Color.Lerp(initialEndColor, newColor, t);
+               yield return null;
+           }
+
+           // Make sure the final color is set to the exact given value
+           lineRenderer.startColor = newColor;
+           lineRenderer.endColor = newColor;
+       }
 
         public void ChangeView()
         {
