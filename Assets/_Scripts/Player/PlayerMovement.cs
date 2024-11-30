@@ -412,8 +412,6 @@ namespace _Scripts.Player
          */
         public void WallSlideMovement()
         {
-            
-            var wallSlideSpeed = PlayerVariables.Instance.Stats.WallSlideSpeed;
             _frameVelocity.y = Mathf.MoveTowards(_frameVelocity.y, -PlayerVariables.Instance.Stats.WallSlideSpeed, Time.fixedDeltaTime);
             // _frameVelocity.x = 0f;
         }
