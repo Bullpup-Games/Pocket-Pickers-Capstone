@@ -39,6 +39,9 @@ namespace _Scripts
         public GameObject potentialSinPrefab;
 
         public GameObject quicktimeEventPanel;
+        public GameObject quicktimeEventProgressPanel; // QTE progress meter panel to be set active / inactive
+        public GameObject quicktimeEventProgressMeter; // The actual meter that gets adjusted
+        public GameObject quicktimeEventTimeLeftMeter; // The meter to display how much time is remaining before death in the patroller QTE
             
         public event Action sinChanged; 
             

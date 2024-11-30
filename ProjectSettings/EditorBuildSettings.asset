@@ -14,4 +14,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PlayTest2/winScreenPlaytest2.unity
     guid: d75b7c4cf3f651343a6e18e3c2efceb1
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 63042ddf6387e46d6b9bce254a02ee98, type: 2}
