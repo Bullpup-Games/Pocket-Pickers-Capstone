@@ -20,15 +20,7 @@ using UnityEngine.SceneManagement;
 public class SaveManager : MonoBehaviour
 {
     
-    /*
-     * The plan:
-     * x 1. We should have a Json file that is stored in this function
-     * x 2. Die and EscapeLevel should both run, and then delegate to Cleanup
-     * 3. Cleanup should grab all relevant data, and save it in the JSON file, overwriting what was previously there
-     * 4. Setup should read the JSON file and set all data in the scene based on the save file
-     * 5. We should also have a seperate JSON file for default save, which will be the first thing that will be loaded in
-     * 
-     */
+    
 
     //public File SaveFile; //JSON file 
     
@@ -157,18 +149,7 @@ public class SaveManager : MonoBehaviour
 
     public void Setup()
     {
-        /*
-         * The plan:
-         * 1. Get access to the JSON save file
-         * 2. Instantiate all active sins with their weights at their positions
-         * 2.5. We will need to create an "instantiate sin" function that chooses the correct prefab based on weight.
-         * 3. Instantiate all potential sins at their positions
-         * 4. Get list of all active sins, put this into the game manager
-         * 5. Get list of all potential sins, put this into the game manager
-         * 6. Instantiate the player object with the correct stats
-         * 7. Calculate total amount of sin in level (call function in Game Manager)
-         * 8. Set the sin UI meters to the correct levels
-         */
+       
 
         //grab saved data from file
         string saveDataJson = "";

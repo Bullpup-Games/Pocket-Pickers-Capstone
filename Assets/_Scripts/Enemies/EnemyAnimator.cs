@@ -9,6 +9,14 @@ public class EnemyAnimator : MonoBehaviour
     private Animator _animator;
     private bool isFalling;
     private IEnemySettings _enemySettings;
+    
+    //used to determine the enemy's current speed
+    private Vector3 lastPosition;
+    private Vector3 currentPosition;
+    public float speed;
+    
+    private readonly int speedHash = Animator.StringToHash("Speed");
+    
 
     [HideInInspector] public bool disabled;
     
@@ -19,6 +27,11 @@ public class EnemyAnimator : MonoBehaviour
         isFalling = false;
         _enemySettings = gameObject.GetComponent<IEnemySettings>();
         environmentLayer = LayerMask.GetMask("Environment");
+
+        speed = 0;
+        lastPosition = gameObject.transform.position;
+        currentPosition = gameObject.transform.position;
+        _animator.SetFloat(speedHash, speed);
     }
 
     // Update is called once per frame
@@ -38,6 +51,16 @@ public class EnemyAnimator : MonoBehaviour
         {
             grounded();
         }
+        
+        //calculate the speed the patroller is moving
+        //should be (absolute value of( the distance between the current position and the last position) * Time.deltatime)
+        
+        currentPosition = gameObject.transform.position;
+        speed = Mathf.Abs(currentPosition.x - lastPosition.x) / Time.deltaTime; //we only care about horizontal speed
+        lastPosition = currentPosition;
+        
+        //set the speed in the animator
+        _animator.SetFloat(speedHash, speed);
     }
 
     private void falling()
