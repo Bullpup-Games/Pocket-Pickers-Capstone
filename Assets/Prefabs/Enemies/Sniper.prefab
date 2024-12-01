@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 806076977170948131}
   - component: {fileID: 9180938684129967659}
   - component: {fileID: 2922755772115506725}
+  - component: {fileID: 1338357396989359722}
   m_Layer: 8
   m_Name: Sniper
   m_TagString: enemy
@@ -124,6 +125,7 @@ MonoBehaviour:
   environmentLayer:
     serializedVersion: 2
     m_Bits: 64
+  lineRenderer: {fileID: 0}
   ignoreSweepAngle: 0
 --- !u!61 &806076977170948131
 BoxCollider2D:
@@ -310,6 +312,23 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &1338357396989359722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 768295214414954276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b9a2f6e1a9014b499a71fc32a547438, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0
+  disabled: 0
+  environmentLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &2924834700768163338
 GameObject:
   m_ObjectHideFlags: 0
@@ -405,7 +424,7 @@ Animator:
   m_GameObject: {fileID: 2924834700768163338}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: af8240f8e356a464da2d4829970ec094, type: 2}
+  m_Controller: {fileID: 9100000, guid: 453eab98e9c086049b996978badad1f9, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

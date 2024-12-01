@@ -292,13 +292,14 @@ namespace _Scripts
             {
                 Debug.Log("Entered loop");
                 GameObject activeSin = activeSins[i];
-                Debug.Log("Active sin at " + activeSin.transform.position);
-                Debug.Log("sin at " + sin.transform.position);
+                //Debug.Log("Active sin at " + activeSin.transform.position);
+                //.Log("sin at " + sin.transform.position);
                 if (Mathf.Abs(activeSin.transform.position.x - sin.transform.position.x) < 0.1f && Mathf.Abs(activeSin.transform.position.y - sin.transform.position.y) < 0.1f) 
                 {
                     Debug.Log("Trying to remove sin");
                     activeSins.RemoveAt(i);
-                    return;
+                    // return;
+                    break;
                 }
             }
             Debug.Log("Number of sins afterwards: " + activeSins.Count);

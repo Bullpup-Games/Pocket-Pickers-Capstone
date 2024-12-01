@@ -16,6 +16,7 @@ public class EnemyAnimator : MonoBehaviour
     public float speed;
     
     private readonly int speedHash = Animator.StringToHash("Speed");
+    private readonly int disabledHash = Animator.StringToHash("Disabled");
     
 
     [HideInInspector] public bool disabled;
@@ -88,7 +89,12 @@ public class EnemyAnimator : MonoBehaviour
 
     public void disable()
     {
-        _animator.SetBool("Disabled", true);
+        _animator.SetBool(disabledHash, true);
         disabled = true;
+    }
+
+    public void endDisable()
+    {
+     _animator.SetBool(disabledHash, false);   
     }
 }
