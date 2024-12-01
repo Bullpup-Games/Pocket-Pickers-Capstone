@@ -20,6 +20,7 @@ namespace _Scripts.Enemies.Guard.State
             }*/
             // _enemy.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 90f)); // TODO: Change eventually
             _enemy.Settings.removeListeners();
+            _enemy.gameObject.GetComponent<EnemyAnimator>().disable();
 
             _timeout = _enemy.StartCoroutine(Timeout());
         }
@@ -46,6 +47,7 @@ namespace _Scripts.Enemies.Guard.State
                 _timeout = null;
             }
 
+            _enemy.gameObject.GetComponent<EnemyAnimator>().endDisable();
             /*if (Card.Card.Instance is not null)
             {
                 Physics2D.IgnoreCollision(Card.Card.Instance.gameObject.GetComponent<Collider2D>(), _enemy.Collider2D, false);
