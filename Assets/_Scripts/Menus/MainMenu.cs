@@ -7,7 +7,7 @@ public class MainMenu : MonoBehaviour
 {
     public void StartDemo()
     {
-        LevelLoader.Instance.LoadLevel("Map");
+        LevelLoader.Instance.LoadLevel(LevelLoader.Instance.map);
         // SceneManager.LoadScene("Map");
     }
 

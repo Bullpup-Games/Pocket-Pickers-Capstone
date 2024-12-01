@@ -79,7 +79,7 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         
-        LevelLoader.Instance.LoadLevel("MainMenuPlayTest2");
+        LevelLoader.Instance.LoadLevel(LevelLoader.Instance.menu);
         // SceneManager.LoadScene("MainMenuPlayTest2");
     }
 }

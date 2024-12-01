@@ -29,6 +29,7 @@ namespace _Scripts
         public List<GameObject> potentialSins;
         public int remainingSin;
         public int winThreshold;//what is the maximum amount of sin that can remain and you still win
+        public int sinEscapedWith; // The amount of held sin the player has when they go to the Escape Screen
 
         public int DeathPenalty; //the penalty in sin for dying
 
@@ -189,11 +190,12 @@ namespace _Scripts
              */
                 
             //release all of the sin you hold
-            if (PlayerVariables.Instance.sinHeld == 0) {return;}
+            if (PlayerVariables.Instance.sinHeld == 0) return;
+            sinEscapedWith = PlayerVariables.Instance.sinHeld;
             PlayerVariables.Instance.sinHeld = 0;
             if (checkForGameComplete(PlayerVariables.Instance.sinAccrued))
             {
-                LevelLoader.Instance.LoadLevel("winScreenPlaytest2");
+                LevelLoader.Instance.LoadLevel(LevelLoader.Instance.winScreen);
                 // SceneManager.LoadScene("winScreenPlaytest2");
                 SaveManager.Instance.deleteSaveFile();
                 return;
@@ -202,9 +204,7 @@ namespace _Scripts
             activeSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("Sin"));
             potentialSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("PotentialSin"));
             SaveManager.Instance.Cleanup();
-            LevelLoader.Instance.LoadLevel("MainMenuPlayTest2"); // TODO: Change to Escape Scene
-                
-            return;
+            LevelLoader.Instance.LoadLevel(LevelLoader.Instance.escapeScreen); // TODO: Change to Escape Scene
         }
 
         
