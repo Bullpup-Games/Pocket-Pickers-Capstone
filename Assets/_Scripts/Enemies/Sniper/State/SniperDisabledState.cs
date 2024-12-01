@@ -14,7 +14,7 @@ namespace _Scripts.Enemies.Sniper.State
             _enemy = enemy;
             Physics2D.IgnoreCollision(PlayerVariables.Instance.Collider2D, _enemy.Collider2D);
             // _enemy.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 90f)); // TODO: Change eventually
-            
+            _enemy.gameObject.GetComponent<EnemyAnimator>().disable();
             _timeout = _enemy.StartCoroutine(Timeout());
         }
 
@@ -28,6 +28,7 @@ namespace _Scripts.Enemies.Sniper.State
                 _timeout = null;
             }
             
+            _enemy.gameObject.GetComponent<EnemyAnimator>().endDisable();
             Physics2D.IgnoreCollision(PlayerVariables.Instance.Collider2D, _enemy.Collider2D, false);
         }
 
