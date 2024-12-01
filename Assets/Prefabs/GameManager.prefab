@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7507623754815840685}
   - component: {fileID: 2204501328560629039}
   - component: {fileID: 1881165730668604333}
+  - component: {fileID: 4240306602342654922}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -52,12 +53,19 @@ MonoBehaviour:
   remainingSin: 0
   winThreshold: 80
   DeathPenalty: 20
+  isDead: 0
   smallSinPrefab: {fileID: 2089339463267486336, guid: 4dcbe66e77eed47a2b6c58786eca3b0f, type: 3}
   mediumSinPrefab: {fileID: 2089339463267486336, guid: bfbd6f7438d0bcb4d9ceac1124db8b8d, type: 3}
   largeSinPrefab: {fileID: 2089339463267486336, guid: f45192c944b127742800003a9d4311a6, type: 3}
   grandSinPrefab: {fileID: 2089339463267486336, guid: 535ba02606e90ae4fb28971a9fcf05cf, type: 3}
   potentialSinPrefab: {fileID: 3971927911920242665, guid: 047ab0db384a3419dbd633e98b719112, type: 3}
   quicktimeEventPanel: {fileID: 0}
+  quicktimeEventProgressPanel: {fileID: 0}
+  quicktimeEventProgressMeter: {fileID: 0}
+  quicktimeEventTimeLeftMeter: {fileID: 0}
+  pauseMenuDefaultButton: {fileID: 0}
+  deathScreenDefaultButton: {fileID: 0}
+  deathPanel: {fileID: 0}
 --- !u!114 &7507623754815840685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,3 +118,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   saveFilePath: 
+--- !u!114 &4240306602342654922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8882917671649753147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4671dd60f9de44a6958f1c66008280ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
