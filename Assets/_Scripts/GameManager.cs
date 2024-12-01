@@ -193,7 +193,8 @@ namespace _Scripts
             PlayerVariables.Instance.sinHeld = 0;
             if (checkForGameComplete(PlayerVariables.Instance.sinAccrued))
             {
-                SceneManager.LoadScene("winScreenPlaytest2");
+                LevelLoader.Instance.LoadLevel("winScreenPlaytest2");
+                // SceneManager.LoadScene("winScreenPlaytest2");
                 SaveManager.Instance.deleteSaveFile();
                 return;
             }
@@ -201,7 +202,7 @@ namespace _Scripts
             activeSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("Sin"));
             potentialSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("PotentialSin"));
             SaveManager.Instance.Cleanup();
-                
+            LevelLoader.Instance.LoadLevel("MainMenuPlayTest2"); // TODO: Change to Escape Scene
                 
             return;
         }

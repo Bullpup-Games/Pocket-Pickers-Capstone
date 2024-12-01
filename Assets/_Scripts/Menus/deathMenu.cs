@@ -11,7 +11,8 @@ namespace _Scripts.Menus
             GameManager.Instance.isDead = false;
             GameManager.Instance.deathPanel.SetActive(false);
 
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            LevelLoader.Instance.LoadLevel(SceneManager.GetActiveScene().name);
+            // SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
         // Loads main menu from death screen
@@ -19,8 +20,9 @@ namespace _Scripts.Menus
         {
             GameManager.Instance.isDead = false;
             GameManager.Instance.deathPanel.SetActive(false);
-
-            SceneManager.LoadScene("MainMenuPlayTest2");
+            
+            LevelLoader.Instance.LoadLevel("MainMenuPlayTest2");
+            // SceneManager.LoadScene("MainMenuPlayTest2");
         }
     }
 }
