@@ -258,11 +258,10 @@ namespace _Scripts
             }
             
             List<GameObject> potentialSinsToPurge = new List<GameObject>(GameObject.FindGameObjectsWithTag("PotentialSin"));
-            foreach (GameObject potentialSin in potentialSinsToPurge)
+            for (int i = 0; i < potentialSinsToPurge.Count; i++)
             {
-                Destroy(potentialSin);
+                Destroy(potentialSinsToPurge[i]);
             }
-
             activeSins.Clear();
             potentialSins = new List<GameObject>();
         }
@@ -293,13 +292,14 @@ namespace _Scripts
             {
                 Debug.Log("Entered loop");
                 GameObject activeSin = activeSins[i];
-                Debug.Log("Active sin at " + activeSin.transform.position);
-                Debug.Log("sin at " + sin.transform.position);
+                //Debug.Log("Active sin at " + activeSin.transform.position);
+                //.Log("sin at " + sin.transform.position);
                 if (Mathf.Abs(activeSin.transform.position.x - sin.transform.position.x) < 0.1f && Mathf.Abs(activeSin.transform.position.y - sin.transform.position.y) < 0.1f) 
                 {
                     Debug.Log("Trying to remove sin");
                     activeSins.RemoveAt(i);
-                    return;
+                    // return;
+                    break;
                 }
             }
             Debug.Log("Number of sins afterwards: " + activeSins.Count);
@@ -322,10 +322,11 @@ namespace _Scripts
             activeSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("Sin"));
             
             Debug.Log("When trying to instantiate a potential sin, there are " + potentialSins.Count + " potential sins");
-            int location = Random.Range(0, potentialSins.Count);
+            int location = Random.Range(0, potentialSins.Count-1);
             GameObject potentialSin = potentialSins[location];
             Vector3 sinLocation = potentialSin.transform.position;
             InstantiateSin(weight ,sinLocation);
+            GameObject.Destroy(potentialSins[location]);
             potentialSins.RemoveAt(location);
 
             if (potentialSin is null)
@@ -344,7 +345,7 @@ namespace _Scripts
             GameObject sinToInstantiate;
             switch (weight)
             {
-                case 25: 
+                case < 25: 
                     sinToInstantiate = smallSinPrefab;
                     break;
                 case < 40:

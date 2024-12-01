@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 611405951916405592}
   - component: {fileID: 806076977170948131}
   - component: {fileID: 9180938684129967659}
+  - component: {fileID: 5951217798406050202}
   m_Layer: 8
   m_Name: Skreecher
   m_TagString: enemy
@@ -213,6 +214,23 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 7
+--- !u!114 &5951217798406050202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 768295214414954276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b9a2f6e1a9014b499a71fc32a547438, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0
+  disabled: 0
+  environmentLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &2924834700768163338
 GameObject:
   m_ObjectHideFlags: 0
@@ -308,7 +326,7 @@ Animator:
   m_GameObject: {fileID: 2924834700768163338}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 41e50896edc8a1848b343888ffd11039, type: 2}
+  m_Controller: {fileID: 9100000, guid: d99a6a62a162ce74fb9014b731b88dc7, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
