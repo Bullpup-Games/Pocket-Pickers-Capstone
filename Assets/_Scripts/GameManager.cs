@@ -258,11 +258,10 @@ namespace _Scripts
             }
             
             List<GameObject> potentialSinsToPurge = new List<GameObject>(GameObject.FindGameObjectsWithTag("PotentialSin"));
-            foreach (GameObject potentialSin in potentialSinsToPurge)
+            for (int i = 0; i < potentialSinsToPurge.Count; i++)
             {
-                Destroy(potentialSin);
+                Destroy(potentialSinsToPurge[i]);
             }
-
             activeSins.Clear();
             potentialSins = new List<GameObject>();
         }
@@ -323,10 +322,11 @@ namespace _Scripts
             activeSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("Sin"));
             
             Debug.Log("When trying to instantiate a potential sin, there are " + potentialSins.Count + " potential sins");
-            int location = Random.Range(0, potentialSins.Count);
+            int location = Random.Range(0, potentialSins.Count-1);
             GameObject potentialSin = potentialSins[location];
             Vector3 sinLocation = potentialSin.transform.position;
             InstantiateSin(weight ,sinLocation);
+            GameObject.Destroy(potentialSins[location]);
             potentialSins.RemoveAt(location);
 
             if (potentialSin is null)
@@ -345,7 +345,7 @@ namespace _Scripts
             GameObject sinToInstantiate;
             switch (weight)
             {
-                case 25: 
+                case < 25: 
                     sinToInstantiate = smallSinPrefab;
                     break;
                 case < 40:
