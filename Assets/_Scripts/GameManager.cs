@@ -321,7 +321,7 @@ namespace _Scripts
             activeSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("Sin"));
             
             Debug.Log("When trying to instantiate a potential sin, there are " + potentialSins.Count + " potential sins");
-            int location = Random.Range(0, potentialSins.Count);
+            int location = Random.Range(0, potentialSins.Count-1);
             GameObject potentialSin = potentialSins[location];
             Vector3 sinLocation = potentialSin.transform.position;
             InstantiateSin(weight ,sinLocation);
