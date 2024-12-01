@@ -14,6 +14,7 @@ namespace _Scripts.Enemies.Guard.State
         {
             _enemy = enemy;
             _enemy.StopMoving();
+            _enemy.gameObject.GetComponent<EnemyAnimator>().disable();
             _stunCoroutine = _enemy.StartCoroutine(StunDuration());
         }
 
@@ -38,6 +39,7 @@ namespace _Scripts.Enemies.Guard.State
             Physics2D.IgnoreCollision(PlayerVariables.Instance.Collider2D, _enemy.Collider2D, false);
             if (_stunCoroutine != null)
                 _enemy.StopCoroutine(_stunCoroutine);
+            _enemy.gameObject.GetComponent<EnemyAnimator>().endDisable();
         }
 
         public void OnCollisionEnter2D(Collision2D col)
