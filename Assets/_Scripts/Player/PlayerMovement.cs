@@ -91,6 +91,10 @@ namespace _Scripts.Player
         
         public void GatherInput()
         {
+            // Do not allow player movement when paused or dead
+            if (GameManager.Instance is not null)
+                if (GameManager.Instance.isDead || PauseMenu.IsPaused) return;
+            
             if (_reduceInputsWhileReadingWallJumpApex)
             {
                 _frameInput = new FrameInput
