@@ -131,6 +131,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 89745488}
+  - component: {fileID: 89745489}
   m_Layer: 0
   m_Name: MenuManager
   m_TagString: Untagged
@@ -153,6 +154,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &89745489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 89745487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b29c2545502ce144b055e35ab2fc99a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sinEscapedWithText: {fileID: 199760981}
+  sinLeftText: {fileID: 1200907032}
 --- !u!1 &152461159
 GameObject:
   m_ObjectHideFlags: 0
@@ -639,9 +654,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
-        m_MethodName: StartDemo
+      - m_Target: {fileID: 89745489}
+        m_TargetAssemblyTypeName: _Scripts.Menus.EscapeScreenMenu, Assembly-CSharp
+        m_MethodName: ReturnToBank
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1120,6 +1135,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3680518264115094353, guid: eb7adbbeb289be043a27aa3170a2fdec, type: 3}
+      propertyPath: transition
+      value: 
+      objectReference: {fileID: 1414725743}
     - target: {fileID: 3810449857217458191, guid: eb7adbbeb289be043a27aa3170a2fdec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1169,6 +1188,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb7adbbeb289be043a27aa3170a2fdec, type: 3}
+--- !u!95 &1414725743 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4731533675336017813, guid: eb7adbbeb289be043a27aa3170a2fdec, type: 3}
+  m_PrefabInstance: {fileID: 1414725742}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1416676930
 GameObject:
   m_ObjectHideFlags: 0
@@ -1555,13 +1579,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 89745487}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 89745489}
+        m_TargetAssemblyTypeName: _Scripts.Menus.EscapeScreenMenu, Assembly-CSharp
+        m_MethodName: MainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
