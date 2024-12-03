@@ -364,8 +364,8 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 1000
+  m_SortingLayerID: -890728331
+  m_SortingOrder: 100
   m_TargetDisplay: 0
 --- !u!114 &5853358631369430416
 MonoBehaviour:
@@ -645,7 +645,7 @@ SpriteRenderer:
   m_SortingLayerID: -890728331
   m_SortingLayer: 5
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 491d3c45d93fe9941b787bf425bb0082, type: 3}
+  m_Sprite: {fileID: -1494419444, guid: c0bc44aa4ec62ad47af81fb58ec4c0a0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -666,7 +666,7 @@ Animator:
   m_GameObject: {fileID: 7528168795759283326}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 62a19ca36238ab44c8454c403f0cc359, type: 2}
+  m_Controller: {fileID: 9100000, guid: 1ce3ea2a2f051d247b07d65b6eaac0ab, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
