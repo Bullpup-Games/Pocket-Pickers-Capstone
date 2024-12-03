@@ -203,6 +203,15 @@ namespace _Scripts.Card
          */
         private void UpdateSafePosition()
         {
+            //TODO make it so if its not immediately a safe position, it will test the offsets
+            /*
+             * Test if the current position is immediately viable. If it is, set it as the safe position
+             * If it is not, have a horizontal and a vertical offset based on the player hitbox
+             * Test if any of the offsets would be a valid position
+             * If none of them are valid, don't update the safe position
+             * If there is a valid teleport, figure out the smallest offset that will let you fit
+             */
+            
             var playerCollider = PlayerVariables.Instance.Collider2D;
             var playerBoundsSize = playerCollider.bounds.size;
             var percent = 0.85f; // Only use 85% of the player's collider size, feels better getting into tight spots and doesn't clip
