@@ -228,9 +228,17 @@ namespace _Scripts.Card
                 0f,
                 LayerMask.GetMask("Environment", "Enemy")
             );
-            
+
             if (hits.Length == 0)
-                lastSafePosition = transform.position;
+            {
+                 lastSafePosition = transform.position;
+                 return;
+            }
+               
+            //if it is not immediately safe, test if there is a different safe position
+            //x offset is .275
+            //y offset starts at the feet, so we don't need to check down
+            //y offset is 1.14
         }
 
         private void ActivateFalseTrigger()
