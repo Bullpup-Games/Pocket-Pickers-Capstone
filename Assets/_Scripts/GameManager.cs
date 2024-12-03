@@ -4,7 +4,9 @@ using System.IO;
 using _Scripts.Player;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace _Scripts
@@ -27,8 +29,11 @@ namespace _Scripts
         public List<GameObject> potentialSins;
         public int remainingSin;
         public int winThreshold;//what is the maximum amount of sin that can remain and you still win
+        public int sinEscapedWith; // The amount of held sin the player has when they go to the Escape Screen
 
         public int DeathPenalty; //the penalty in sin for dying
+
+        public bool isDead;
         //public Scene credits;
 
         //prefabs
@@ -42,6 +47,11 @@ namespace _Scripts
         public GameObject quicktimeEventProgressPanel; // QTE progress meter panel to be set active / inactive
         public GameObject quicktimeEventProgressMeter; // The actual meter that gets adjusted
         public GameObject quicktimeEventTimeLeftMeter; // The meter to display how much time is remaining before death in the patroller QTE
+        
+        public GameObject pauseMenuDefaultButton;
+        public GameObject deathScreenDefaultButton;
+        
+        public GameObject deathPanel;
             
         public event Action sinChanged; 
             
@@ -78,7 +88,12 @@ namespace _Scripts
             potentialSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("PotentialSin"));
             Debug.Log("The total amount of sin in the game is " + remainingSin);
             
-            
+        }
+
+        private void Start()
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(pauseMenuDefaultButton);
         }
 
         private int calculateRemainingSin()
@@ -139,7 +154,7 @@ namespace _Scripts
             // }
             potentialSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("PotentialSin"));
             
-             PotentialSinToSin(weight);
+            PotentialSinToSin(weight);
             //choosing the location
             // int location = Random.Range(0, potentialSins.Count);
             //
@@ -161,35 +176,39 @@ namespace _Scripts
         }
         
         public void EscapeLevel()
+        {
+            /*
+             * The plan:
+             * 1. reset player sin held to 0 (release the sin they collected)
+             * 2. Run check to see if you have won the game. If they have:
+             *      a: delete their saved data
+             *      b: set there saved data to be the default JSON
+             *      c: transition to credits
+             * 3. Call cleanup, possibly pass in a cutscene to transition to
+             * 
+             */
+                
+            //release all of the sin you hold
+            if (PlayerVariables.Instance.sinHeld == 0) return;
+            
+            SinEscapedWith.Instance.sinHeldOnEscape = PlayerVariables.Instance.sinHeld;
+            SinEscapedWith.Instance.sinLeftInLevelOnEscape = remainingSin;
+            
+            PlayerVariables.Instance.sinHeld = 0;
+            
+            if (checkForGameComplete(PlayerVariables.Instance.sinAccrued))
             {
-                /*
-                 * The plan:
-                 * 1. reset player sin held to 0 (release the sin they collected)
-                 * 2. Run check to see if you have won the game. If they have:
-                 *      a: delete their saved data
-                 *      b: set there saved data to be the default JSON
-                 *      c: transition to credits
-                 * 3. Call cleanup, possibly pass in a cutscene to transition to
-                 * 
-                 */
-                
-                //release all of the sin you hold
-                if (PlayerVariables.Instance.sinHeld == 0) {return;}
-                PlayerVariables.Instance.sinHeld = 0;
-                if (checkForGameComplete(PlayerVariables.Instance.sinAccrued))
-                {
-                    SceneManager.LoadScene("winScreenPlaytest2");
-                    SaveManager.Instance.deleteSaveFile();
-                    return;
-                }
-               
-                activeSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("Sin"));
-                potentialSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("PotentialSin"));
-                SaveManager.Instance.Cleanup();
-                
-                
+                LevelLoader.Instance.LoadLevel(LevelLoader.Instance.winScreen);
+                // SceneManager.LoadScene("winScreenPlaytest2");
+                SaveManager.Instance.deleteSaveFile();
                 return;
             }
+               
+            activeSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("Sin"));
+            potentialSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("PotentialSin"));
+            SaveManager.Instance.Cleanup();
+            LevelLoader.Instance.LoadLevel(LevelLoader.Instance.escapeScreen); // TODO: Change to Escape Scene
+        }
 
         
         public void Die()
@@ -211,7 +230,17 @@ namespace _Scripts
             PlayerVariables.Instance.sinAccrued = 0;
             
             SaveManager.Instance.Cleanup();
-            return;
+
+            isDead = true;
+            
+            // Set focus to the default button
+            if (EventSystem.current is not null)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+                EventSystem.current.SetSelectedGameObject(deathScreenDefaultButton);
+            }
+            
+            deathPanel.SetActive(true);
         }
 
         
@@ -380,4 +409,3 @@ namespace _Scripts
         }
     }
 }
-

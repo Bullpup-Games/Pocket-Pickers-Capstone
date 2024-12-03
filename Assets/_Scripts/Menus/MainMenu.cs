@@ -7,7 +7,8 @@ public class MainMenu : MonoBehaviour
 {
     public void StartDemo()
     {
-        SceneManager.LoadScene("Map");
+        LevelLoader.Instance.LoadLevel(LevelLoader.Instance.map);
+        // SceneManager.LoadScene("Map");
     }
 
     public void QuitToDesktop()

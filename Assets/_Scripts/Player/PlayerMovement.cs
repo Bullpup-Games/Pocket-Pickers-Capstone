@@ -87,10 +87,26 @@ namespace _Scripts.Player
             if (_reduceInputsWhileReadingWallJumpApex && _frameVelocity.y <= 0)
                 _reduceInputsWhileReadingWallJumpApex = false;
         }
-        
-        
+
+        private bool _movementBlockedLastFrame; 
         public void GatherInput()
         {
+            // Do not allow player movement when paused or dead
+            if (GameManager.Instance is not null)
+                if (GameManager.Instance.isDead || PauseMenu.IsPaused)
+                {
+                    _frameInput = new FrameInput();
+                    _movementBlockedLastFrame = true;
+                    return;
+                }
+
+            if (_movementBlockedLastFrame)
+            {
+                _frameInput = new FrameInput();
+                _movementBlockedLastFrame = !_movementBlockedLastFrame;
+                return;
+            }
+            
             if (_reduceInputsWhileReadingWallJumpApex)
             {
                 _frameInput = new FrameInput

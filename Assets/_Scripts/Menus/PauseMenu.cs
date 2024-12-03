@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using _Scripts;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
@@ -41,6 +42,13 @@ public class PauseMenu : MonoBehaviour
 
     private void Pause()
     {
+        // Do not allow the player to pause if they are dead
+        if (GameManager.Instance is null) return;
+        if (GameManager.Instance.isDead) return;
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(GameManager.Instance.pauseMenuDefaultButton);
+        
         pauseMenuUI.SetActive(true);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
@@ -50,6 +58,10 @@ public class PauseMenu : MonoBehaviour
 
     public void Resume()
     {
+        // Do not allow the player to pause if they are dead
+        if (GameManager.Instance is null) return;
+        if (GameManager.Instance.isDead) return;
+        
         pauseMenuUI.SetActive(false);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -66,6 +78,8 @@ public class PauseMenu : MonoBehaviour
         IsPaused = false;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-        SceneManager.LoadScene("MainMenuPlayTest2");
+        
+        LevelLoader.Instance.LoadLevel(LevelLoader.Instance.menu);
+        // SceneManager.LoadScene("MainMenuPlayTest2");
     }
 }
