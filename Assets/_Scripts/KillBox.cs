@@ -34,8 +34,11 @@ namespace _Scripts
             
             if (col.gameObject.CompareTag("Card"))
             {
-                CardEffectHandler.Instance.DestroyEffect(Card.Card.Instance.transform.position);
-                Card.Card.Instance.DestroyCard();
+                if (CardEffectHandler.Instance is not null && Card.Card.Instance is not null)
+                {
+                    CardEffectHandler.Instance.DestroyEffect(Card.Card.Instance.transform.position);
+                    Card.Card.Instance.DestroyCard();
+                }
             } 
             
             if (col.gameObject.CompareTag("enemy"))
