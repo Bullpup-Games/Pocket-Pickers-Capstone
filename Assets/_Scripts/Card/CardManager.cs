@@ -192,6 +192,12 @@ namespace _Scripts.Card
         {
             if (Card.Instance != null)
             {
+                if (Card.Instance.lastSafePosition == Vector2.zero)
+                {
+                    effectHandler.DestroyEffect(Card.Instance.gameObject.transform.position);
+                    Card.Instance.DestroyCard();
+                    return;
+                }
                 effectHandler.TeleportEffect(Card.Instance.lastSafePosition);
                 Teleport?.Invoke(Card.Instance.lastSafePosition);
             }
