@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using _Scripts.Card;
 using _Scripts.Enemies;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -24,27 +26,36 @@ namespace _Scripts
         private IEnumerator WaitBeforeKill(Collider2D col)
         {
             yield return new WaitForSeconds(0.15f);
+            
+            if (col is null) yield return null;
 
-            if (col.gameObject.CompareTag("Player"))
+            try
             {
-                // TODO: Hook up to the cleanup handler when it is made
-                //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-                GameManager.Instance.Die();
-            } 
-            
-            if (col.gameObject.CompareTag("Card"))
-            {
-                if (CardEffectHandler.Instance is not null && Card.Card.Instance is not null)
+                if (col.gameObject.CompareTag("Player"))
                 {
-                    CardEffectHandler.Instance.DestroyEffect(Card.Card.Instance.transform.position);
-                    Card.Card.Instance.DestroyCard();
-                }
-            } 
+                    // TODO: Hook up to the cleanup handler when it is made
+                    //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                    GameManager.Instance.Die();
+                } 
             
-            if (col.gameObject.CompareTag("enemy"))
+                if (col.gameObject.CompareTag("Card"))
+                {
+                    if (Card.Card.Instance is not null && CardManager.Instance.cardPrefab is not null)
+                    {
+                        CardEffectHandler.Instance.DestroyEffect(Card.Card.Instance.transform.position);
+                        Card.Card.Instance.DestroyCard();
+                    }
+                } 
+            
+                if (col.gameObject.CompareTag("enemy"))
+                {
+                    var enemy = col.gameObject.GetComponent<IEnemyStateManagerBase>();
+                    enemy.KillEnemyWithoutGeneratingSin();
+                }
+            }
+            catch (Exception e)
             {
-                var enemy = col.gameObject.GetComponent<IEnemyStateManagerBase>();
-                enemy.KillEnemyWithoutGeneratingSin();
+                Debug.Log("CATCH!");
             }
         }
     }
