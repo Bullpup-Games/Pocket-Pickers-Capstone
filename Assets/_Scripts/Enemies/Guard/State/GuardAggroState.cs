@@ -115,6 +115,7 @@ namespace _Scripts.Enemies.Guard.State
                     PlayerStateManager.Instance.TransitionToState(PlayerStateManager.Instance.FreeMovingState);
 
                 GameManager.Instance.quicktimeEventPanel.SetActive(false);
+                GameManager.Instance.quicktimeEventProgressPanel.SetActive(false);
                 _enemy.StopCoroutine(_qteCoroutine);
                 _qteCoroutine = null;
             }
