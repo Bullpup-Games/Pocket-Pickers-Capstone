@@ -10,7 +10,8 @@ namespace _Scripts.Enemies.Skreecher.State
         {
             _enemy = enemy;
             _screechCoroutine = _enemy.StartCoroutine(_enemy.PerformScreech());
-            
+
+            _enemy.gameObject.GetComponent<EnemyAnimator>().chase();
             Debug.Log("Enter Aggro");
             
             _enemy.AlertAllEnemiesInRange();
@@ -23,6 +24,7 @@ namespace _Scripts.Enemies.Skreecher.State
             if (_screechCoroutine is null) return;
             _enemy.StopCoroutine(_screechCoroutine);
             _screechCoroutine = null;
+            _enemy.gameObject.GetComponent<EnemyAnimator>().stopChase();
         }
 
         public void OnCollisionEnter2D(Collision2D col) {}
