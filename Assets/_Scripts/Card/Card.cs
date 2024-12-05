@@ -203,6 +203,89 @@ namespace _Scripts.Card
          */
         private void UpdateSafePosition()
         {
+            //TODO make it so if its not immediately a safe position, it will test the offsets
+            /*
+             * Test if the current position is immediately viable. If it is, set it as the safe position
+             * If it is not, have a horizontal and a vertical offset based on the player hitbox
+             * Test if any of the offsets would be a valid position
+             * If none of them are valid, don't update the safe position
+             * If there is a valid teleport, figure out the smallest offset that will let you fit
+             */
+            
+            // var playerCollider = PlayerVariables.Instance.Collider2D;
+            // var playerBoundsSize = playerCollider.bounds.size;
+            // var percent = 0.85f; // Only use 85% of the player's collider size, feels better getting into tight spots and doesn't clip
+            // var colliderSize = new Vector2(playerBoundsSize.x * percent, playerBoundsSize.y * percent);
+            // var colliderOffset = playerCollider.offset;
+            //
+            // // get the current collider position with the player offset to cast from when checking for hits
+            // var colliderPos = (Vector2)transform.position + colliderOffset;
+            //
+            // // Check for obstructions that would prevent a teleport in this location
+            // var hits = Physics2D.OverlapBoxAll(
+            //     colliderPos,
+            //     colliderSize,
+            //     0f,
+            //     LayerMask.GetMask("Environment", "Enemy")
+            // );
+
+            Vector2 leftXOffset = new Vector2(-0.265f,0);
+            Vector2 rightXOffset = new Vector2(0.265f,0);
+            Vector2 yOffset = new Vector2(0,-1.2f);
+            
+            //run the bounds check with standard bounds
+            var hits = boundsCheck(Vector2.zero);
+            if (hits.Length == 0)
+            {
+                 lastSafePosition = transform.position;
+                 return;//we will not run anything else
+            } 
+            
+            hits = boundsCheck(rightXOffset);
+            if (hits.Length == 0)
+            {
+                lastSafePosition = transform.position + (Vector3)rightXOffset;
+                return;//we will not run anything else
+            } 
+            
+            hits = boundsCheck(leftXOffset);
+            if (hits.Length == 0)
+            {
+                lastSafePosition = transform.position + (Vector3)leftXOffset;
+                return;//we will not run anything else
+            } 
+            
+            hits = boundsCheck(yOffset);
+            if (hits.Length == 0)
+            {
+                lastSafePosition = transform.position + (Vector3)yOffset;
+                return;//we will not run anything else
+            }
+            
+            hits = boundsCheck((leftXOffset + yOffset));
+            if (hits.Length == 0)
+            {
+                lastSafePosition = transform.position + (Vector3)(leftXOffset + yOffset);
+                return;//we will not run anything else
+            }
+            
+            hits = boundsCheck((rightXOffset + yOffset));
+            if (hits.Length == 0)
+            {
+                lastSafePosition = transform.position + (Vector3)(rightXOffset + yOffset);
+                return;//we will not run anything else
+            }
+
+            //lastSafePosition = Vector2.zero;
+
+            //if it is not immediately safe, test if there is a different safe position
+            //x offset is .275
+            //y offset starts at the feet, so we don't need to check down
+            //y offset is 1.14
+        }
+
+        private Collider2D[] boundsCheck(Vector2 offset)
+        {
             var playerCollider = PlayerVariables.Instance.Collider2D;
             var playerBoundsSize = playerCollider.bounds.size;
             var percent = 0.85f; // Only use 85% of the player's collider size, feels better getting into tight spots and doesn't clip
@@ -210,7 +293,7 @@ namespace _Scripts.Card
             var colliderOffset = playerCollider.offset;
             
             // get the current collider position with the player offset to cast from when checking for hits
-            var colliderPos = (Vector2)transform.position + colliderOffset;
+            var colliderPos = (Vector2)transform.position + colliderOffset + offset;
             
             // Check for obstructions that would prevent a teleport in this location
             var hits = Physics2D.OverlapBoxAll(
@@ -219,9 +302,7 @@ namespace _Scripts.Card
                 0f,
                 LayerMask.GetMask("Environment", "Enemy")
             );
-            
-            if (hits.Length == 0)
-                lastSafePosition = transform.position;
+            return hits;
         }
 
         private void ActivateFalseTrigger()
