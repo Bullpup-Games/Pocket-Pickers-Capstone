@@ -229,9 +229,9 @@ namespace _Scripts.Card
             //     LayerMask.GetMask("Environment", "Enemy")
             // );
 
-            Vector2 leftXOffset = new Vector2(-0.275f,0);
-            Vector2 rightXOffset = new Vector2(0.275f,0);
-            Vector2 yOffset = new Vector2(0,-1.14f);
+            Vector2 leftXOffset = new Vector2(-0.265f,0);
+            Vector2 rightXOffset = new Vector2(0.265f,0);
+            Vector2 yOffset = new Vector2(0,-1.2f);
             
             //run the bounds check with standard bounds
             var hits = boundsCheck(Vector2.zero);
@@ -261,8 +261,22 @@ namespace _Scripts.Card
                 lastSafePosition = transform.position + (Vector3)yOffset;
                 return;//we will not run anything else
             }
+            
+            hits = boundsCheck((leftXOffset + yOffset));
+            if (hits.Length == 0)
+            {
+                lastSafePosition = transform.position + (Vector3)(leftXOffset + yOffset);
+                return;//we will not run anything else
+            }
+            
+            hits = boundsCheck((rightXOffset + yOffset));
+            if (hits.Length == 0)
+            {
+                lastSafePosition = transform.position + (Vector3)(rightXOffset + yOffset);
+                return;//we will not run anything else
+            }
 
-            lastSafePosition = Vector2.zero;
+            //lastSafePosition = Vector2.zero;
 
             //if it is not immediately safe, test if there is a different safe position
             //x offset is .275
