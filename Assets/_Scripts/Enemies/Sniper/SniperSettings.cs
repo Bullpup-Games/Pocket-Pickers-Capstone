@@ -117,9 +117,17 @@ namespace _Scripts.Enemies.Sniper
 
         public void FlipLocalScale()
         {
-            var localScale = transform.localScale;
-            localScale.x *= -1;
-            transform.localScale = localScale;
+            var localScale = transform.localScale.y;
+            if (transform.localScale.x > 0f)
+            {
+                localScale = -localScale;
+            }
+            else
+            {
+                localScale = Mathf.Abs(localScale);
+            }
+            // transform.localScale.x = localScale;
+            transform.localScale = new Vector3(localScale, transform.localScale.y, transform.localScale.z);
         }
 
         
