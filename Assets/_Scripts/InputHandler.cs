@@ -146,7 +146,7 @@ namespace _Scripts
 
         private void OnThrowPerformed(InputAction.CallbackContext context)
         {
-            if (PlayerStateManager.Instance.IsStunnedState()) return;
+            // if (PlayerStateManager.Instance.IsStunnedState()) return;
             // Debug.Log("Throw Input");
             OnCardThrow?.Invoke();
         }
