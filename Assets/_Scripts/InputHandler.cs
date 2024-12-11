@@ -87,6 +87,11 @@ namespace _Scripts
         
         private void Update()
         {
+            if (GameManager.Instance is null) 
+                return;
+            if (GameManager.Instance.isDead)
+                return;
+            
             // Read the right stick input directly every frame
             LookInput = _inputActions.Player.Aim.ReadValue<Vector2>();
 
@@ -123,8 +128,15 @@ namespace _Scripts
 
         private void OnLookPerformed(InputAction.CallbackContext context)
         {
-            if (PlayerStateManager.Instance.IsStunnedState()) return;
-            if (CardManager.Instance.IsCardInScene()) return;
+            if (GameManager.Instance is null) 
+                return;
+            if (GameManager.Instance.isDead)
+                return;
+            
+            if (PlayerStateManager.Instance.IsStunnedState()) 
+                return;
+            if (CardManager.Instance.IsCardInScene()) 
+                return;
 
             _lookInput = context.ReadValue<Vector2>();
 
@@ -148,7 +160,10 @@ namespace _Scripts
         {
             // if (PlayerStateManager.Instance.IsStunnedState()) return;
             // Debug.Log("Throw Input");
-            OnCardThrow?.Invoke();
+            if (GameManager.Instance is null) 
+                return;
+            if (!GameManager.Instance.isDead)
+                OnCardThrow?.Invoke();
         }
         
         public event Action OnFalseTrigger;
