@@ -10,7 +10,7 @@ public class LevelLoader : MonoBehaviour
     public readonly string menu = "MainMenu";
     public readonly string map = "Map";
     public readonly string escapeScreen = "EscapeScreen";
-    public readonly string winScreen = "WinScreen";
+    public readonly string credits = "Credits";
     
     #region Singleton
 

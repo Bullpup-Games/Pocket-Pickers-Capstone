@@ -9,7 +9,8 @@ public class Timeout : MonoBehaviour
     private IEnumerator timeout()
     {
         yield return new WaitForSeconds(5);
-        SceneManager.LoadScene("Map");
+        // SceneManager.LoadScene("Map");
+        LevelLoader.Instance.LoadLevel(LevelLoader.Instance.credits);
     }
 
     void Start()
