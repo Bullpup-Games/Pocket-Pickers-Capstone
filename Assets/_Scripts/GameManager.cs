@@ -198,7 +198,7 @@ namespace _Scripts
             
             if (checkForGameComplete(PlayerVariables.Instance.sinAccrued))
             {
-                LevelLoader.Instance.LoadLevel(LevelLoader.Instance.winScreen);
+                LevelLoader.Instance.LoadLevel(LevelLoader.Instance.credits);
                 // SceneManager.LoadScene("winScreenPlaytest2");
                 SaveManager.Instance.deleteSaveFile();
                 return;
