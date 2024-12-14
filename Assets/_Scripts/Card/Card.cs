@@ -5,6 +5,7 @@ using _Scripts.Enemies.Skreecher.State;
 using _Scripts.Enemies.Sniper;
 using _Scripts.Enemies.Sniper.State;
 using _Scripts.Player;
+using _Scripts.Sound;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -319,6 +320,8 @@ namespace _Scripts.Card
             
             //activate the animation
             CardEffectHandler.Instance.FalseTriggerEffect(gameObject.transform.position);
+            // Play sound effect
+            CardSoundEffectManager.Instance.PlayFalseTriggerClip();
             
             
             // Switch states of all enemies within the false trigger radius

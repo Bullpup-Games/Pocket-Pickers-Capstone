@@ -7,6 +7,7 @@ namespace _Scripts.Sound
         [SerializeField] private AudioSource audioSource;
         [SerializeField] private AudioClip[] cardThrowClips;
         [SerializeField] private AudioClip teleportClip;
+        [SerializeField] private AudioClip falseTriggerClip;
 
         private int _lastPlayedIndex = -1;
         
@@ -60,6 +61,14 @@ namespace _Scripts.Sound
             if (teleportClip is null) return;
             audioSource.pitch = Random.Range(0.9f, 1.1f);
             audioSource.PlayOneShot(teleportClip);
+        }
+
+        public void PlayFalseTriggerClip()
+        {
+            if (falseTriggerClip is null) return;
+            audioSource.pitch = Random.Range(0.9f, 1.1f);
+            audioSource.PlayOneShot(falseTriggerClip);
+            
         }
 
         private int GetRandomClipIndexExcluding(int excludeIndex)
