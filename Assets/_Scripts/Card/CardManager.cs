@@ -202,6 +202,7 @@ namespace _Scripts.Card
                 }
                 effectHandler.TeleportEffect(Card.Instance.lastSafePosition);
                 Teleport?.Invoke(Card.Instance.lastSafePosition);
+                CardSoundEffectManager.Instance.PlayTeleportClip();
             }
         }
 

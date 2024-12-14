@@ -6,6 +6,7 @@ namespace _Scripts.Sound
     {
         [SerializeField] private AudioSource audioSource;
         [SerializeField] private AudioClip[] cardThrowClips;
+        [SerializeField] private AudioClip teleportClip;
 
         private int _lastPlayedIndex = -1;
         
@@ -52,6 +53,13 @@ namespace _Scripts.Sound
                 
             var clipToPlay = cardThrowClips[newIndex];
             audioSource.PlayOneShot(clipToPlay);
+        }
+
+        public void PlayTeleportClip()
+        {
+            if (teleportClip is null) return;
+            audioSource.pitch = Random.Range(0.9f, 1.1f);
+            audioSource.PlayOneShot(teleportClip);
         }
 
         private int GetRandomClipIndexExcluding(int excludeIndex)
