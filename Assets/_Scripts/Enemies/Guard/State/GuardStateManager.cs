@@ -1,3 +1,4 @@
+using System.Collections;
 using _Scripts.Enemies.ViewTypes;
 using _Scripts.Player;
 using UnityEngine;
@@ -271,7 +272,6 @@ namespace _Scripts.Enemies.Guard.State
         public void KillEnemy()
         {
             if (CurrentState == DisabledState) return;
-            Debug.Log("KillEnemy called on guard.");
             PlayerVariables.Instance.CommitSin(sinPenalty);
             TransitionToState(this.DisabledState);
         }
@@ -279,8 +279,14 @@ namespace _Scripts.Enemies.Guard.State
         public void KillEnemyWithoutGeneratingSin()
         {
             if (CurrentState == DisabledState) return;
-            Debug.Log("Guard Killed By Sniper.");
-            TransitionToState(DisabledState); 
+            TransitionToState(DisabledState);
+            StartCoroutine(DisableObjectWithDelay());
+        }
+
+        private IEnumerator DisableObjectWithDelay()
+        {
+            yield return new WaitForSeconds(0.75f);
+            gameObject.SetActive(false);
         }
 
         #region State Getters

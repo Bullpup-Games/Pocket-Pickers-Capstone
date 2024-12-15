@@ -214,9 +214,16 @@ namespace _Scripts.Enemies.Skreecher.State
         public void KillEnemyWithoutGeneratingSin()
         {
             if (CurrentState == DisabledState) return;
-            Debug.Log("Skreecher Killed By Sniper.");
-            TransitionToState(DisabledState); 
+            TransitionToState(DisabledState);
+            StartCoroutine(DisableObjectWithDelay());
         }
+        
+        private IEnumerator DisableObjectWithDelay()
+        {
+            yield return new WaitForSeconds(0.75f);
+            gameObject.SetActive(false);
+        }
+
         
         public IEnumerator PerformScreech()
         {
