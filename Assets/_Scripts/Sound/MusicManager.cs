@@ -5,10 +5,18 @@ namespace _Scripts.Sound
 {
     public class MusicManager : MonoBehaviour
     {
-        // Just keep the object around so it can play music throughout all scenes
+        private static MusicManager _instance;
         private void Awake()
         {
-            DontDestroyOnLoad(gameObject);
+            if (_instance is null)
+            {
+                _instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }
