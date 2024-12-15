@@ -1,3 +1,4 @@
+using _Scripts.Sound;
 using UnityEngine;
 
 namespace _Scripts
@@ -31,6 +32,9 @@ namespace _Scripts
                 Physics2D.IgnoreCollision(col.collider, GetComponent<Collider2D>());
 
                 Debug.Log("Passing in transform of " +gameObject.transform.position);
+
+                SinSoundManager.Instance.PlaySinCollectedClip();
+                
                 GameManager.Instance.CollectSin(gameObject);
                 DestroySin();
             }
