@@ -5,8 +5,11 @@ namespace _Scripts.Sound
     public class EnemySoundManager : MonoBehaviour
     {
         [SerializeField] private AudioSource audioSource;
+        
         [SerializeField] private AudioClip sniperShotClip;
         [SerializeField] private AudioClip sniperReloadedClip;
+
+        [SerializeField] private AudioClip[] skreacherScreachClips;
         
         #region Singleton
 
@@ -26,6 +29,7 @@ namespace _Scripts.Sound
 
         #endregion
 
+        #region Sniper Clips
         public void PlaySniperShotClip()
         {
             if (sniperShotClip is null) return;
@@ -41,5 +45,22 @@ namespace _Scripts.Sound
             audioSource.pitch = Random.Range(0.9f, 1.1f);
             audioSource.PlayOneShot(sniperReloadedClip);
         }
+        
+        #endregion
+        
+        #region Skreacher Clips
+        
+        public void PlayerSkreacherClip()
+        {
+            if (skreacherScreachClips is null) return;
+
+            foreach (var clip in skreacherScreachClips)
+            {
+                audioSource.pitch = Random.Range(0.9f, 1.1f);
+                audioSource.PlayOneShot(clip);
+            }
+        }
+        
+        #endregion
     }
 }

@@ -5,6 +5,7 @@ using _Scripts.Enemies.Guard.State;
 using _Scripts.Enemies.Sniper.State;
 using _Scripts.Enemies.ViewTypes;
 using _Scripts.Player;
+using _Scripts.Sound;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -228,6 +229,7 @@ namespace _Scripts.Enemies.Skreecher.State
         public IEnumerator PerformScreech()
         {
             // TODO: Play animation & sound
+            EnemySoundManager.Instance.PlayerSkreacherClip();
             yield return new WaitForSeconds(Settings.screechTime);
             TransitionToState(DetectingState);
         }
