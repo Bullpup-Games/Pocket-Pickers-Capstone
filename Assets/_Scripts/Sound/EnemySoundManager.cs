@@ -72,8 +72,10 @@ namespace _Scripts.Sound
         {
             if (patrollerFlashlightClip is null) return;
 
+            audioSource.volume = 0.033f;
             audioSource.pitch = Random.Range(0.9f, 1.1f);
             audioSource.PlayOneShot(patrollerFlashlightClip);
+            audioSource.volume = 0.2f;
         }
         
         #endregion
