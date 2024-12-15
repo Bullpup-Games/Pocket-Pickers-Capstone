@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using _Scripts.Enemies.ViewTypes;
+using _Scripts.Sound;
 using UnityEngine;
 
 
@@ -188,6 +189,7 @@ namespace _Scripts.Enemies.Guard
         public void changeFov()
         {
             gameObject.GetComponent<ConeView>().ChangeView();
+            EnemySoundManager.Instance.PlayPatrollerFlashlightClip();
             Debug.Log("Caught sin changed action");
         }
     }

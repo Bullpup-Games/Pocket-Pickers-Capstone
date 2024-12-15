@@ -1,4 +1,5 @@
 using System.Collections;
+using _Scripts.Sound;
 using UnityEngine;
 
 namespace _Scripts.Enemies.Sniper.State
@@ -37,6 +38,7 @@ namespace _Scripts.Enemies.Sniper.State
         {
             yield return new WaitForSeconds(_enemy.Settings.reloadTime);
             
+            EnemySoundManager.Instance.PlaySniperReloadedClip();
             // Default behavior is to switch back to patrolling directly after reloading to scan for the enemy again
             _enemy.TransitionToState(_enemy.PatrollingState);
         }

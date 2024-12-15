@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using _Scripts.Player;
 using _Scripts.Player.State;
+using _Scripts.Sound;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -177,6 +178,7 @@ namespace _Scripts.Card
             if (cardScript != null)
             {
                 cardScript.Launch(currentDirection);
+                CardSoundEffectManager.Instance.PlayCardThrowClip();
             }
             else
             {
@@ -200,6 +202,7 @@ namespace _Scripts.Card
                 }
                 effectHandler.TeleportEffect(Card.Instance.lastSafePosition);
                 Teleport?.Invoke(Card.Instance.lastSafePosition);
+                CardSoundEffectManager.Instance.PlayTeleportClip();
             }
         }
 

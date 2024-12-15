@@ -5,6 +5,7 @@ using _Scripts.Enemies.Guard.State;
 using _Scripts.Enemies.Sniper.State;
 using _Scripts.Enemies.ViewTypes;
 using _Scripts.Player;
+using _Scripts.Sound;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -214,13 +215,21 @@ namespace _Scripts.Enemies.Skreecher.State
         public void KillEnemyWithoutGeneratingSin()
         {
             if (CurrentState == DisabledState) return;
-            Debug.Log("Skreecher Killed By Sniper.");
-            TransitionToState(DisabledState); 
+            TransitionToState(DisabledState);
+            StartCoroutine(DisableObjectWithDelay());
         }
+        
+        private IEnumerator DisableObjectWithDelay()
+        {
+            yield return new WaitForSeconds(0.75f);
+            gameObject.SetActive(false);
+        }
+
         
         public IEnumerator PerformScreech()
         {
             // TODO: Play animation & sound
+            EnemySoundManager.Instance.PlayerSkreacherClip();
             yield return new WaitForSeconds(Settings.screechTime);
             TransitionToState(DetectingState);
         }

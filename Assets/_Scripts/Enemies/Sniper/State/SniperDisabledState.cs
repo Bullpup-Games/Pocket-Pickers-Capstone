@@ -1,5 +1,6 @@
 using System.Collections;
 using _Scripts.Player;
+using _Scripts.Sound;
 using UnityEngine;
 
 namespace _Scripts.Enemies.Sniper.State
@@ -39,6 +40,8 @@ namespace _Scripts.Enemies.Sniper.State
         private IEnumerator Timeout()
         {
             yield return new WaitForSeconds(_enemy.Settings.disabledTimeout);
+            
+            EnemySoundManager.Instance.PlaySniperReloadedClip();
             _enemy.TransitionToState(_enemy.PatrollingState);
         }
     }

@@ -106,9 +106,16 @@ namespace _Scripts.Enemies.Sniper.State
         public void KillEnemyWithoutGeneratingSin()
         {
             if (CurrentState == DisabledState) return;
-            Debug.Log("Sniper Killed By Sniper.");
-            TransitionToState(DisabledState); 
+            TransitionToState(DisabledState);
+            StartCoroutine(DisableObjectWithDelay());
         }
+        
+        private IEnumerator DisableObjectWithDelay()
+        {
+            yield return new WaitForSeconds(0.75f);
+            gameObject.SetActive(false);
+        }
+
         
         public void AlertFromAggroSkreecher()
         {

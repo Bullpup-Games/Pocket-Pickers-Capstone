@@ -5,6 +5,7 @@ using _Scripts.Enemies.Skreecher.State;
 using _Scripts.Enemies.Sniper;
 using _Scripts.Enemies.Sniper.State;
 using _Scripts.Player;
+using _Scripts.Sound;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -182,9 +183,6 @@ namespace _Scripts.Card
                 if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Environment"))
                 {
                     CollideWithWall(hit, ref newPosition);
-                    
-                    //todo activate the card bounce effect
-                   
                     return;
                 }
 
@@ -319,6 +317,8 @@ namespace _Scripts.Card
             
             //activate the animation
             CardEffectHandler.Instance.FalseTriggerEffect(gameObject.transform.position);
+            // Play sound effect
+            CardSoundEffectManager.Instance.PlayFalseTriggerClip();
             
             
             // Switch states of all enemies within the false trigger radius
@@ -405,9 +405,13 @@ namespace _Scripts.Card
             if (bounces >= totalBounces)
             {
                 effectHandler.DestroyEffect(gameObject.transform.position);
+                CardSoundEffectManager.Instance.PlayCardDestroyClip();
+
                 DestroyCard();
                 return;
             }
+            
+            CardSoundEffectManager.Instance.PlayCardHitClip();
             effectHandler.bounceEffect(gameObject.transform.position);
             // Adjust position slightly along the new direction to prevent immediate re-collision
             newPosition += _direction * MinMoveDistance;
@@ -431,6 +435,7 @@ namespace _Scripts.Card
                 Debug.Log("Guard State Manager Found");
                 guardStateManager.KillEnemy();
                 Debug.Log("Guard Killed");
+                CardSoundEffectManager.Instance.PlayEnemyHitClip();
                 DestroyCard();
                 return;
             }
@@ -442,6 +447,7 @@ namespace _Scripts.Card
                 Debug.Log("Sniper State Manager Found");
                 sniperStateManager.KillEnemy();
                 Debug.Log("Sniper Killed");
+                CardSoundEffectManager.Instance.PlayEnemyHitClip();
                 DestroyCard();
                 return;
             }
@@ -453,6 +459,7 @@ namespace _Scripts.Card
                 Debug.Log("Skreecher State Manager Found");
                 skreecherStateManager.KillEnemy();
                 Debug.Log("Skreecher Killed");
+                CardSoundEffectManager.Instance.PlayEnemyHitClip();
                 DestroyCard();
                 return;
             }
@@ -493,6 +500,8 @@ namespace _Scripts.Card
         public void CancelCardThrow()
         {
             CardEffectHandler.Instance.DestroyEffect(gameObject.transform.position);
+            CardSoundEffectManager.Instance.PlayCardDestroyClip();
+
             DestroyCard();
         }
 

@@ -3,6 +3,7 @@ using System.Collections;
 using _Scripts.Card;
 using _Scripts.Player;
 using _Scripts.Player.State;
+using _Scripts.Sound;
 using UnityEngine;
 using UnityEngine.Rendering.VirtualTexturing;
 using UnityEngine.SceneManagement;
@@ -555,6 +556,8 @@ namespace _Scripts.Enemies.Guard.State
                     _enemy.Settings.counterGoal += 2;
                     if (_enemy.Settings.qteTimeLimit > 2f)
                         _enemy.Settings.qteTimeLimit -= _enemy.Settings.timeLostPerEncounter;
+
+                    CardSoundEffectManager.Instance.PlayEnemyHitClip();
                     _enemy.TransitionToState(_enemy.StunnedState);
                 }
                 // Quick time event failed
