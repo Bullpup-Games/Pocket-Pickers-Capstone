@@ -8,6 +8,7 @@ namespace _Scripts.Sound
         [SerializeField] private AudioClip teleportClip;
         [SerializeField] private AudioClip falseTriggerClip;
         [SerializeField] private AudioClip cardDestroyClip;
+        [SerializeField] private AudioClip enemyHitClip;
         [SerializeField] private AudioClip[] cardThrowClips;
         [SerializeField] private AudioClip[] cardHitClips;
 
@@ -89,8 +90,10 @@ namespace _Scripts.Sound
         public void PlayFalseTriggerClip()
         {
             if (falseTriggerClip is null) return;
+            if (cardDestroyClip is null) return;
             audioSource.pitch = Random.Range(0.9f, 1.1f);
             audioSource.PlayOneShot(cardDestroyClip);
+            audioSource.pitch = Random.Range(0.9f, 1.1f);
             audioSource.PlayOneShot(falseTriggerClip);
             
         }
@@ -98,6 +101,16 @@ namespace _Scripts.Sound
         public void PlayCardDestroyClip()
         {
             if (cardDestroyClip is null) return;
+            audioSource.pitch = Random.Range(0.9f, 1.1f);
+            audioSource.PlayOneShot(cardDestroyClip); 
+        }
+        
+        public void PlayEnemyHitClip()
+        {
+            if (cardDestroyClip is null) return;
+            if (enemyHitClip is null) return;
+            audioSource.pitch = Random.Range(0.9f, 1.1f);
+            audioSource.PlayOneShot(enemyHitClip); 
             audioSource.pitch = Random.Range(0.9f, 1.1f);
             audioSource.PlayOneShot(cardDestroyClip); 
         }

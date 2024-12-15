@@ -435,6 +435,7 @@ namespace _Scripts.Card
                 Debug.Log("Guard State Manager Found");
                 guardStateManager.KillEnemy();
                 Debug.Log("Guard Killed");
+                CardSoundEffectManager.Instance.PlayEnemyHitClip();
                 DestroyCard();
                 return;
             }
@@ -446,6 +447,7 @@ namespace _Scripts.Card
                 Debug.Log("Sniper State Manager Found");
                 sniperStateManager.KillEnemy();
                 Debug.Log("Sniper Killed");
+                CardSoundEffectManager.Instance.PlayEnemyHitClip();
                 DestroyCard();
                 return;
             }
@@ -457,6 +459,7 @@ namespace _Scripts.Card
                 Debug.Log("Skreecher State Manager Found");
                 skreecherStateManager.KillEnemy();
                 Debug.Log("Skreecher Killed");
+                CardSoundEffectManager.Instance.PlayEnemyHitClip();
                 DestroyCard();
                 return;
             }
