@@ -6,6 +6,7 @@ namespace _Scripts.Sound
     {
         [SerializeField] private AudioSource audioSource;
         [SerializeField] private AudioClip sniperShotClip;
+        [SerializeField] private AudioClip sniperReloadedClip;
         
         #region Singleton
 
@@ -31,6 +32,14 @@ namespace _Scripts.Sound
 
             audioSource.pitch = Random.Range(0.9f, 1.1f);
             audioSource.PlayOneShot(sniperShotClip);
+        }
+        
+        public void PlaySniperReloadedClip()
+        {
+            if (sniperReloadedClip is null) return;
+
+            audioSource.pitch = Random.Range(0.9f, 1.1f);
+            audioSource.PlayOneShot(sniperReloadedClip);
         }
     }
 }
