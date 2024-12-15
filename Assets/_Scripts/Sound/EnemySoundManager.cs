@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor.Tilemaps;
+using UnityEngine;
 
 namespace _Scripts.Sound
 {
@@ -10,6 +11,8 @@ namespace _Scripts.Sound
         [SerializeField] private AudioClip sniperReloadedClip;
 
         [SerializeField] private AudioClip[] skreacherScreachClips;
+
+        [SerializeField] private AudioClip patrollerFlashlightClip;
         
         #region Singleton
 
@@ -59,6 +62,18 @@ namespace _Scripts.Sound
                 audioSource.pitch = Random.Range(0.9f, 1.1f);
                 audioSource.PlayOneShot(clip);
             }
+        }
+        
+        #endregion
+        
+        #region Patroller
+
+        public void PlayPatrollerFlashlightClip()
+        {
+            if (patrollerFlashlightClip is null) return;
+
+            audioSource.pitch = Random.Range(0.9f, 1.1f);
+            audioSource.PlayOneShot(patrollerFlashlightClip);
         }
         
         #endregion
