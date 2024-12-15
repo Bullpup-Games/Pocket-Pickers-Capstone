@@ -1,4 +1,5 @@
 using System.Collections;
+using _Scripts.Sound;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -51,7 +52,8 @@ namespace _Scripts.Enemies.Sniper.State
 
         private void FireShot()
         {
-            Debug.Log("Shot fired.");
+            EnemySoundManager.Instance.PlaySniperShotClip();
+            
             if (_enemy.IsPlayerDetected())
             {
                 // TODO: Eventually this will need to call a full cleanup of the level. For now just restart the scene
