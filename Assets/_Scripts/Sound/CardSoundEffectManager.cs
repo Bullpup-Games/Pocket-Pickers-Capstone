@@ -7,6 +7,7 @@ namespace _Scripts.Sound
         [SerializeField] private AudioSource audioSource;
         [SerializeField] private AudioClip teleportClip;
         [SerializeField] private AudioClip falseTriggerClip;
+        [SerializeField] private AudioClip cardDestroyClip;
         [SerializeField] private AudioClip[] cardThrowClips;
         [SerializeField] private AudioClip[] cardHitClips;
 
@@ -89,8 +90,16 @@ namespace _Scripts.Sound
         {
             if (falseTriggerClip is null) return;
             audioSource.pitch = Random.Range(0.9f, 1.1f);
+            audioSource.PlayOneShot(cardDestroyClip);
             audioSource.PlayOneShot(falseTriggerClip);
             
+        }
+
+        public void PlayCardDestroyClip()
+        {
+            if (cardDestroyClip is null) return;
+            audioSource.pitch = Random.Range(0.9f, 1.1f);
+            audioSource.PlayOneShot(cardDestroyClip); 
         }
 
         private int GetRandomClipIndexExcluding(int excludeIndex)

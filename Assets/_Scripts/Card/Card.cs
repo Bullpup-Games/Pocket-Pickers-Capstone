@@ -183,9 +183,6 @@ namespace _Scripts.Card
                 if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Environment"))
                 {
                     CollideWithWall(hit, ref newPosition);
-                    
-                    CardSoundEffectManager.Instance.PlayCardHitClip();
-                   
                     return;
                 }
 
@@ -408,9 +405,13 @@ namespace _Scripts.Card
             if (bounces >= totalBounces)
             {
                 effectHandler.DestroyEffect(gameObject.transform.position);
+                CardSoundEffectManager.Instance.PlayCardDestroyClip();
+
                 DestroyCard();
                 return;
             }
+            
+            CardSoundEffectManager.Instance.PlayCardHitClip();
             effectHandler.bounceEffect(gameObject.transform.position);
             // Adjust position slightly along the new direction to prevent immediate re-collision
             newPosition += _direction * MinMoveDistance;
@@ -496,6 +497,8 @@ namespace _Scripts.Card
         public void CancelCardThrow()
         {
             CardEffectHandler.Instance.DestroyEffect(gameObject.transform.position);
+            CardSoundEffectManager.Instance.PlayCardDestroyClip();
+
             DestroyCard();
         }
 
