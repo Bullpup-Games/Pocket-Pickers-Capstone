@@ -12,36 +12,8 @@ namespace _Scripts
     [RequireComponent(typeof(Collider2D))]
     public class KillBox : MonoBehaviour
     {
-        private int _environmentLayer;
-        [SerializeField] private float overlapCheckRadius = 0.1f;
-
-        private void Awake()
-        {
-            // Get the integer layer index of Environment layer
-            _environmentLayer = LayerMask.NameToLayer("Environment");
-        }
-
         private void OnTriggerEnter2D(Collider2D col)
         {
-            // Check if an environment collider overlaps with this position
-            // Construct a layer mask for the environment layer
-            var environmentLayerMask = 1 << _environmentLayer;
-
-            // Perform an overlap check at the killbox position
-            var environmentHit = Physics2D.OverlapCircle(transform.position, overlapCheckRadius, environmentLayerMask);
-
-            // If environment is detected overlapping, return and do not kill
-            if (environmentHit != null)
-                return;
-
-            var colPos = col.gameObject.transform.position;
-            var dir = colPos - gameObject.transform.position;
-            var layerMaskForRaycast = 1 << _environmentLayer; // Raycast should check for environment layer
-            var distance = Vector3.Distance(colPos, transform.position);
-            var hit = Physics2D.Raycast(colPos, dir, distance, layerMaskForRaycast);
-
-            if (hit.collider is not null) return;
-
             if (col.gameObject.CompareTag("Player"))
                 StartCoroutine(WaitBeforeKill(col));
 
