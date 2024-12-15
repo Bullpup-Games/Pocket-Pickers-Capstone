@@ -5,9 +5,10 @@ namespace _Scripts.Sound
     public class CardSoundEffectManager : MonoBehaviour
     {
         [SerializeField] private AudioSource audioSource;
-        [SerializeField] private AudioClip[] cardThrowClips;
         [SerializeField] private AudioClip teleportClip;
         [SerializeField] private AudioClip falseTriggerClip;
+        [SerializeField] private AudioClip[] cardThrowClips;
+        [SerializeField] private AudioClip[] cardHitClips;
 
         private int _lastPlayedIndex = -1;
         
@@ -54,6 +55,27 @@ namespace _Scripts.Sound
                 
             var clipToPlay = cardThrowClips[newIndex];
             audioSource.PlayOneShot(clipToPlay);
+        }
+
+        public void PlayCardHitClip()
+        {
+            if (cardHitClips is null || cardHitClips.Length == 0)
+            {
+                Debug.Log("Error trying to find footstep clips.");
+                return;
+            }
+
+            // Choose a random clip, excluding the one that played last to give a more 'random' feeling
+            var newIndex = GetRandomClipIndexExcluding(_lastPlayedIndex);
+            _lastPlayedIndex = newIndex;
+
+            if (cardHitClips is null) return;
+            
+            // Randomize pitch slightly before playing
+            audioSource.pitch = Random.Range(0.9f, 1.1f);
+                
+            var clipToPlay = cardHitClips[newIndex];
+            audioSource.PlayOneShot(clipToPlay); 
         }
 
         public void PlayTeleportClip()

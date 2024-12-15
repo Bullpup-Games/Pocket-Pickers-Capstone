@@ -184,7 +184,7 @@ namespace _Scripts.Card
                 {
                     CollideWithWall(hit, ref newPosition);
                     
-                    //todo activate the card bounce effect
+                    CardSoundEffectManager.Instance.PlayCardHitClip();
                    
                     return;
                 }
