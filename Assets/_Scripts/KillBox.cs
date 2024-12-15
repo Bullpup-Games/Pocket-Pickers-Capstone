@@ -16,7 +16,7 @@ namespace _Scripts
         {
             if (col.gameObject.CompareTag("Player"))
                 StartCoroutine(WaitBeforeKill(col));
-        
+
             if (col.gameObject.CompareTag("Card"))
                 StartCoroutine(WaitBeforeKill(col));
 
