@@ -16,7 +16,7 @@ This game is designed to be played through multiple runs, as each sin
 you collect will make the enemies more dangerous. Whether one-by-one or
 few-by-few, reclaim the sins binding you to hell and escape!
 
-# Controlls
+# Controls
 Playable with a steam deck, xbox controller, and playstation controller
 The controlls use similar buttons on each controller, though each controller calls
 the buttons something different
