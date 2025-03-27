@@ -1,83 +1,107 @@
-# Pocket_Pickers
-# How To Play 
+# Pocket Pickers
 
-Pocket Pickers is a game where you play as a bank robber who died. 
-You now find yourself in hell, where your sins are being stored in a
-protected vault. Using your skills, along with a magic playing card,
-you run through the vault to steal your sins back!
+![Pocket Pickers Banner](Assets/Visuals/ui/menu/main/new/title.png)
 
+**Pocket Pickers** is a stealth-action platformer developed in Unity as a senior capstone project at CSUMB.  
+You play as a bank robber trapped in hell, breaking into the underworld's vault to reclaim your sins and escape your eternal punishment.
 
-# Objective
+## 🕹️ Gameplay Overview
 
-There are several glowing sin objects hidden throughout the level.
-Your goal is to avoid detection by enemies, and navigate your way 
-to collect these sin objects, and then make it out without being caught.
-This game is designed to be played through multiple runs, as each sin 
-you collect will make the enemies more dangerous. Whether one-by-one or
-few-by-few, reclaim the sins binding you to hell and escape!
+You'll use a magic playing card that can be thrown, bounced off walls, and teleported to — the cornerstone of both movement and strategy.
 
-# Controls
-Playable with a steam deck, xbox controller, and playstation controller
-The controlls use similar buttons on each controller, though each controller calls
-the buttons something different
+- 🎯 **Throw & teleport** to a magical card to traverse and outwit enemies
+- 😈 **Avoid sinfully violent behavior** — attacking enemies makes the game harder
+- 🔥 **Collect your sins** and escape Hell’s vault, but beware: the more you carry, the stronger the guards become
+- 💀 **Multiple runs encouraged** — make strategic trips to reclaim your soul one piece at a time
 
-## Movement
+A careful balance of stealth, mobility, and risk defines your path to redemption.
 
-The left joystick controlls your players movement back and forth across the screen.
+---
 
-## Jumping
+## 🎯 Objective
 
-Steam Deck: A button
-Xbox: A button
-Playstation: X button
+Your mission is to locate and collect glowing **sin objects** hidden throughout each level and return them to the exit.  
+Every sin increases difficulty — enemies get faster, more aware, and your stealth options narrow. Plan carefully:
 
-## Card throw
-The main movement mechanic in this game is a magic playing card that you can throw,
-and then teleport to. There are a few steps to this
+- 🏃‍♂️ Go for a few sins at a time to play it safe  
+- 🪙 Or risk a large trip to save time... but raise the stakes
 
-## Aim 
-Use the right joystick on any of the controllers to aim your card throw. 
-If you throw without aiming, the card will be thrown directly forward
+Master teleportation, avoid unnecessary violence, and escape Hell!
 
-## Throw 
-Throw a card in the direction you are aiming. The card will move forward, and can
-bounce off of walls up to 2 times.
+---
 
-Steam Deck: R2
-Xbox: RT 
-Playstation: R2
+## 🎮 Controls
 
-## Teleport 
-When there is a card in the air, press the card throw button a second time. You will
-teleport to the card's location
+> _Supports Steam Deck, Xbox, and PlayStation controllers_  
+> Controls use analogous buttons across all controller types.
 
-## Cancel 
-When there is a card in the air, you can cancel the card throw and destroy the card.
-This will allow you to throw a card in a different direction
+### 🧍 Movement
 
-Steam Deck: R1
-Xbox: RB 
-Playstation: R1
+| Action       | Input                          |
+|--------------|--------------------------------|
+| Move         | Left joystick                  |
+| Jump         | A (Xbox / Steam Deck), X (PS)  |
+| Dash         | B (Xbox / Steam Deck), O (PS)  |
 
-## Additional Controlls
+---
 
-## Dash 
-Suddenly dash forward in midair
+### 🃏 Card Mechanics
 
-Steam Deck: B
-Xbox: B 
-Playstation: circle
+| Action              | Input                        |
+|---------------------|------------------------------|
+| **Aim**             | Right joystick               |
+| **Throw**           | RT (Xbox), R2 (PS / Deck)    |
+| **Teleport**        | Press throw button again     |
+| **Cancel**          | RB (Xbox), R1 (PS / Deck)    |
+| **False Trigger**   | Activate burst (LT (Xbox), L2 (PS / Deck) ) to distract enemies without generating sin |
 
-## Escape
-Some enemies can grab you and you must struggle to escape before they capture you.
-To escape, wiggle the joysticks as fast as you can
+> 🧠 Cards bounce up to 2 times and can be recalled or exploded to distract enemies.
 
-## Strike 
-Throw a card at an enemy to temporarily disable that enemy. Be advised this will 
-generate new sins that will be added to the map
+---
 
-## False Trigger
-While a card is in the air, you can use a false trigger to cause it to burst and 
-catch the attention of all nearby enemies. Can be used as a distraction and does not
-generate sin
+### 🧟 Additional Actions
 
+| Action     | Description |
+|------------|-------------|
+| **Escape** | Wiggle joysticks when grabbed by enemies |
+| **Strike** | Hit enemies with the card to disable them (⚠️ adds sin to the vault!) |
+
+---
+
+## 🧪 Tech Stack
+
+- **Engine:** Unity 2022.3.46f1
+- **Art:** Adobe Suite
+
+---
+
+## 👥 Team
+
+- Micah Rodriguez (Lead Design)
+- Josh Dickerman (Programmer)
+- Noel Hann (Programmer)
+
+---
+
+## 📸 Screenshots
+
+<p float="left">
+  <img src="imgs/gameplay-01.png" width="45%" />
+  <img src="imgs/gameplay-02.png" width="45%" />
+</p>
+
+---
+
+## 🧠 Design Notes
+
+- Focus on **player agency** through skillful use of teleport mechanics
+- Stealth emphasis — avoid being seen, create distractions, and outmaneuver patrols
+- Dynamic difficulty system based on player behavior (sin count, violence)
+
+---
+
+### 🔮 Future Plans
+
+Complete overhaul with more enemies, unique mechanics, boss encounters, puzzles, and more coming soon!
+
+---
