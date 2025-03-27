@@ -86,8 +86,8 @@ Master teleportation, avoid unnecessary violence, and escape Hell!
 ## 📸 Screenshots
 
 <p float="left">
-  <img src="imgs/gameplay-01.png" width="45%" />
-  <img src="imgs/gameplay-02.png" width="45%" />
+  <img src="imgs/gameplay-01.PNG" width="45%" />
+  <img src="imgs/gameplay-02.PNG" width="45%" />
 </p>
 
 ---
