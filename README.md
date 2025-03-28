@@ -2,8 +2,11 @@
 
 ![Pocket Pickers Banner](Assets/Visuals/ui/menu/main/new/title.png)
 
-**Pocket Pickers** is a stealth-action platformer developed in Unity as a senior capstone project at CSUMB.  
-You play as a bank robber trapped in hell, breaking into the underworld's vault to reclaim your sins and escape your eternal punishment.
+**Pocket Pickers** is an award-winning stealth-action platformer developed in Unity as a senior capstone project at CSUMB.  
+Play as a bank robber trapped in hell, breaking into the underworld's vault to reclaim your sins and escape your eternal punishment.
+
+> 🏆 **CSUMB Fall 2024 Capstone Project Award:** 
+> *Best Computer Design & Computer Science Integrated Project*
 
 ## 🕹️ Gameplay Overview
 
