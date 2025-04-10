@@ -16,7 +16,7 @@ public class PauseMenu : MonoBehaviour
     private void Start()
     {
         Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     private void OnEnable()
@@ -64,7 +64,7 @@ public class PauseMenu : MonoBehaviour
         
         pauseMenuUI.SetActive(false);
         Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        // Cursor.lockState = CursorLockMode.Locked;
         Time.timeScale = 1f;
         IsPaused = false;
     }

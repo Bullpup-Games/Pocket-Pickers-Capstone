@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using _Scripts.Camera;
 using _Scripts.Card;
 using _Scripts.Player;
 using _Scripts.Player.State;
@@ -10,10 +12,14 @@ namespace _Scripts
     public class InputHandler : MonoBehaviour
     {
         public Vector2 MovementInput { get; private set; }
-        public Vector2 LookInput { get; private set; }
+        public Vector3 LookInput { get; private set; }
         public bool JumpPressed { get; private set; }
         public bool JumpHeld { get; private set; }
-        
+
+        public enum InputDeviceType { KeyboardMouse, Gamepad }
+        public InputDeviceType CurrentInputDevice { get; private set; } = InputDeviceType.KeyboardMouse;
+
+
         #region Singleton
 
         public static InputHandler Instance
@@ -44,6 +50,12 @@ namespace _Scripts
             _inputActions.Player.Enable();
             _inputActions.UI.Enable();
 
+            // Detect control scheme changes
+            _inputActions.asset.controlSchemes.ToList().ForEach(scheme =>
+            {
+                Debug.Log($"Found control scheme: {scheme.name}");
+            });
+
             // Subscribe to input events
             _inputActions.Player.Aim.performed += OnLookPerformed;
             _inputActions.Player.Aim.canceled += OnLookCanceled;
@@ -61,6 +73,9 @@ namespace _Scripts
             _inputActions.Player.Crouch.performed += OnCrouchPerformed;
             
             _inputActions.UI.PauseEvent.performed += OnPausePerformed;
+
+            PlayerVariables.Instance.PlayerInput.onControlsChanged += OnControlsChanged;
+
         }
 
         private void OnDisable()
@@ -81,39 +96,49 @@ namespace _Scripts
             _inputActions.Player.Crouch.performed -= OnCrouchPerformed;
             
             _inputActions.UI.PauseEvent.performed -= OnPausePerformed;
+            if (PlayerVariables.Instance is not null)
+                PlayerVariables.Instance.PlayerInput.onControlsChanged -= OnControlsChanged;
+
             _inputActions.Player.Disable();
             _inputActions.UI.Disable();
         }
-        
+
         private void Update()
         {
-            if (GameManager.Instance is null) 
+            if (GameManager.Instance is null || GameManager.Instance.isDead)
                 return;
-            if (GameManager.Instance.isDead)
-                return;
-            
-            // Read the right stick input directly every frame
-            LookInput = _inputActions.Player.Aim.ReadValue<Vector2>();
 
-            // Invoke CardStanceDirectionalInput event if necessary
-            if (!PlayerStateManager.Instance.IsStunnedState() && !CardManager.Instance.IsCardInScene())
+            if (PlayerStateManager.Instance.IsStunnedState() || CardManager.Instance.IsCardInScene())
+                return;
+
+            switch (CurrentInputDevice)
             {
-                if (LookInput.magnitude > 0.1f)
-                {
-                    Vector2 inputDirection = LookInput.normalized;
-                    CardStanceDirectionalInput?.Invoke(inputDirection);
-                }
-                else
-                {
-                    CardStanceDirectionalInput?.Invoke(Vector2.zero);
-                }
+                case InputDeviceType.Gamepad:
+                    LookInput = _inputActions.Player.Aim.ReadValue<Vector2>();
+                    if (LookInput.magnitude > 0.1f)
+                        CardStanceDirectionalInput?.Invoke(LookInput.normalized);
+                    else
+                        CardStanceDirectionalInput?.Invoke(Vector2.zero);
+                    break;
+
+                case InputDeviceType.KeyboardMouse:
+                    Vector2 mouseScreen = Mouse.current.position.ReadValue();
+                    Vector3 worldMouse = UnityEngine.Camera.main.ScreenToWorldPoint(new Vector3(mouseScreen.x, mouseScreen.y, 0));
+                    Vector3 centerPos = UnityEngine.Camera.main.ScreenToWorldPoint(new Vector3());
+                    // Vector3 playerPos = PlayerVariables.Instance.transform.position;
+                    
+
+                    Vector2 aimDir = worldMouse - centerPos;
+
+                    if (aimDir.magnitude > 0.1f)
+                        CardStanceDirectionalInput?.Invoke(aimDir.normalized);
+                    else
+                        CardStanceDirectionalInput?.Invoke(Vector2.zero);
+                    break;
             }
-            
-            // Reset JumpPressed after it has been read
+
             if (JumpPressed)
-            {
                 JumpPressed = false;
-            }
         }
 
         // Event for updating direction while in card stance
@@ -128,12 +153,12 @@ namespace _Scripts
 
         private void OnLookPerformed(InputAction.CallbackContext context)
         {
-            if (GameManager.Instance is null) 
+            if (GameManager.Instance is null)
                 return;
             if (GameManager.Instance.isDead)
                 return;
-            
-            if (PlayerStateManager.Instance.IsStunnedState()) 
+
+            if (PlayerStateManager.Instance.IsStunnedState())
                 return;
             if (CardManager.Instance.IsCardInScene()) 
                 return;
@@ -229,6 +254,17 @@ namespace _Scripts
         private void OnCrouchPerformed(InputAction.CallbackContext context)
         {
             OnCrouch?.Invoke();
+        }
+
+        private void OnControlsChanged(PlayerInput input)
+        {
+            CurrentInputDevice = input.currentControlScheme switch
+            {
+                "KeyboardMouse" => InputDeviceType.Gamepad,
+                _ => InputDeviceType.KeyboardMouse,
+            };
+
+            Debug.Log($"Switched to {CurrentInputDevice}");
         }
     }
 }

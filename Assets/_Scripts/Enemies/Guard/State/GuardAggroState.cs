@@ -5,7 +5,7 @@ using _Scripts.Player;
 using _Scripts.Player.State;
 using _Scripts.Sound;
 using UnityEngine;
-using UnityEngine.Rendering.VirtualTexturing;
+// using UnityEngine.Rendering.VirtualTexturing;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 

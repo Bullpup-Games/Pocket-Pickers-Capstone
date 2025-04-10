@@ -1,6 +1,7 @@
 using System;
 using _Scripts.Player.State;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Timeline;
 using Random = UnityEngine.Random;
 
@@ -15,6 +16,7 @@ namespace _Scripts.Player
         [HideInInspector] public BoxCollider2D Collider2D;
         [HideInInspector] public Rigidbody2D RigidBody2D; 
         [SerializeField] public ScriptableStats Stats;
+        [SerializeField] public PlayerInput PlayerInput;
 
         [HideInInspector] public float Time;
 
@@ -82,6 +84,7 @@ namespace _Scripts.Player
             stateManager = GetComponent<PlayerStateManager>();
             Collider2D = GetComponent<BoxCollider2D>();
             RigidBody2D = GetComponent<Rigidbody2D>();
+            PlayerInput = GetComponent<PlayerInput>();
             sinThreshold = Random.Range(thresholdRangeStart, thresholdRangeEnd);
         }
 

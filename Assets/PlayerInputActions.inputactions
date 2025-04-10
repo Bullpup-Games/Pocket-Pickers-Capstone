@@ -115,7 +115,7 @@
                 {
                     "name": "",
                     "id": "137f7767-d2ff-43d5-bd57-f2a8ec45bd6d",
-                    "path": "<Keyboard>/1",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -159,7 +159,7 @@
                 {
                     "name": "",
                     "id": "1f6c60f8-7bb9-4a8c-b5d0-7b028ab0ccca",
-                    "path": "<Keyboard>/2",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -236,7 +236,7 @@
                 {
                     "name": "",
                     "id": "32fa6955-821d-4a99-974b-7e4a980573b3",
-                    "path": "<Keyboard>/3",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -446,6 +446,17 @@
                     "name": "",
                     "id": "27ebb525-bcfa-48d6-b820-60fb0db020c4",
                     "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a2ce4264-e2a3-4a0b-b771-05cc75893491",
+                    "path": "<Keyboard>/shift",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
