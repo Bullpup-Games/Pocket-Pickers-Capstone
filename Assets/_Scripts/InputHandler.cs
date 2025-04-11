@@ -124,7 +124,10 @@ namespace _Scripts
                 case InputDeviceType.KeyboardMouse:
                     Vector2 mouseScreen = Mouse.current.position.ReadValue();
                     Vector3 worldMouse = UnityEngine.Camera.main.ScreenToWorldPoint(new Vector3(mouseScreen.x, mouseScreen.y, 0));
-                    Vector3 centerPos = UnityEngine.Camera.main.ScreenToWorldPoint(new Vector3());
+                    int centerX = Screen.width / 2;
+                    int centerY = Screen.height / 2;
+
+                    Vector3 centerPos = UnityEngine.Camera.main.ScreenToWorldPoint(new Vector3(centerX, centerY, 0));
                     // Vector3 playerPos = PlayerVariables.Instance.transform.position;
                     
 
