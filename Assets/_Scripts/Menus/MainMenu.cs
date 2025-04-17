@@ -7,6 +7,7 @@ public class MainMenu : MonoBehaviour
 {
     public void StartDemo()
     {
+        Cursor.visible = false;
         LevelLoader.Instance.LoadLevel(LevelLoader.Instance.map);
         // SceneManager.LoadScene("Map");
     }

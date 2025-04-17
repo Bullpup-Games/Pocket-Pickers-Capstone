@@ -75,13 +75,13 @@ namespace _Scripts
         
         public void Awake()
         {
-            if (File.Exists(Application.persistentDataPath + "/save.txt"))
-            {
-                PurgeSin();
-            }
+            // if (File.Exists(Application.persistentDataPath + "/save.txt"))
+            // {
+            //     PurgeSin();
+            // }
             
             activeSins = new List<GameObject>();
-            SaveManager.Instance.Setup();
+            // SaveManager.Instance.Setup();
             //activeSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("Sin"));
             Debug.Log("Number of sins: " +activeSins.Count);
             calculateRemainingSin();
@@ -92,6 +92,8 @@ namespace _Scripts
 
         private void Start()
         {
+            
+            Cursor.visible = false;
             EventSystem.current.SetSelectedGameObject(null);
             EventSystem.current.SetSelectedGameObject(pauseMenuDefaultButton);
         }
@@ -200,13 +202,13 @@ namespace _Scripts
             {
                 LevelLoader.Instance.LoadLevel(LevelLoader.Instance.credits);
                 // SceneManager.LoadScene("winScreenPlaytest2");
-                SaveManager.Instance.deleteSaveFile();
+                // SaveManager.Instance.deleteSaveFile();
                 return;
             }
                
             activeSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("Sin"));
             potentialSins = new List<GameObject>(GameObject.FindGameObjectsWithTag("PotentialSin"));
-            SaveManager.Instance.Cleanup();
+            // SaveManager.Instance.Cleanup();
             LevelLoader.Instance.LoadLevel(LevelLoader.Instance.escapeScreen); // TODO: Change to Escape Scene
         }
 
@@ -229,7 +231,7 @@ namespace _Scripts
             PlayerVariables.Instance.sinHeld = 0;
             PlayerVariables.Instance.sinAccrued = 0;
             
-            SaveManager.Instance.Cleanup();
+            // SaveManager.Instance.Cleanup();
 
             isDead = true;
             

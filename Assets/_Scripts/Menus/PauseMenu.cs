@@ -89,9 +89,9 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f;
         IsPaused = false;
         Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.None;
         
-        SaveManager.Instance.DeleteSaveFile();
+        // SaveManager.Instance.DeleteSaveFile();
         LevelLoader.Instance.LoadLevel(LevelLoader.Instance.map);
     }
 }
