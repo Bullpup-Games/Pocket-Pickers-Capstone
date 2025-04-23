@@ -236,12 +236,13 @@ namespace _Scripts
             isDead = true;
             
             // Set focus to the default button
-            if (EventSystem.current is not null)
-            {
-                EventSystem.current.SetSelectedGameObject(null);
-                EventSystem.current.SetSelectedGameObject(deathScreenDefaultButton);
-            }
+            // if (EventSystem.current is not null)
+            // {
+            //     EventSystem.current.SetSelectedGameObject(null);
+            //     EventSystem.current.SetSelectedGameObject(deathScreenDefaultButton);
+            // }
             
+            Cursor.visible = true;
             deathPanel.SetActive(true);
         }
 

@@ -14,6 +14,7 @@ public class CreditScroll : MonoBehaviour
     private void Start()
     {
         StartCoroutine(WaitBeforeStart());
+        Cursor.visible = true;
     }
 
     private void Update()
@@ -56,6 +57,7 @@ public class CreditScroll : MonoBehaviour
     private IEnumerator CreditTimeout()
     {
         yield return new WaitForSeconds(28f);
+        Cursor.visible = true;
         
         LevelLoader.Instance.LoadLevel(LevelLoader.Instance.menu);
     }

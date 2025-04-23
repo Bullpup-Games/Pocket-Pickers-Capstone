@@ -74,7 +74,8 @@ namespace _Scripts
             
             _inputActions.UI.PauseEvent.performed += OnPausePerformed;
 
-            PlayerVariables.Instance.PlayerInput.onControlsChanged += OnControlsChanged;
+            // if (PlayerVariables.Instance is not null)
+            //     PlayerVariables.Instance.PlayerInput.onControlsChanged += OnControlsChanged;
 
         }
 
@@ -96,8 +97,8 @@ namespace _Scripts
             _inputActions.Player.Crouch.performed -= OnCrouchPerformed;
             
             _inputActions.UI.PauseEvent.performed -= OnPausePerformed;
-            if (PlayerVariables.Instance is not null)
-                PlayerVariables.Instance.PlayerInput.onControlsChanged -= OnControlsChanged;
+            // if (PlayerVariables.Instance is not null)
+            //     PlayerVariables.Instance.PlayerInput.onControlsChanged -= OnControlsChanged;
 
             _inputActions.Player.Disable();
             _inputActions.UI.Disable();
@@ -111,34 +112,35 @@ namespace _Scripts
             if (PlayerStateManager.Instance.IsStunnedState() || CardManager.Instance.IsCardInScene())
                 return;
 
-            switch (CurrentInputDevice)
-            {
-                case InputDeviceType.Gamepad:
-                    LookInput = _inputActions.Player.Aim.ReadValue<Vector2>();
-                    if (LookInput.magnitude > 0.1f)
-                        CardStanceDirectionalInput?.Invoke(LookInput.normalized);
-                    else
-                        CardStanceDirectionalInput?.Invoke(Vector2.zero);
-                    break;
+            Vector2 mouseScreen = Mouse.current.position.ReadValue();
+            Vector3 worldMouse = UnityEngine.Camera.main.ScreenToWorldPoint(new Vector3(mouseScreen.x, mouseScreen.y, 0));
+            int centerX = Screen.width / 2;
+            int centerY = Screen.height / 2;
 
-                case InputDeviceType.KeyboardMouse:
-                    Vector2 mouseScreen = Mouse.current.position.ReadValue();
-                    Vector3 worldMouse = UnityEngine.Camera.main.ScreenToWorldPoint(new Vector3(mouseScreen.x, mouseScreen.y, 0));
-                    int centerX = Screen.width / 2;
-                    int centerY = Screen.height / 2;
+            Vector3 centerPos = UnityEngine.Camera.main.ScreenToWorldPoint(new Vector3(centerX, centerY, 0));
+            // Vector3 playerPos = PlayerVariables.Instance.transform.position;
 
-                    Vector3 centerPos = UnityEngine.Camera.main.ScreenToWorldPoint(new Vector3(centerX, centerY, 0));
-                    // Vector3 playerPos = PlayerVariables.Instance.transform.position;
-                    
 
-                    Vector2 aimDir = worldMouse - centerPos;
+            Vector2 aimDir = worldMouse - centerPos;
 
-                    if (aimDir.magnitude > 0.1f)
-                        CardStanceDirectionalInput?.Invoke(aimDir.normalized);
-                    else
-                        CardStanceDirectionalInput?.Invoke(Vector2.zero);
-                    break;
-            }
+            if (aimDir.magnitude > 0.1f)
+                CardStanceDirectionalInput?.Invoke(aimDir.normalized);
+            else
+                CardStanceDirectionalInput?.Invoke(Vector2.zero);
+
+            // switch (CurrentInputDevice)
+            // {
+            //     case InputDeviceType.Gamepad:
+            //         LookInput = _inputActions.Player.Aim.ReadValue<Vector2>();
+            //         if (LookInput.magnitude > 0.1f)
+            //             CardStanceDirectionalInput?.Invoke(LookInput.normalized);
+            //         else
+            //             CardStanceDirectionalInput?.Invoke(Vector2.zero);
+            //         break;
+
+            //     case InputDeviceType.KeyboardMouse:
+            //         break;
+            // }
 
             if (JumpPressed)
                 JumpPressed = false;

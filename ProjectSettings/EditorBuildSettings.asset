@@ -11,7 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Capstone Release/Map.unity
     guid: 1bf56232d49cf9843aa9f6d82500b6f6
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Capstone Release/EscapeScreen.unity
     guid: b843f5f89a86b9b4f8123f402a6326f1
   - enabled: 1
