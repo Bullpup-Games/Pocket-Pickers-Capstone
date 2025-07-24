@@ -11,12 +11,17 @@ namespace _Scripts.Player.State
 
         public void UpdateState()
         {
-            PlayerMovement.Instance.HandleGravity();
+            // PlayerMovement.Instance.AlterHorizontalMovement(0.95f);
         }
 
         public void FixedUpdateState()
         {
-            // Apply gravity
+            PlayerMovement.Instance.CheckCollisions();
+            
+            PlayerMovement.Instance.HandleJump();
+            PlayerMovement.Instance.HandleDirection();
+            PlayerMovement.Instance.HandleGravity();
+
             PlayerMovement.Instance.ApplyMovement();
         }
         public void ExitState()

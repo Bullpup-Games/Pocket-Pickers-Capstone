@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using _Scripts.Card;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -123,6 +125,34 @@ namespace _Scripts.Player.State
             TransitionToState(DashingState);
         }
         #endregion
+
+        private Coroutine _stunnedByPatroller;
+        public void HandleHitByPatroller(bool struckFromRightSide)
+        {
+            if (_stunnedByPatroller != null)
+                return;
+
+            PlayerVariables.Instance.currentHealth--;
+
+            if (PlayerVariables.Instance.currentHealth <= 0)
+                GameManager.Instance.Die();
+
+            Debug.Log("Player Hit by attack");
+            TransitionToState(StunnedState);
+            _stunnedByPatroller = StartCoroutine(StunnedByPatrollerHitCountdown());
+            PlayerMovement.Instance.ApplyDiagonalForce(!struckFromRightSide);
+        }
+
+        private IEnumerator StunnedByPatrollerHitCountdown()
+        {
+            // yield return new WaitForSeconds(0.1f);
+            // if (CurrentState == StunnedState) yield return null;
+            // if (PlayerMovement.Instance.IsGrounded())
+            //     TransitionToState(StunnedState);
+            yield return new WaitForSeconds(1.5f);
+            TransitionToState(FreeMovingState);
+            _stunnedByPatroller = null;
+        }
         
         #region Wall Sliding
 
